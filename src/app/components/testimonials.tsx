@@ -58,8 +58,8 @@ export const Testimonials = () => {
 
 const TestimonialCard = ({ quote, name, avatar }: { quote: string, name: string, avatar: string }) => {
     return (
-        <div className='flex flex-col justify-between gap-4 mx-2 rounded-xl h-50 w-full max-w-60 shadow-md p-4'>
-            <p className='text-sm text-neutral-700'>{quote}</p>
+        <div className='mx-2 flex h-50 w-full max-w-60 flex-col justify-between gap-4 rounded-xl border border-neutral-200 p-4 shadow-md dark:border-neutral-800 dark:bg-neutral-950'>
+            <p className='text-sm text-primary'>{quote}</p>
             <div className='flex items-center  gap-4'>
                 <Image
                     src={avatar}
@@ -68,7 +68,7 @@ const TestimonialCard = ({ quote, name, avatar }: { quote: string, name: string,
                     width={40}
                     className='size-10 rounded-full object-cover'
                 />
-                <p className='text-sm text-neutral-500'>{name}</p>
+                <p className='text-sm text-secondary'>{name}</p>
             </div>
 
 

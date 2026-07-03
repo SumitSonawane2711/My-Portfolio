@@ -48,9 +48,9 @@ export default async function SingleBlogpage({
                     alt={frontmatter.title}
                     height={500}
                     width={900}
-                    className=" rounded-lg  mx-auto max-h-96 w-full border border-neutral-200 mb-20 shadow-xl"
+                    className="mx-auto mb-20 max-h-96 w-full rounded-lg border border-neutral-200 shadow-xl dark:border-neutral-800"
                 />
-                <div className="prose  ">
+                <div className="prose prose-neutral dark:prose-invert">
                     {content}
                 </div>
             </Container>

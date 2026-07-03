@@ -38,16 +38,16 @@ export const ContactForm = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-lg mx-auto p-4 bg-white rounded-lg shadow-md">
+        <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-lg flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
             <div className='flex flex-col gap-2'>
                 <label
                     htmlFor='name'
-                    className='text-sm font-medium text-neutral-600 tracking-tight'>Full name</label>
+                    className='text-sm font-medium tracking-tight text-primary'>Full name</label>
                 <input
                     id='name'
                     name='name'
                     type="text"
-                    className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
+                    className="rounded-md border border-neutral-200 bg-white px-2 py-1 text-sm text-neutral-900 shadow focus:outline-none focus:ring-2 focus:ring-primary dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={handleChange}
@@ -56,14 +56,14 @@ export const ContactForm = () => {
 
                 <label
                     htmlFor='email'
-                    className='text-sm font-medium text-neutral-600 tracking-tight'>
+                    className='text-sm font-medium tracking-tight text-primary'>
                     Email Address
                 </label>
                 <input
                     id='email'
                     name='email'
                     type="email"
-                    className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
+                    className="rounded-md border border-neutral-200 bg-white px-2 py-1 text-sm text-neutral-900 shadow focus:outline-none focus:ring-2 focus:ring-primary dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
                     placeholder="Enter your email address"
                     value={formData.email}
                     onChange={handleChange}
@@ -71,21 +71,21 @@ export const ContactForm = () => {
                 />
                 <label
                     htmlFor='message'
-                    className='text-sm font-medium text-neutral-600 tracking-tight'>
+                    className='text-sm font-medium tracking-tight text-primary'>
                     Message
                 </label>
                 <textarea
                     rows={5}
                     id='message'
                     name='message'
-                    className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
+                    className="rounded-md border border-neutral-200 bg-white px-2 py-1 text-sm text-neutral-900 shadow focus:outline-none focus:ring-2 focus:ring-primary dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100"
                     placeholder="Enter your message"
                     value={formData.message}
                     onChange={handleChange}
                     required
                 />
             </div>
-            <button type="submit" className="px-4 py-2 bg-primary text-white rounded-md shadow-md hover:bg-primary-dark">
+            <button type="submit" className="rounded-md bg-primary px-4 py-2 text-white shadow-md transition-colors hover:bg-neutral-700 dark:text-neutral-950 dark:hover:bg-neutral-300">
                 Send Message
             </button>
 

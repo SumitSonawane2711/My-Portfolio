@@ -36,9 +36,9 @@ export const Projects = ({ projects = defaultProjects }: { projects: Project[] }
                                 width={500}
                                 className='h-54 w-full rounded-t-xl object-cover  transition duration-200'
                             />
-                            <div className='div p-4'>
-                                <h2 className='max-w-lg pt-4 text-sm font-semibold text-neutral-600 md:text-base'>{project.title}</h2>
-                                <p className='max-w-lg text-sm font-normal text-neutral-600 md:text-sm'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, doloribus?</p>
+                            <div className='p-4'>
+                                <h2 className='max-w-lg pt-4 text-sm font-semibold text-primary md:text-base'>{project.title}</h2>
+                                <p className='max-w-lg text-sm font-normal text-secondary md:text-sm'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, doloribus?</p>
                             </div>
                         </motion.div>
                     </Link>

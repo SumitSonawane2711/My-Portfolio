@@ -35,11 +35,11 @@ export default async function ProjectPage({ params }: PageProps) {
                     alt={project.title}
                     height={500}
                     width={500}
-                    className="rounded-lg mx-auto max-h-96 w-full border border-neutral-200 mb-20 shadow-xl"
+                    className="mx-auto mb-20 max-h-96 w-full rounded-lg border border-neutral-200 shadow-xl dark:border-neutral-800"
                 />
                 <div>
                     <Heading className="text-4xl font-bold mb-4">{project.title}</Heading>
-                    <p className="mb-4">{project.description}</p>
+                    <p className="mb-4 text-secondary">{project.description}</p>
                 </div>
             </Container>
         </main>

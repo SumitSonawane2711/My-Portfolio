@@ -57,7 +57,7 @@ export const Timeline = () => {
                             delay: 0.1 * idx,
                         }}
 
-                        className='font-bold text-black'>
+                        className='font-bold text-primary'>
                         {year.year}
                     </motion.h2>
                     <div className='flex flex-col gap-4'>
@@ -74,11 +74,11 @@ export const Timeline = () => {
                                             ease: 'easeInOut',
                                             delay: 0.1 * idx,
                                         }}
-                                        className='text-neutral-600'
+                                        className='text-primary'
                                     >{item.title}</motion.h3>
                                 </Step>
 
-                                {item.description && <p className='text-neutral-400 pt-1'>{item.description}</p>}
+                                {item.description && <p className='pt-1 text-secondary'>{item.description}</p>}
                             </div>
                         ))}
                     </div>
@@ -102,7 +102,7 @@ const Step = (
         delay: 0.2 * idx
     }}
     className={cn('flex items-start gap-2', className)}>
-        <IconCircleCheckFilled className='h-4 w-4 mt-1.5 text-neutral-500' />
+        <IconCircleCheckFilled className='mt-1.5 h-4 w-4 text-secondary' />
         {children}
     </motion.div>
 }

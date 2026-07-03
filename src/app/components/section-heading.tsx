@@ -4,7 +4,7 @@ import { motion } from 'motion/react'
 
 export const SectionHeading = ({ children, delay }: { children: string, delay: number }) => {
     return (
-        <h2 className='max-w-lg pt-4 text-sm font-normal text-neutral-600 md:text-sm'>
+        <h2 className='max-w-lg pt-4 text-sm font-normal text-secondary md:text-sm'>
             {children.split(" ").map((word, idx) => (
                 <motion.span
                     key={word + idx}

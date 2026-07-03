@@ -16,7 +16,7 @@ export default function AboutPage() {
         <SubHeading >
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, unde facere! Necessitatibus numquam iusto assumenda. Ullam quaerat exercitationem nesciunt porro!
         </SubHeading>
-        <div className="bg-gray-200 min-h-[400px]">
+        <div className="min-h-[400px] rounded-lg bg-neutral-200 dark:bg-neutral-800">
 
         </div>
         <p className="text-secondary max-w-lg pt-4 text-sm md:text-sm">

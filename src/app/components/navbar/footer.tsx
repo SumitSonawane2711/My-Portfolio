@@ -4,17 +4,17 @@ import Container from "../container";
 
 export const Footer = () => {
     return (
-        <Container className="flex  justify-between px-2 py-4 border-t border-neutral-200">
-            <p className="text-md text-neutral-500">Build with Love by Sumit</p>
-            <div className="flex item-center justify-center gap-4 ">
+        <Container className="flex justify-between border-t border-neutral-200 px-2 py-4 dark:border-neutral-800">
+            <p className="text-md text-secondary">Build with Love by Sumit</p>
+            <div className="flex items-center justify-center gap-4">
                 <Link href="#">
-                <IconBrandX className="size-4 text-neutral-500 hover-neutral-700" />
+                <IconBrandX className="size-4 text-secondary hover:text-primary" />
                 </Link>
                 <Link href="#">
-                    <IconBrandGithub className="size-4 text-neutral-500 hover-neutral-700" />
+                    <IconBrandGithub className="size-4 text-secondary hover:text-primary" />
                 </Link>
                 <Link href="#">
-                    <IconBrandLinkedin className="size-4 text-neutral-500 hover-neutral-700" />
+                    <IconBrandLinkedin className="size-4 text-secondary hover:text-primary" />
                 </Link>
             </div>
         </Container>
