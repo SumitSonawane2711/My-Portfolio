@@ -1,13 +1,12 @@
 "use client";
-import React, { use, useState } from 'react'
-import Container from '../container'
-import Image from 'next/image'
-import { Link } from 'next-view-transitions'
-import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion"
-import { ToggleButton } from '../theme-toggle';
+import React, { useState } from "react";
+import Image from "next/image";
+import { Link } from "next-view-transitions";
+import { motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
+import { ToggleButton } from "../theme-toggle";
 
 export const Navbar = () => {
-    const navItmes = [
+    const navItems = [
         {
             title: 'About',
             href: '/about'
@@ -39,54 +38,53 @@ export const Navbar = () => {
     })
 
     const y = useTransform(scrollY, [0, 100], [0, 10]);
-    const width = useTransform(scrollY, [0, 100], ["60%", "50%"]);
+    const width = useTransform(scrollY, [0, 100], ["min(92%, 56rem)", "min(88%, 48rem)"]);
 
     return (
-        <Container >
-            <motion.nav
-                style={{
-                    boxShadow: scrolled ? 'var(--shadow-md) ' : 'none',
-                    y,
-                    width
-                }}
-                transition={{
-                    duration: 0.3,
-                    ease: "linear"
-                }}
-                className='fixed inset-x-0 top-0 z-50 mx-auto flex max-w-4xl items-center bg-white justify-between px-4 py-2.5 rounded-full '>
-                <Link href={'/'}>
-                    <Image
-                        className='h-10 w-10 rounded-full'
-                        src={'/avatar.jpg'}
-                        height='188'
-                        width='188'
-                        alt="Avatar"
-                    />
-                </Link>
+        <motion.nav
+            style={{
+                boxShadow: scrolled ? 'var(--shadow-md) ' : 'none',
+                y,
+                width
+            }}
+            transition={{
+                duration: 0.3,
+                ease: "linear"
+            }}
+            className='fixed inset-x-0 top-3 z-50 mx-auto flex items-center justify-between rounded-full border border-neutral-200 bg-white px-3 py-2 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100 md:px-4'>
+            <Link href={'/'} className="shrink-0">
+                <Image
+                    className='h-10 w-10 rounded-full object-cover'
+                    src={'/young-bearded-man-with-striped-shirt.jpg'}
+                    height='188'
+                    width='188'
+                    alt="Sumit avatar"
+                    priority
+                />
+            </Link>
 
 
-                <div>
-                    {navItmes.map((item, idx) => (
-                        <Link
-                            className='relative px-2 py-1 text-sm'
-                            href={item.href}
-                            key={idx}
-                            onMouseEnter={() => setHovered(idx)}
-                            onMouseLeave={() => setHovered(null)}
-                        >{hovered === idx && (
-                            <motion.span layoutId='hovered-span' className='h-full w-full absolute inset-0 rounded-md bg-neutral-200' />
+            <div className="flex items-center gap-1 md:gap-2">
+                {navItems.map((item, idx) => (
+                    <Link
+                        className='relative px-2 py-1 text-sm'
+                        href={item.href}
+                        key={item.href}
+                        onMouseEnter={() => setHovered(idx)}
+                        onMouseLeave={() => setHovered(null)}
+                    >{hovered === idx && (
+                        <motion.span layoutId='hovered-span' className='absolute inset-0 h-full w-full rounded-md bg-neutral-200 dark:bg-neutral-800' />
 
-                        )
+                    )
 
-                            }
-                            <span className='relative z-10'>{item.title}</span>
-                        </Link>
-                    ))}
-                    <ToggleButton/>
-                </div>
-                
-            </motion.nav>
-        </Container>
+                        }
+                        <span className='relative z-10'>{item.title}</span>
+                    </Link>
+                ))}
+                <ToggleButton />
+            </div>
+
+        </motion.nav>
     )
 
 }

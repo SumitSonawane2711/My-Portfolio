@@ -15,8 +15,8 @@ export const Landingblog = async () => {
                 I love to write the my experince and thoughts through
             </p>
             <div className="flex flex-col gap-4">
-                {allblogs.map((blog, idx) =>
-                    <Link href={`blog/${blog.slug}`} key={idx}>
+                {allblogs.map((blog) =>
+                    <Link href={`/blog/${blog.slug}`} key={blog.slug}>
                         <div className="flex items-center justify-between">
                             <h2 className=" text-primary text-base tracking-tight font-bold ">
                                 {blog.title}

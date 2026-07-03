@@ -2,11 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/navbar";
-import { ViewTransitions } from 'next-view-transitions'
+import { ViewTransitions } from "next-view-transitions";
 import { Footer } from "./components/navbar/footer";
-import { Toaster } from "sonner"
-import { ThemeProvider } from "next-themes"
-
+import { Toaster } from "sonner";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -25,23 +24,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-
-    <ViewTransitions>
-      <ThemeProvider attribute="class">
-      <html lang="en">
-        
-          <body
-            className={`${inter.variable} antialiased font-sans bg-neutral-400`}
-          >
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} bg-neutral-100 font-sans antialiased text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100`}
+      >
+        <ViewTransitions>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
             <Toaster position="top-center" />
             <Navbar />
             {children}
             <Footer />
-          </body>
-        
-
-      </html>
-      </ThemeProvider>
-    </ViewTransitions>
+          </ThemeProvider>
+        </ViewTransitions>
+      </body>
+    </html>
   );
 }

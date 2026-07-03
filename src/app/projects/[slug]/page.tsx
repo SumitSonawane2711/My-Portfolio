@@ -7,22 +7,24 @@ import { Heading } from '@/app/components/heading';
 import Image from 'next/image';
 
 interface PageProps {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
+    const { slug } = await params;
+
     return {
-        title: `Project - ${params.slug}`,
+        title: `Project - ${slug}`,
     };
 }
 
-export default function ProjectPage({ params }: PageProps) {
-    const project = projects.find((project: Project) => project.slug === params.slug);
-    console.log("project :", project);
+export default async function ProjectPage({ params }: PageProps) {
+    const { slug } = await params;
+    const project = projects.find((project: Project) => project.slug === slug);
 
 
     if (!project) {
-        notFound();  // Handles 404
+        notFound();
     }
 
     return (

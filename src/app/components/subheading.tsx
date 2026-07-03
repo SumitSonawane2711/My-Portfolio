@@ -1,7 +1,7 @@
 "use client";
 import { cn } from '@/lib/utils'
 import React from 'react'
-import { motion, stagger } from 'motion/react';
+import { motion } from 'motion/react';
 
 export const SubHeading = (
     { as: Tag = "h2", children, className }:
@@ -14,7 +14,7 @@ export const SubHeading = (
             transition={{
                 duration: 0.3,
                 ease: "easeInOut",
-                delay: stagger(0.1),
+                delay: 0.1,
             }}
             viewport={{ once: true }}
         >

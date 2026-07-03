@@ -20,15 +20,15 @@ export const ContactForm = () => {
             return;
         }
 
-        const response = new Promise ((resolve ,reject) => {
-            setTimeout (()=> {
+        try {
+            await new Promise((resolve) => {
+                setTimeout(() => {
                 resolve("api call resolved");
-            },1000)
-        });
-
-        if (response) {
+                }, 1000)
+            });
             toast.success("Message sent successfully");
-        } else {
+            setFormData({ name: '', email: '', message: '' });
+        } catch {
             toast.error("Something went wrong");
         }
     }
@@ -49,6 +49,7 @@ export const ContactForm = () => {
                     type="text"
                     className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
                     placeholder="Enter your full name"
+                    value={formData.name}
                     onChange={handleChange}
                     required
                 />
@@ -63,10 +64,10 @@ export const ContactForm = () => {
                     name='email'
                     type="email"
                     className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
-                    placeholder="Enter your full name"
+                    placeholder="Enter your email address"
+                    value={formData.email}
                     onChange={handleChange}
                     required
-                    resize-none
                 />
                 <label
                     htmlFor='message'
@@ -79,6 +80,7 @@ export const ContactForm = () => {
                     name='message'
                     className="shadow px-2 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary "
                     placeholder="Enter your message"
+                    value={formData.message}
                     onChange={handleChange}
                     required
                 />

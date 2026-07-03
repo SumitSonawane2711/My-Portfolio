@@ -17,7 +17,7 @@ export const projects: Project[] = [
         {
             title: "second Project video",
             slug: "second-project-video",
-            src: "/avatar.jpg",
+            src: "/blog.jpg",
             description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum in animi qui nesciunt obcaecati magnam",
             href: '#',
         },

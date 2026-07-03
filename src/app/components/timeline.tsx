@@ -1,6 +1,6 @@
 'use client'
 import React, { useRef } from 'react'
-import { inView, motion, useInView } from 'motion/react'
+import { motion, useInView } from 'motion/react'
 import { IconCircleCheckFilled } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 type data = {

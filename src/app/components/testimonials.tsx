@@ -1,4 +1,7 @@
+"use client";
+
 import React from 'react';
+import Image from "next/image";
 import Marquee from "react-fast-marquee";
 import { SectionHeading } from './section-heading';
 
@@ -58,7 +61,11 @@ const TestimonialCard = ({ quote, name, avatar }: { quote: string, name: string,
         <div className='flex flex-col justify-between gap-4 mx-2 rounded-xl h-50 w-full max-w-60 shadow-md p-4'>
             <p className='text-sm text-neutral-700'>{quote}</p>
             <div className='flex items-center  gap-4'>
-                <img src={avatar} alt={name}
+                <Image
+                    src={avatar}
+                    alt={name}
+                    height={40}
+                    width={40}
                     className='size-10 rounded-full object-cover'
                 />
                 <p className='text-sm text-neutral-500'>{name}</p>

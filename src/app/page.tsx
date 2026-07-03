@@ -11,9 +11,9 @@ export default function Home() {
   return (
     <main className="min-h-screen flex items-start justify-start ">
       <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
-        <Heading >Hellow World</Heading>
+        <Heading>Hello, I am Sumit</Heading>
         <SubHeading >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, unde facere! Necessitatibus numquam iusto assumenda. Ullam quaerat exercitationem nesciunt porro!
+          Full stack developer building clean, responsive, and reliable web experiences.
         </SubHeading>
         <Projects projects={projects.slice(0, 3)} />
         <Landingblog />

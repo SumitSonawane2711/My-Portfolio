@@ -27,8 +27,8 @@ export default async function Blogspage() {
                     Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, unde facere! Necessitatibus numquam iusto assumenda. Ullam quaerat exercitationem nesciunt porro!
                 </SubHeading>
                 <div className="flex flex-col gap-10">
-                    {allblogs.map((blog,idx)=> 
-                    <Link href={`blog/${blog.slug}`} key={idx}>
+                    {allblogs.map((blog)=> 
+                    <Link href={`/blog/${blog.slug}`} key={blog.slug}>
                         <div className="flex items-center justify-between">
                             <h2 className=" text-primary text-base tracking-tight font-bold ">
                             {blog.title}

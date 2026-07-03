@@ -19,7 +19,7 @@ export const getSingleBlog = async (slug: string) => {
             return null;
         }
 
-        const { content, frontmatter } = await compileMDX<{ title: string }>({
+        const { content, frontmatter } = await compileMDX<Frontmatter>({
             source: singleBlog,
             options: { parseFrontmatter: true },
         })

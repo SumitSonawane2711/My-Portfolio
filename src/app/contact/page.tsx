@@ -2,7 +2,6 @@ import { ContactForm } from "../components/contact-form";
 import Container from "../components/container";
 import { Heading } from "../components/heading";
 import { SubHeading } from "../components/subheading";
-import { Timeline } from "../components/timeline";
 
 
 
