@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Container from "../components/container";
 import { getBlogs } from "@/utils/mdx";
-import { Link } from 'next-view-transitions'
+import Link from 'next/link'
 import { Heading } from "../components/heading";
 import { SubHeading } from "../components/subheading";
 

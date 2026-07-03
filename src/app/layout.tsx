@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Navbar } from "./components/navbar";
-import { ViewTransitions } from "next-view-transitions";
 import { Footer } from "./components/navbar/footer";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
@@ -28,14 +27,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} bg-neutral-100 font-sans antialiased text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100`}
       >
-        <ViewTransitions>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            <Toaster position="top-center" />
-            <Navbar />
-            {children}
-            <Footer />
-          </ThemeProvider>
-        </ViewTransitions>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          <Toaster position="top-center" />
+          <Navbar />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

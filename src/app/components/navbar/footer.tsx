@@ -1,5 +1,5 @@
 import {  IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
-import { Link } from "next-view-transitions";
+import Link from "next/link";
 import Container from "../container";
 
 export const Footer = () => {
