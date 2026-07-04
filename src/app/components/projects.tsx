@@ -5,13 +5,14 @@ import { motion } from 'motion/react'
 import { Project, projects as defaultProjects } from '../constants/projects'
 import { SectionHeading } from './section-heading'
 import Link from 'next/link'
+import { SubHeading } from './subheading'
 
 export const Projects = ({ projects = defaultProjects }: { projects: Project[] }) => {
 
     return (
         <div className='py-10'>
             <SectionHeading delay={0.3}>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum in animi qui nesciunt obcaecati magnam?
+                Projects | A showcase of my work, highlighting the technologies and skills I have applied in real-world projects.
             </SectionHeading>
             <div className='grid grid-cols-1 gap-4 md:grid-cols-3 py-4'>
                 {projects.map((project, idx) =>
@@ -29,17 +30,21 @@ export const Projects = ({ projects = defaultProjects }: { projects: Project[] }
                         >
 
 
-                            <Image
+                            {/* <Image
                                 src={project.src}
                                 alt={project.title}
                                 height={500}
                                 width={500}
                                 className='h-54 w-full rounded-t-xl object-cover  transition duration-200'
-                            />
+                            /> */}
                             <div className='p-4'>
                                 <h2 className='max-w-lg pt-4 text-sm font-semibold text-primary md:text-base'>{project.title}</h2>
-                                <p className='max-w-lg text-sm font-normal text-secondary md:text-sm'>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, doloribus?</p>
+                                 <p className='shrink-0 text-sm py-2 text-secondary'>
+                                {project.dateFrom} - {project.dateTo}
+                            </p>
+                                <p className='max-w-lg text-sm font-normal text-secondary md:text-sm'>{project.description}</p>
                             </div>
+                          
                         </motion.div>
                     </Link>
                 )}

@@ -5,6 +5,7 @@ import Container from '@/app/components/container';
 import { notFound } from 'next/navigation';
 import { Heading } from '@/app/components/heading';
 import Image from 'next/image';
+import { getProjectFrontmatterBySlug, getSingleProject } from '@/utils/mdx';
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -12,34 +13,48 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
     const { slug } = await params;
+    const frontmatter = await getProjectFrontmatterBySlug(slug);
+
+    if (!frontmatter) {
+        return {
+            title: "Project Not Found",
+        };
+    }
 
     return {
-        title: `Project - ${slug}`,
+        title: `${frontmatter.title} - Project`,
+        description: frontmatter.description,
     };
 }
 
 export default async function ProjectPage({ params }: PageProps) {
     const { slug } = await params;
     const project = projects.find((project: Project) => project.slug === slug);
+    const mdx = await getSingleProject(slug);
 
 
-    if (!project) {
+    if (!project || !mdx) {
         notFound();
     }
+
+    const { content, frontmatter } = mdx;
 
     return (
         <main className="min-h-screen flex items-start justify-start">
             <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
                 <Image
-                    src={project.src}
-                    alt={project.title}
+                    src={frontmatter.image || project.src}
+                    alt={frontmatter.title}
                     height={500}
-                    width={500}
+                    width={900}
                     className="mx-auto mb-20 max-h-96 w-full rounded-lg border border-neutral-200 shadow-xl dark:border-neutral-800"
                 />
                 <div>
-                    <Heading className="text-4xl font-bold mb-4">{project.title}</Heading>
+                    <Heading className="text-4xl font-bold mb-4">{frontmatter.title}</Heading>
                     <p className="mb-4 text-secondary">{project.description}</p>
+                </div>
+                <div className="prose prose-neutral dark:prose-invert">
+                    {content}
                 </div>
             </Container>
         </main>

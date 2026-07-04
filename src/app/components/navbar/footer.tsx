@@ -10,10 +10,10 @@ export const Footer = () => {
                 <Link href="#">
                 <IconBrandX className="size-4 text-secondary hover:text-primary" />
                 </Link>
-                <Link href="#">
+                <Link href="https://github.com/SumitSonawane2711">
                     <IconBrandGithub className="size-4 text-secondary hover:text-primary" />
                 </Link>
-                <Link href="#">
+                <Link href="# ">
                     <IconBrandLinkedin className="size-4 text-secondary hover:text-primary" />
                 </Link>
             </div>

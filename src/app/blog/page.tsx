@@ -13,7 +13,9 @@ export const metadata: Metadata = {
 
 export default async function Blogspage() {
 
-    const allblogs = await getBlogs();
+    const allblogs = (await getBlogs())
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
     const truncate = (str: string, n: number) => {
         return str.length > n ? str.substring(0, n) + '...' : str;
     }
@@ -21,28 +23,33 @@ export default async function Blogspage() {
         <main className="min-h-screen flex items-start justify-start ">
             <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
                 <Heading >
-                    All Blogs
+                    Writing
                 </Heading>
                 <SubHeading >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore, unde facere! Necessitatibus numquam iusto assumenda. Ullam quaerat exercitationem nesciunt porro!
+                    Practical notes, experiments, and lessons from building full-stack web applications.
                 </SubHeading>
-                <div className="flex flex-col gap-10">
-                    {allblogs.map((blog)=> 
-                    <Link href={`/blog/${blog.slug}`} key={blog.slug}>
-                        <div className="flex items-center justify-between">
-                            <h2 className=" text-primary text-base tracking-tight font-bold ">
-                            {blog.title}
-                        </h2>
-                        <p className="text-secondary max-w-lg pt-2 text-sm md:text-sm">
-                            {new Date(blog.date || "").toLocaleDateString('en-us',{
-                                weekday: 'long',year: 'numeric', month: 'short', day: 'numeric'}) }
-                        </p>
-                        </div>
-                        
-                        <p className="text-secondary max-w-lg pt-2 text-sm md:text-sm">
-                            {truncate(blog.description || "", 150)}
-                        </p>
-                    </Link>)}
+                <div className="mt-10 flex flex-col gap-4">
+                    {allblogs.map((blog) =>
+                        <Link
+                            href={`/blog/${blog.slug}`}
+                            key={blog.slug}
+                            className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/70"
+                        >
+                            <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
+                                <h2 className="text-base font-semibold tracking-tight text-primary">
+                                    {blog.title}
+                                </h2>
+                                <p className="shrink-0 text-sm text-secondary">
+                                    {new Date(blog.date || "").toLocaleDateString('en-us', {
+                                        month: 'short', day: 'numeric', year: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+
+                            <p className="max-w-2xl pt-2 text-sm text-secondary">
+                                {truncate(blog.description || "", 180)}
+                            </p>
+                        </Link>)}
                 </div>
             </Container>
         </main>
