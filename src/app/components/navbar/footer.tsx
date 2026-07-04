@@ -1,4 +1,4 @@
-import {  IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
+import {  IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import Link from "next/link";
 import Container from "../container";
 

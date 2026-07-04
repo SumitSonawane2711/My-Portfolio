@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconBrandGithub, IconBrandLinkedin, IconBrandX, IconMail, IconPhone, IconX } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin, IconMail, IconPhone, IconX } from "@tabler/icons-react";
 import { DownloadResume } from "./download-resume";
 
 export type SocialLink = {
@@ -12,7 +12,6 @@ export type SocialLink = {
     icon: React.ReactNode;
 };
 
-const role = "MERN Stack Developer";
 const name = "Sumit Sonawane";
 const experienceYears: number = 2;
 const summary = "Motivated and detail-oriented MERN Stack Developer.";

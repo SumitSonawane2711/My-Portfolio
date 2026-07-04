@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Heading } from "./heading"
 import { SubHeading } from "./subheading"
-import { IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react"
+import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react"
 import { DownloadResume } from "./download-resume"
 
 export const Hero = async () => {

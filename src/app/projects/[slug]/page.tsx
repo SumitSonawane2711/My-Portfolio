@@ -4,7 +4,6 @@ import type { Project } from '../../constants/projects';
 import Container from '@/app/components/container';
 import { notFound } from 'next/navigation';
 import { Heading } from '@/app/components/heading';
-import Image from 'next/image';
 import { getProjectFrontmatterBySlug, getSingleProject } from '@/utils/mdx';
 
 interface PageProps {

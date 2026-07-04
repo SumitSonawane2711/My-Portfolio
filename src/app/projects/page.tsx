@@ -1,7 +1,6 @@
 import Container from "../components/container";
 import { Heading } from "../components/heading";
 import { Projects } from "../components/projects";
-import { SubHeading } from "../components/subheading";
 import { projects } from "../constants/projects";
 
 

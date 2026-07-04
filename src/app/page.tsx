@@ -2,7 +2,6 @@ import Container from "./components/container";
 import { Landingblog } from "./components/landing-blog";
 import { Projects } from "./components/projects";
 import { ProfessionalExperience } from "./components/professional-experience";
-import { Testimonials } from "./components/testimonials";
 import { projects } from "./constants/projects";
 import { Hero } from "./components/hero";
 import { Profile } from "./components/profile";
