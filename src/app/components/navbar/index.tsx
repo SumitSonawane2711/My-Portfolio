@@ -2,11 +2,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { ToggleButton } from "../theme-toggle";
 import { HamburgerButton } from "../hamburger";
-import { Profile } from "../profile";
-import { IconBrandGithub, IconBrandLinkedin, IconBrandX } from "@tabler/icons-react";
 
 export const Navbar = () => {
     const navItems = [
@@ -14,10 +13,11 @@ export const Navbar = () => {
         //     title: 'About',
         //     href: '/about'
         // },
-        // {
-        //     title: 'Projects',
-        //     href: '/projects'
-        // },
+        
+        {
+            title: 'Projects',
+            href: '/projects'
+        },
         {
             title: 'Contact',
             href: '/contact'
@@ -30,6 +30,9 @@ export const Navbar = () => {
 
     const [hovered, setHovered] = useState<number | null>(null);
     const [mobileOpen, setMobileOpen] = useState<boolean>(false);
+    const pathname = usePathname();
+    const router = useRouter();
+    const isHome = pathname === "/";
     const { scrollY } = useScroll();
 
     const [scrolled, setScrolled] = useState<boolean>(false)
@@ -44,6 +47,15 @@ export const Navbar = () => {
     const y = useTransform(scrollY, [0, 100], [0, 10]);
     const width = useTransform(scrollY, [0, 100], ["min(92%, 56rem)", "min(88%, 48rem)"]);
 
+    const handleProfileClick = () => {
+        if (isHome) {
+            window.dispatchEvent(new Event("open-profile"));
+            return;
+        }
+
+        router.push("/");
+    };
+
     return (
         <motion.nav
             style={{
@@ -57,31 +69,21 @@ export const Navbar = () => {
             }}
             className='fixed inset-x-0 top-3 z-50 mx-auto rounded-3xl border border-neutral-200 bg-white text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100'>
             <div className="flex items-center justify-between px-3 py-2 md:px-4">
-                {/* <Link href={'/'} className="shrink-0">
+                <button
+                    type="button"
+                    onClick={handleProfileClick}
+                    aria-label={isHome ? "Open Sumit's profile" : "Go to homepage"}
+                    className="shrink-0 rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                >
                     <Image
-                        className='h-10 w-10 rounded-full object-cover'
-                        src={'/profile.png'}
-                        height='188'
-                        width='188'
-                        alt="Sumit avatar"
+                        className="h-10 w-10 rounded-full object-cover"
+                        src="/profile.png"
+                        height={188}
+                        width={188}
+                        alt="Profile avatar"
                         priority
                     />
-                </Link> */}
-
-<Profile
-    imageSrc="/profile.png"
-    name="Sumit Sonawane"
-    role="MERN Stack Developer"
-    experienceYears={2}
-    summary="Motivated and detail-oriented MERN Stack Developer."
-    phone="+911234567890"
-    contactHref="/contact"
-    socialLinks={[
-        { href: "https://github.com/yourhandle", label: "GitHub", icon: <IconBrandGithub className="h-4 w-4" /> },
-        { href: "https://linkedin.com/in/yourhandle", label: "LinkedIn", icon: <IconBrandLinkedin className="h-4 w-4" /> },
-        { href: "https://x.com/yourhandle", label: "X", icon: <IconBrandX className="h-4 w-4" /> },
-    ]}
-/>
+                </button>
                 <div className="flex items-center gap-1 md:gap-2">
                     {navItems.map((item, idx) => (
                         <Link

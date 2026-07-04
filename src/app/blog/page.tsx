@@ -21,19 +21,19 @@ export default async function Blogspage() {
     }
     return (
         <main className="min-h-screen flex items-start justify-start ">
-            <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
+            <Container className="min-h-screen p-4 pt-20 md:pb-10">
                 <Heading >
                     Writing
                 </Heading>
                 <SubHeading >
-                    Practical notes, experiments, and lessons from building full-stack web applications.
+                    A collection of my thoughts, insights, and experiences of my journey in development.
                 </SubHeading>
                 <div className="mt-10 flex flex-col gap-4">
                     {allblogs.map((blog) =>
                         <Link
                             href={`/blog/${blog.slug}`}
                             key={blog.slug}
-                            className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/70"
+                            className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-900/70"
                         >
                             <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
                                 <h2 className="text-base font-semibold tracking-tight text-primary">

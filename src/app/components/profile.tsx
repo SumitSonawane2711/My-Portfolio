@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconMail, IconPhone, IconX } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin, IconBrandX, IconMail, IconPhone, IconX } from "@tabler/icons-react";
 import { DownloadResume } from "./download-resume";
 
 export type SocialLink = {
@@ -13,31 +12,26 @@ export type SocialLink = {
     icon: React.ReactNode;
 };
 
-type ProfileProps = {
-    imageSrc: string;
-    name: string;
-    role: string;
-    experienceYears: number;
-    summary: string;
-    phone?: string;
-    contactHref?: string;
-    socialLinks?: SocialLink[];
-};
+const role = "MERN Stack Developer";
+const name = "Sumit Sonawane";
+const experienceYears: number = 2;
+const summary = "Motivated and detail-oriented MERN Stack Developer.";
+const phone = "+911234567890";
+const contactHref = "/contact";
+const socialLinks: SocialLink[] = [
+    { href: "https://github.com/SumitSonawane2711", label: "GitHub", icon: <IconBrandGithub className="h-4 w-4" /> },
+    { href: "https://in.linkedin.com/in/sumit-sonawane-2b504b219", label: "LinkedIn", icon: <IconBrandLinkedin className="h-4 w-4" /> },
+];
 
-export const Profile = ({
-    imageSrc,
-    name,
-    role,
-    experienceYears,
-    summary,
-    phone,
-    contactHref = "/contact",
-    socialLinks = [],
-}: ProfileProps) => {
-    const pathname = usePathname();
-    const router = useRouter();
-    const isHome = pathname === "/";
+export const Profile = () => {
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const onOpenProfile = () => setOpen(true);
+
+        window.addEventListener("open-profile", onOpenProfile);
+        return () => window.removeEventListener("open-profile", onOpenProfile);
+    }, []);
 
     // Esc to close + lock body scroll while the popup is open
     useEffect(() => {
@@ -54,32 +48,8 @@ export const Profile = ({
         };
     }, [open]);
 
-    const handleClick = () => {
-        if (isHome) {
-            setOpen(true);
-        } else {
-            router.push("/");
-        }
-    };
-
     return (
         <>
-            <button
-                type="button"
-                onClick={handleClick}
-                aria-label={isHome ? `Open ${name}'s profile` : "Go to homepage"}
-                className="shrink-0 rounded-full transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
-            >
-                <Image
-                    className="h-10 w-10 rounded-full object-cover"
-                    src={imageSrc}
-                    height={188}
-                    width={188}
-                    alt={`${name} avatar`}
-                    priority
-                />
-            </button>
-
             <AnimatePresence>
                 {open && (
                     <>
@@ -119,17 +89,17 @@ export const Profile = ({
 
                                 <div className="flex flex-col items-center text-center">
                                     <Image
-                                        src={imageSrc}
+                                        src={'/profile.png'}
                                         height={140}
                                         width={140}
-                                        alt={`${name} avatar`}
+                                        alt="Profile avatar"
                                         className="h-28 w-28 rounded-full object-cover ring-4 ring-neutral-100 dark:ring-neutral-800 sm:h-32 sm:w-32"
                                     />
 
                                     <h2 className="mt-4 text-xl font-semibold sm:text-2xl">{name}</h2>
 
                                     <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400">
-                                        {role} · {experienceYears}+ {experienceYears === 1 ? "year" : "years"} experience
+                                         {experienceYears}+ {experienceYears === 1 ? "year" : "years"} experience
                                     </p>
 
                                     <p className="mt-3 text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">

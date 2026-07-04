@@ -8,28 +8,39 @@ export const ContactForm = () => {
         email: '',
         message: ''
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("submit clicked");
 
-        const {name,email,message} = formData;
+        const { name, email, message } = formData;
 
-        if(!name || !email || !message) {
+        if (!name || !email || !message) {
             toast.error("Please fill all the fields");
             return;
         }
 
+        setIsSubmitting(true);
+
         try {
-            await new Promise((resolve) => {
-                setTimeout(() => {
-                resolve("api call resolved");
-                }, 1000)
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
             });
-            toast.success("Message sent successfully");
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data?.error || "Something went wrong");
+            }
+
+            toast.success(data.message || "Message sent successfully");
             setFormData({ name: '', email: '', message: '' });
-        } catch {
-            toast.error("Something went wrong");
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : "Something went wrong");
+        } finally {
+            setIsSubmitting(false);
         }
     }
 
@@ -38,7 +49,7 @@ export const ContactForm = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-lg flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md dark:border-neutral-800 dark:bg-neutral-900">
+        <form onSubmit={handleSubmit} className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-900">
             <div className='flex flex-col gap-2'>
                 <label
                     htmlFor='name'
@@ -85,8 +96,12 @@ export const ContactForm = () => {
                     required
                 />
             </div>
-            <button type="submit" className="rounded-md bg-primary px-4 py-2 text-white shadow-md transition-colors hover:bg-neutral-700 dark:text-neutral-950 dark:hover:bg-neutral-300">
-                Send Message
+            <button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-md bg-primary px-4 py-2 text-white shadow-md transition-colors hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-neutral-950 dark:hover:bg-neutral-300"
+            >
+                {isSubmitting ? "Sending..." : "Send Message"}
             </button>
 
         </form>

@@ -42,7 +42,7 @@ export default async function SingleBlogpage({
 
     return (
         <main className="min-h-screen flex items-start justify-start ">
-            <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
+            <Container className="min-h-screen p-4 pt-20 md:pb-10">
                 <Image
                     src={frontmatter.image || "/blog.jpg"}
                     alt={frontmatter.title}

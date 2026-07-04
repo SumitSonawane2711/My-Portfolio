@@ -1,11 +1,14 @@
 'use client'
-import Image from 'next/image'
 import React from 'react'
 import { motion } from 'motion/react'
 import { Project, projects as defaultProjects } from '../constants/projects'
 import { SectionHeading } from './section-heading'
 import Link from 'next/link'
-import { SubHeading } from './subheading'
+import { TechIconGroup } from './tech-icons'
+
+const truncate = (str: string, n: number) => {
+        return str.length > n ? str.substring(0, n) + '...' : str;
+    }
 
 export const Projects = ({ projects = defaultProjects }: { projects: Project[] }) => {
 
@@ -26,7 +29,7 @@ export const Projects = ({ projects = defaultProjects }: { projects: Project[] }
                                 ease: 'easeInOut'
                             }}
                             key={project.title}
-                            className=' group rounded-lg shadow-lg transition duration-200 hover:scale-105'
+                            className=' group rounded-lg shadow-lg transition duration-200 hover:scale-105 dark:border-neutral-800 dark:bg-neutral-950'
                         >
 
 
@@ -40,9 +43,18 @@ export const Projects = ({ projects = defaultProjects }: { projects: Project[] }
                             <div className='p-4'>
                                 <h2 className='max-w-lg pt-4 text-sm font-semibold text-primary md:text-base'>{project.title}</h2>
                                  <p className='shrink-0 text-sm py-2 text-secondary'>
-                                {project.dateFrom} - {project.dateTo}
+                                {project.date} 
                             </p>
-                                <p className='max-w-lg text-sm font-normal text-secondary md:text-sm'>{project.description}</p>
+                            {project.technologies && (
+                                <div className='mt-4'>
+                                    <TechIconGroup
+                                        technologies={project.technologies}
+                                        iconClassName='h-4 w-4'
+                                        itemClassName='inline-flex h-8 w-8 items-center justify-center rounded-md border border-neutral-200 bg-white shadow-sm transition-transform group-hover:scale-105 dark:border-neutral-800 dark:bg-neutral-900'
+                                    />
+                                </div>
+                            )}
+                                <p className='mt-4 max-w-lg text-sm font-normal text-secondary md:text-sm'>{truncate(project.description, 150)}</p>
                             </div>
                           
                         </motion.div>
