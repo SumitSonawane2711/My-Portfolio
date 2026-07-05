@@ -11,8 +11,8 @@ type DownloadResumeProps = {
 };
 
 export const DownloadResume = ({
-    fileUrl = "/resume.pdf",
-    fileName = "resume.pdf",
+    fileUrl = "/Sumit_Resume_2026.pdf",
+    fileName = "Sumit_Resume_2026.pdf",
     label = "Resume",
     className,
 }: DownloadResumeProps) => {
