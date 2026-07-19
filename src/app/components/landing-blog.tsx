@@ -28,7 +28,7 @@ export const Landingblog = async () => {
                     <Link
                         href={`/blog/${blog.slug}`}
                         key={blog.slug}
-                        className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/70"
+                        className="block rounded-lg border border-neutral-200 bg-white p-4 shadow-sm transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-900/70"
                     >
                         <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
                             <h3 className="text-base font-semibold tracking-tight text-primary">

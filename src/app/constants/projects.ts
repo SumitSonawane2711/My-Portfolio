@@ -10,17 +10,17 @@ export type Project = {
 }
 
 export const projects: Project[] = [
-    //    {
-    //         title: "Enterprise Document Management System",
-    //         subtitle: "Enterprise Document Management Platform | In Progress",
-    //         slug: "enterprise-document-management-system",
-    //         src: "/blog.jpg",
-    //         description: "A secure enterprise platform that digitizes employee document management by centralizing HR records, automating document workflows, and providing role-based access for secure storage, retrieval, and lifecycle management.",
-    //         href: '#',
-    //         date: "July 2026",
-    //         technologies: ["React", "Adonis.js","PostgreSQL", "TypeScript"],
+       {
+            title: "Enterprise Document Management System",
+            subtitle: "Enterprise Document Management Platform | In Progress",
+            slug: "enterprise-document-management-system",
+            src: "/blog.jpg",
+            description: "A secure enterprise platform that digitizes employee document management by centralizing HR records, automating document workflows, and providing role-based access for secure storage, retrieval, and lifecycle management.",
+            href: '#',
+            date: "July 2026",
+            technologies: ["React", "Adonis.js","PostgreSQL", "TypeScript"],
 
-    //     },
+        },
         {
             title: "PetExpress | Multi-Portal Pet-Care Rewards Platform",
             subtitle: "multi-portal pet-care rewards platform",
