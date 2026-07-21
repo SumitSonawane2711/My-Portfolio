@@ -13,8 +13,8 @@ export default function Home() {
       <Profile />
       <Container className="min-h-screen p-4 pt-10 md:pt-20 md:pb-10">
        <Hero />
-        <ProfessionalExperience />
         <Projects projects={projects.slice(0, 3)} />
+        <ProfessionalExperience />
         <Landingblog />
         {/* <Testimonials /> */}
       </Container>

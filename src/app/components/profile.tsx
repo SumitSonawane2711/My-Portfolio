@@ -120,7 +120,7 @@ export const Profile = () => {
                                                 {link.icon}
                                             </a>
                                         ))}
-<DownloadResume />
+{/* <DownloadResume /> */}
 
                                     </div>
                                 )}

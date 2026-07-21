@@ -2,7 +2,6 @@ import Link from "next/link"
 import { Heading } from "./heading"
 import { SubHeading } from "./subheading"
 import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react"
-import { DownloadResume } from "./download-resume"
 
 export const Hero = async () => {
     return (
@@ -19,7 +18,7 @@ export const Hero = async () => {
                 <Link href="https://in.linkedin.com/in/sumit-sonawane-2b504b219">
                     <IconBrandLinkedin className="size-5 text-secondary hover:text-primary" />
                 </Link>
-                <DownloadResume />
+                {/* <DownloadResume /> */}
             </div>     
         </section>
     )
