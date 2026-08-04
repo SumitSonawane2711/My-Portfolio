@@ -16,7 +16,7 @@ export const professionalExperience: ProfessionalExperience[] = [
         slug: "rwaltz-software",
         url: "https://www.rwaltz.com/",
         technologies: ["React", "Node.js", "Adonis.js", "MySQL","MongoDB","PostgreSQL", "TypeScript", "Tailwind CSS"],
-        dateFrom: "Nov 2025",
+        dateFrom: "Aug 2025",
         dateTo: "Present",
         description: "As a Software Developer at Rwaltz Software, Built and integrated secure RESTful APIs, authentication, and Role-Based Access Control (RBAC) using Node.js, Express.js, and Adonis.js. Collaborated with cross-functional teams in Agile sprints to deliver end-to-end features, optimize application performance, and ensure code quality through reviews and best practices.",
     },
@@ -27,7 +27,7 @@ export const professionalExperience: ProfessionalExperience[] = [
         url: "https://sinss.in/",
         technologies: ["React", "Next.js", "TypeScript", "WordPress", "Shopify", "Tailwind CSS", "JavaScript", "HTML", "CSS"],
         dateFrom: "Feb 2025",
-        dateTo: "Nov 2025",
+        dateTo: "July 2025",
         description: "Developing and delivering responsive websites and web applications using Next.js, React.js, TypeScript, WordPress, Shopify, and other modern web technologies. My role involves collaborating directly with clients to understand business requirements, translating them into intuitive and high-performing digital solutions, and ensuring seamless execution from development to deployment. I focus on creating scalable, user-centric applications with strong emphasis on UI/UX, performance, SEO, and maintainability.",
     },
         {
