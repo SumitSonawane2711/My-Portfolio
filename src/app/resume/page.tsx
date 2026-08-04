@@ -15,8 +15,8 @@ export default function ResumePage() {
         </Link>
 
         <a
-          href="/Sumit_Resume_2026.pdf"
-          download="Sumit_Resume_2026.pdf"
+          href="/CV_Sumit_Sonawane_2026.pdf"
+          download="CV_Sumit_Sonawane_2026.pdf"
           className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
         >
           <IconDownload className="h-4 w-4" />
@@ -26,7 +26,7 @@ export default function ResumePage() {
 
       <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
         <iframe
-          src="/Sumit_Resume_2026.pdf"
+          src="/CV_Sumit_Sonawane_2026.pdf"
           title="Sumit Resume Preview"
           className="h-[80vh] w-full"
         />
