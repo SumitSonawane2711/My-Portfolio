@@ -5,6 +5,7 @@ import { Project, projects as defaultProjects } from '../constants/projects'
 import { SectionHeading } from './section-heading'
 import Link from 'next/link'
 import { TechIconGroup } from './tech-icons'
+import Image from 'next/image'
 
 const truncate = (str: string, n: number) => {
         return str.length > n ? str.substring(0, n) + '...' : str;
@@ -33,13 +34,13 @@ export const Projects = ({ projects = defaultProjects }: { projects: Project[] }
                         >
 
 
-                            {/* <Image
-                                src={project.src}
+                            <Image
+                                src={project.src[0]}
                                 alt={project.title}
-                                height={500}
+                                height={300}
                                 width={500}
-                                className='h-54 w-full rounded-t-xl object-cover  transition duration-200'
-                            /> */}
+                                className=' w-full rounded-t-xl object-cover  transition duration-200'
+                            />
                             <div className='p-4'>
                                 <h2 className='max-w-lg pt-4 text-sm font-semibold text-primary md:text-base'>{project.title}</h2>
                                  <p className='shrink-0 text-sm py-2 text-secondary'>
