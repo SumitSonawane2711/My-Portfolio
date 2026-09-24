@@ -1,0 +1,10 @@
+.next/
+out/
+build/
+coverage/
+node_modules/
+package-lock.json
+public/
+next-env.d.ts
+# Written content — keep authored formatting as-is.
+src/data/

@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sumit Sonawane — Portfolio
 
-## Getting Started
+Personal portfolio built with Next.js (App Router), Tailwind CSS v4 and MDX.
 
-First, run the development server:
+## Getting started
+
+Requires Node.js 22.22.1 or newer.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install          # also installs the git hooks (husky)
+cp .env.example .env # then fill in the Gmail values for the contact form
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+There is a single environment file, `.env`. See `.env.example` for every variable.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script                 | What it does                     |
+| ---------------------- | -------------------------------- |
+| `npm run dev`          | Start the dev server (Turbopack) |
+| `npm run build`        | Production build                 |
+| `npm run start`        | Serve the production build       |
+| `npm run lint`         | ESLint (`lint:fix` to auto-fix)  |
+| `npm run format`       | Format everything with Prettier  |
+| `npm run format:check` | Check formatting without writing |
+| `npm run typecheck`    | TypeScript type check            |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/        # Routes only — thin page.tsx files and the /api/contact route handler
+├── features/   # One folder per domain: components/, services/, interfaces/, constants/
+├── shared/     # Cross-feature code: components/, configs/, constants/, libs/
+└── data/       # MDX content (blogs, projects, professional experience)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Import across folders with the `@/` alias (e.g. `@/shared/components/Container`).
+ESLint rejects deep relative imports like `../../`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Commits and CI
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
+  (`feat: ...`, `fix(contact): ...`), enforced by commitlint on `commit-msg`.
+- `pre-commit` runs ESLint and Prettier on staged files through lint-staged.
+- GitHub Actions (`.github/workflows/ci.yml`) runs on pushes and PRs to `main`:
+  commit lint (PRs), lint, format check, typecheck, build.

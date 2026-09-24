@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { Navbar } from "./components/navbar";
-import { Footer } from "./components/navbar/footer";
-import { Toaster } from "sonner";
-import { ThemeProvider } from "next-themes";
+import { Navbar } from "@/shared/components/Navbar";
+import { Footer } from "@/shared/components/Footer";
+import { AppProviders } from "@/shared/components/providers";
 
 const inter = Inter({
   weight: ["400", "500", "600", "700", "800", "900"],
@@ -25,14 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} bg-neutral-100 font-sans antialiased text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100`}
+        className={`${inter.variable} bg-neutral-100 font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-          <Toaster position="top-center" />
+        <AppProviders>
           <Navbar />
           {children}
           <Footer />
-        </ThemeProvider>
+        </AppProviders>
       </body>
     </html>
   );
