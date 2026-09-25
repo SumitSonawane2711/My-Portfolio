@@ -8,3 +8,6 @@ public/
 next-env.d.ts
 # Written content — keep authored formatting as-is.
 src/data/
+src/generated/
+prisma/migrations/
+local-docs/

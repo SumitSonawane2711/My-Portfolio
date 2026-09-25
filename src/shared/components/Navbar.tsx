@@ -9,7 +9,7 @@ import {
   useMotionValueEvent,
   useScroll,
   useTransform,
-} from "framer-motion";
+} from "motion/react";
 import { ToggleButton } from "./ThemeToggle";
 import { HamburgerButton } from "./HamburgerButton";
 import { NAV_ITEMS } from "@/shared/constants/nav";

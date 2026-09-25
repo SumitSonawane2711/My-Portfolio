@@ -1,26 +1,17 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { defineConfig, globalIgnores } from "eslint/config";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import prettierConfig from "eslint-config-prettier/flat";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// eslint-config-next 15 only ships legacy (eslintrc) configs, so FlatCompat
-// bridges them into flat config. Run via the ESLint CLI (`npm run lint`) —
-// `next lint` is deprecated and removed in Next.js 16.
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  {
-    ignores: [".next/**", "out/**", "build/**", "coverage/**", "next-env.d.ts"],
-  },
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+const eslintConfig = defineConfig([
+  ...nextVitals,
+  ...nextTs,
   {
     rules: {
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      ],
       "no-console": ["warn", { allow: ["warn", "error"] }],
       // Use the `@/` alias for anything outside the current folder's parent
       // (e.g. "@/shared/components/Container", not "../../shared/...").
@@ -37,8 +28,22 @@ const eslintConfig = [
       ],
     },
   },
+  {
+    // Scripts run outside Next.js and log their progress.
+    files: ["scripts/**", "prisma/**"],
+    rules: { "no-console": "off" },
+  },
   // Last, so it switches off any stylistic rules that would fight Prettier.
   prettierConfig,
-];
+  globalIgnores([
+    ".next/**",
+    "out/**",
+    "build/**",
+    "coverage/**",
+    "next-env.d.ts",
+    "src/generated/**",
+    "prisma/migrations/**",
+  ]),
+]);
 
 export default eslintConfig;
