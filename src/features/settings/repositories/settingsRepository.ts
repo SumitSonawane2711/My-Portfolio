@@ -9,14 +9,20 @@ const withMedia = {
 } satisfies Prisma.SiteSettingsInclude;
 
 export const settingsRepository = {
-  /** The single settings row (id 1), created on first read. */
-  get() {
-    return db.siteSettings.upsert({
-      where: { id: 1 },
-      create: { id: 1 },
-      update: {},
-      include: withMedia,
-    });
+  /**
+   * The single settings row (id 1). A plain read on every page; the row is only
+   * created on the very first call (an upsert here would run a transaction per read).
+   */
+  async get() {
+    return (
+      (await db.siteSettings.findUnique({ where: { id: 1 }, include: withMedia })) ??
+      db.siteSettings.upsert({
+        where: { id: 1 },
+        create: { id: 1 },
+        update: {},
+        include: withMedia,
+      })
+    );
   },
 
   update(data: Prisma.SiteSettingsUpdateInput) {
