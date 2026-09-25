@@ -10,7 +10,9 @@ import { db, summary, type ImportContext } from "./importers/shared";
 type Importer = (ctx: ImportContext) => Promise<void>;
 
 // Order matters: later importers connect to rows created by earlier ones.
-const importers: Record<string, () => Promise<Importer>> = {};
+const importers: Record<string, () => Promise<Importer>> = {
+  technologies: async () => (await import("./importers/technologies")).importTechnologies,
+};
 
 async function main() {
   const args = process.argv.slice(2);
