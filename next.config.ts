@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
     // Long posts send their editor HTML through a server action.
     serverActions: { bodySizeLimit: "2mb" },
   },
+
+  async redirects() {
+    return [
+      // The resume used to be a static file; old links now get the current
+      // primary resume (and are counted).
+      { source: "/CV_Sumit_Sonawane_2026.pdf", destination: "/resume/download", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

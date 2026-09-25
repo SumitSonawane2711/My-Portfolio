@@ -1,9 +1,18 @@
 import Link from "next/link";
 import { IconDownload, IconArrowLeft } from "@tabler/icons-react";
 import { Container } from "@/shared/components/Container";
-import { RESUME } from "@/shared/constants/site";
+import type { PublicResume } from "../interfaces/resume";
+import { ResumeSelector } from "./ResumeSelector";
 
-export const ResumePage = () => {
+type ResumePageProps = {
+  resume: PublicResume;
+  /** Active resumes to switch between (the selector shows when there are 2+). */
+  options: PublicResume[];
+};
+
+// Same layout as before (back link, download button, PDF preview), now for
+// whichever resume is selected. Downloads go through a counting route.
+export const ResumePage = ({ resume, options }: ResumePageProps) => {
   return (
     <Container className="min-h-screen py-8">
       <div className="mb-6 flex items-center justify-between gap-3">
@@ -16,8 +25,7 @@ export const ResumePage = () => {
         </Link>
 
         <a
-          href={RESUME.fileUrl}
-          download={RESUME.fileName}
+          href={resume.downloadPath}
           className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
         >
           <IconDownload className="h-4 w-4" />
@@ -25,8 +33,16 @@ export const ResumePage = () => {
         </a>
       </div>
 
+      {options.length > 1 && <ResumeSelector options={options} selected={resume.slug} />}
+      {resume.description && <p className="mb-4 text-sm text-secondary">{resume.description}</p>}
+
       <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
-        <iframe src={RESUME.fileUrl} title="Sumit Resume Preview" className="h-[80vh] w-full" />
+        <iframe
+          key={resume.slug}
+          src={resume.viewUrl}
+          title={`${resume.title} resume preview`}
+          className="h-[80vh] w-full"
+        />
       </div>
     </Container>
   );
