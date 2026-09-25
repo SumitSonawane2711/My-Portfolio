@@ -1,12 +1,10 @@
-import { getSortedBlogs } from "../services/blogServices";
 import Link from "next/link";
 import React from "react";
 import { SectionHeading } from "@/shared/components/SectionHeading";
 import { formatDate, truncate } from "@/shared/libs/format";
+import type { BlogCard } from "../interfaces/blog";
 
-export const LandingBlog = async () => {
-  const allblogs = (await getSortedBlogs()).slice(0, 3);
-
+export const LandingBlog = ({ posts }: { posts: BlogCard[] }) => {
   return (
     <section className="py-10">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -19,7 +17,7 @@ export const LandingBlog = async () => {
         </Link>
       </div>
       <div className="mt-6 flex flex-col gap-3">
-        {allblogs.map((blog) => (
+        {posts.map((blog) => (
           <Link
             href={`/blog/${blog.slug}`}
             key={blog.slug}
@@ -27,12 +25,10 @@ export const LandingBlog = async () => {
           >
             <div className="flex flex-col gap-1 md:flex-row md:items-start md:justify-between">
               <h3 className="text-base font-semibold tracking-tight text-primary">{blog.title}</h3>
-              <p className="shrink-0 text-sm text-secondary">{formatDate(blog.date)}</p>
+              <p className="shrink-0 text-sm text-secondary">{formatDate(blog.publishedAt)}</p>
             </div>
 
-            <p className="max-w-2xl pt-2 text-sm text-secondary">
-              {truncate(blog.description || "", 150)}
-            </p>
+            <p className="max-w-2xl pt-2 text-sm text-secondary">{truncate(blog.excerpt, 150)}</p>
           </Link>
         ))}
       </div>

@@ -7,15 +7,17 @@ import { getExperiences } from "@/features/experience/queries/experienceQueries"
 import { getSettings } from "@/features/settings/queries/settingsQueries";
 import { Testimonials } from "@/features/testimonials/components/Testimonials";
 import { getVisibleTestimonials } from "@/features/testimonials/queries/testimonialQueries";
+import { getLatestPosts } from "@/features/blog/queries/blogQueries";
 import { Hero } from "./Hero";
 import { Profile } from "./Profile";
 
 export const HomePage = async () => {
-  const [projects, experience, settings, testimonials] = await Promise.all([
+  const [projects, experience, settings, testimonials, posts] = await Promise.all([
     getHomeProjects(3),
     getExperiences(),
     getSettings(),
     getVisibleTestimonials(),
+    getLatestPosts(3),
   ]);
 
   return (
@@ -25,7 +27,7 @@ export const HomePage = async () => {
         <Hero />
         <Projects projects={projects} />
         <ProfessionalExperience experience={experience} />
-        <LandingBlog />
+        <LandingBlog posts={posts} />
         {testimonials.length > 0 && <Testimonials items={testimonials} />}
       </Container>
     </main>

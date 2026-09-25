@@ -3,20 +3,33 @@ import { Container } from "@/shared/components/Container";
 import { Heading } from "@/shared/components/Heading";
 import { SubHeading } from "@/shared/components/SubHeading";
 import { formatDate, truncate } from "@/shared/libs/format";
-import { getSortedBlogs } from "../services/blogServices";
+import type { BlogCard, TagRef } from "../interfaces/blog";
 
-export const BlogListPage = async () => {
-  const allblogs = await getSortedBlogs();
+type BlogListPageProps = {
+  posts: BlogCard[];
+  /** Set on /blog/tag/[tag]. */
+  tag?: TagRef;
+};
 
+export const BlogListPage = ({ posts, tag }: BlogListPageProps) => {
   return (
     <main className="flex min-h-screen items-start justify-start">
       <Container className="min-h-screen p-4 pt-20 md:pb-10">
-        <Heading>Writing</Heading>
+        <Heading>{tag ? `#${tag.name}` : "Writing"}</Heading>
         <SubHeading>
-          A collection of my thoughts, insights, and experiences of my journey in development.
+          {tag ? (
+            <>
+              Posts tagged {tag.name}.{" "}
+              <Link href="/blog" className="font-medium text-primary">
+                All posts
+              </Link>
+            </>
+          ) : (
+            "A collection of my thoughts, insights, and experiences of my journey in development."
+          )}
         </SubHeading>
         <div className="mt-10 flex flex-col gap-4">
-          {allblogs.map((blog) => (
+          {posts.map((blog) => (
             <Link
               href={`/blog/${blog.slug}`}
               key={blog.slug}
@@ -26,12 +39,10 @@ export const BlogListPage = async () => {
                 <h2 className="text-base font-semibold tracking-tight text-primary">
                   {blog.title}
                 </h2>
-                <p className="shrink-0 text-sm text-secondary">{formatDate(blog.date)}</p>
+                <p className="shrink-0 text-sm text-secondary">{formatDate(blog.publishedAt)}</p>
               </div>
 
-              <p className="max-w-2xl pt-2 text-sm text-secondary">
-                {truncate(blog.description || "", 180)}
-              </p>
+              <p className="max-w-2xl pt-2 text-sm text-secondary">{truncate(blog.excerpt, 180)}</p>
             </Link>
           ))}
         </div>
