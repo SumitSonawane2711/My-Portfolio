@@ -13,7 +13,16 @@ export { db };
 
 export type ImportContext = {
   dryRun: boolean;
+  /** Replace rows that already exist (default: keep them — they may have been edited in the dashboard). */
+  overwrite: boolean;
 };
+
+/** True (and logged) when an existing row must be kept because --overwrite was not given. */
+export function skipExisting(ctx: ImportContext, existed: boolean, label: string) {
+  if (!existed || ctx.overwrite) return false;
+  log.skipped(label, "already exists — use --overwrite to replace it");
+  return true;
+}
 
 type Summary = { created: number; updated: number; skipped: number; errors: number };
 
@@ -49,6 +58,7 @@ export async function reportUpsert(
 ) {
   try {
     const existed = await exists();
+    if (skipExisting(ctx, existed, label)) return;
     if (!ctx.dryRun) await write();
     if (existed) log.updated(label);
     else log.created(label);
@@ -141,7 +151,9 @@ export async function readMarkdown<T = Record<string, unknown>>(
 ): Promise<MarkdownFile<T>> {
   const source = await readFile(file, "utf8");
   const { data, content } = matter(source);
-  if (/^(import|export)\s/m.test(content) || /<[A-Z][A-Za-z]*[\s/>]/.test(content)) {
+  // Code samples inside ``` fences are plain text, not MDX syntax.
+  const prose = content.replace(/^(```|~~~)[\s\S]*?^\1/gm, "");
+  if (/^(import|export)\s/m.test(prose) || /<[A-Z][A-Za-z]*[\s/>]/.test(prose)) {
     throw new Error("contains MDX-only syntax (import/export or JSX) — convert it by hand");
   }
   const rawHtml = await marked.parse(content);

@@ -7,7 +7,7 @@ package-lock.json
 public/
 next-env.d.ts
 # Written content — keep authored formatting as-is.
-src/data/
+scripts/legacy-content/
 src/generated/
 prisma/migrations/
 local-docs/

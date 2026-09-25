@@ -2,7 +2,14 @@ import { existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import type { Prisma } from "@/generated/prisma/client";
-import { db, log, readMarkdown, registerLocalFile, type ImportContext } from "./shared";
+import {
+  db,
+  log,
+  readMarkdown,
+  registerLocalFile,
+  skipExisting,
+  type ImportContext,
+} from "./shared";
 
 // Snapshot of the old features/projects/constants/projects.ts (deleted after
 // this importer was written). Order = display order on the site.
@@ -44,7 +51,7 @@ const PROJECTS = [
   },
 ];
 
-const MDX_DIR = path.join(process.cwd(), "src/data/projects");
+const MDX_DIR = path.join(process.cwd(), "scripts/legacy-content/projects");
 
 async function technologyIds(names: string[]) {
   const techs = await db.technology.findMany({
@@ -66,6 +73,7 @@ async function upsertProject(
 ) {
   try {
     const existing = await db.project.findUnique({ where: { slug }, select: { id: true } });
+    if (skipExisting(ctx, Boolean(existing), label)) return;
     if (!ctx.dryRun) {
       await db.$transaction(async (tx) => {
         if (existing) await tx.projectImage.deleteMany({ where: { projectId: existing.id } });

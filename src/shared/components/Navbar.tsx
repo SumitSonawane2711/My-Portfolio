@@ -70,14 +70,20 @@ export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
           }
           className="shrink-0 rounded-full transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none"
         >
-          <CloudImage
-            className="h-10 w-10 rounded-full object-cover"
-            publicId={avatarPublicId ?? "/profile.png"}
-            height={188}
-            width={188}
-            alt="Profile avatar"
-            priority
-          />
+          {avatarPublicId ? (
+            <CloudImage
+              className="h-10 w-10 rounded-full object-cover"
+              publicId={avatarPublicId}
+              height={188}
+              width={188}
+              alt="Profile avatar"
+              priority
+            />
+          ) : (
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 text-sm font-semibold dark:bg-neutral-800">
+              {name.charAt(0) || "?"}
+            </span>
+          )}
         </button>
         <div className="flex items-center gap-1 md:gap-2">
           {NAV_ITEMS.map((item, idx) => (

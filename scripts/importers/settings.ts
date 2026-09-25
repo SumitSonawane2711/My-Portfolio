@@ -1,5 +1,5 @@
 import type { Prisma } from "@/generated/prisma/client";
-import { db, log, registerLocalFile, type ImportContext } from "./shared";
+import { db, log, registerLocalFile, skipExisting, type ImportContext } from "./shared";
 
 // Values from the old shared/constants/site.ts, Hero.tsx and the root layout
 // metadata. "2+ years" becomes "{years}+ years" so it stays current
@@ -23,6 +23,7 @@ export async function importSettings(ctx: ImportContext) {
   try {
     const avatarId = await registerLocalFile(ctx, "/profile.png", "Sumit Sonawane");
     const existing = await db.siteSettings.findUnique({ where: { id: 1 } });
+    if (skipExisting(ctx, Boolean(existing), "site settings")) return;
     const data = {
       ...SETTINGS,
       socials: SETTINGS.socials as Prisma.InputJsonValue,

@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Removed once the MDX content has moved to the database (guide Part 16).
-  transpilePackages: ["next-mdx-remote"],
-
   devIndicators: false,
 
   images: {
@@ -24,6 +21,12 @@ const nextConfig: NextConfig = {
       // The resume used to be a static file; old links now get the current
       // primary resume (and are counted).
       { source: "/CV_Sumit_Sonawane_2026.pdf", destination: "/resume/download", permanent: true },
+      // Blog slugs now come from cleaned-up file names.
+      {
+        source: "/blog/Adopting-AI-Agents.",
+        destination: "/blog/adopting-ai-agents",
+        permanent: true,
+      },
     ];
   },
 };

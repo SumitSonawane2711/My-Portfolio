@@ -1,4 +1,4 @@
-import { db, log, type ImportContext } from "./shared";
+import { db, log, skipExisting, type ImportContext } from "./shared";
 
 // Snapshot of the old features/experience/constants/professional-experience.ts.
 // The commented-out Paarsh Infotech entry is imported unpublished (hidden, as before).
@@ -84,6 +84,7 @@ export async function importExperience(ctx: ImportContext) {
         log.info(`${item.slug}: some technologies not found`);
 
       const existing = await db.experience.findUnique({ where: { slug: item.slug } });
+      if (skipExisting(ctx, Boolean(existing), label)) continue;
       const data = {
         company: item.company,
         role: item.role,

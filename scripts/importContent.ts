@@ -4,6 +4,9 @@
 //   npm run content:import -- --only=projects --dry-run
 //   npm run content:import -- --only=technologies,projects
 //   npm run content:import                    (everything, in dependency order)
+//   npm run content:import -- --overwrite      (also replace rows that already exist)
+//
+// Existing rows are skipped by default so dashboard edits are never lost.
 import "dotenv/config";
 import { db, summary, type ImportContext } from "./importers/shared";
 
@@ -16,6 +19,7 @@ const importers: Record<string, () => Promise<Importer>> = {
   projects: async () => (await import("./importers/projects")).importProjects,
   experience: async () => (await import("./importers/experience")).importExperience,
   resumes: async () => (await import("./importers/resumes")).importResumes,
+  blog: async () => (await import("./importers/blog")).importBlog,
   // Last: moves everything imported from /public to Cloudinary (needs valid keys).
   "upload-local-media": async () => (await import("./importers/localMedia")).uploadLocalMedia,
 };
@@ -23,6 +27,7 @@ const importers: Record<string, () => Promise<Importer>> = {
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
+  const overwrite = args.includes("--overwrite");
   const onlyArg = args.find((a) => a.startsWith("--only="));
   // upload-local-media talks to Cloudinary, so it only runs when named explicitly.
   const only = onlyArg
@@ -42,7 +47,7 @@ async function main() {
     if (!only.includes(name)) continue;
     console.log(`▶ ${name}`);
     const run = await importers[name]();
-    await run({ dryRun });
+    await run({ dryRun, overwrite });
   }
 
   console.log(

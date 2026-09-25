@@ -1,4 +1,4 @@
-import { db, log, registerLocalFile, type ImportContext } from "./shared";
+import { db, log, registerLocalFile, skipExisting, type ImportContext } from "./shared";
 
 // The single resume that was in /public (moved to /files/resumes so the old
 // URL can redirect to /resume/download). Becomes the primary ACTIVE resume.
@@ -14,6 +14,7 @@ export async function importResumes(ctx: ImportContext) {
   try {
     const fileId = await registerLocalFile(ctx, RESUME.path);
     const existing = await db.resume.findUnique({ where: { slug: RESUME.slug } });
+    if (skipExisting(ctx, Boolean(existing), label)) return;
     if (!ctx.dryRun) {
       const hasPrimary = (await db.resume.count({ where: { isPrimary: true } })) > 0;
       await db.resume.upsert({
