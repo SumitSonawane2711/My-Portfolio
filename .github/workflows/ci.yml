@@ -60,6 +60,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Unit tests
+        run: npm test
+
       - name: Apply migrations to the CI database
         if: env.DATABASE_URL_UNPOOLED != ''
         run: npx prisma migrate deploy
