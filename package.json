@@ -18,9 +18,12 @@
     "node": ">=22.22.1"
   },
   "dependencies": {
+    "@prisma/adapter-neon": "7.10.0",
+    "@prisma/client": "7.10.0",
     "@tabler/icons-react": "^3.34.1",
     "@tailwindcss/typography": "^0.5.16",
     "clsx": "^2.1.1",
+    "dotenv": "^18.0.3",
     "motion": "^12.23.12",
     "next": "^16.3.6",
     "next-mdx-remote": "^6.0.0",
@@ -30,8 +33,10 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-fast-marquee": "^1.6.5",
+    "server-only": "^0.0.1",
     "sonner": "^2.0.7",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.3",
@@ -44,11 +49,15 @@
     "eslint": "^9",
     "eslint-config-next": "^16.3.6",
     "eslint-config-prettier": "^10.1.8",
+    "gray-matter": "^4.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.1",
+    "marked": "^18.0.14",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "prisma": "7.10.0",
     "tailwindcss": "^4.1.12",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

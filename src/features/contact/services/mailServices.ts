@@ -38,7 +38,7 @@ export const sendContactEmail = async ({ name, email, message }: ContactPayload)
   await transporter.sendMail({
     from: `"${name}" <${env.GMAIL_USER}>`,
     replyTo: email,
-    to: env.CONTACT_RECEIVER_EMAIL,
+    to: env.CONTACT_RECEIVER_EMAIL || env.GMAIL_USER,
     subject: `New portfolio message from ${name}`,
     text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
     html: `
