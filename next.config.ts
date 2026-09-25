@@ -6,9 +6,17 @@ const nextConfig: NextConfig = {
 
   devIndicators: false,
 
+  images: {
+    // A small fixed set of widths → a predictable number of Cloudinary variants.
+    deviceSizes: [640, 960, 1280, 1920],
+    imageSizes: [64, 128, 256, 384],
+  },
+
   experimental: {
     // Two root layouts ((site) and (admin)) → unmatched URLs need a global 404.
     globalNotFound: true,
+    // Long posts send their editor HTML through a server action.
+    serverActions: { bodySizeLimit: "2mb" },
   },
 };
 
