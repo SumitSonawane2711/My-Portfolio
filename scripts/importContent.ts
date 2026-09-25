@@ -11,6 +11,7 @@ type Importer = (ctx: ImportContext) => Promise<void>;
 
 // Order matters: later importers connect to rows created by earlier ones.
 const importers: Record<string, () => Promise<Importer>> = {
+  settings: async () => (await import("./importers/settings")).importSettings,
   technologies: async () => (await import("./importers/technologies")).importTechnologies,
   projects: async () => (await import("./importers/projects")).importProjects,
   experience: async () => (await import("./importers/experience")).importExperience,

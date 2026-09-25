@@ -1,38 +1,26 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconMail,
-  IconPhone,
-  IconX,
-} from "@tabler/icons-react";
-import { SITE, SOCIAL_LINKS } from "@/shared/constants/site";
+import { IconMail, IconPhone, IconX } from "@tabler/icons-react";
+import type { SiteProfile } from "@/features/settings/interfaces/settings";
+import { CloudImage } from "@/shared/components/CloudImage";
+import { SOCIAL_LABELS, SocialIcon, socialHref } from "@/shared/components/SocialIcon";
 
-export type SocialLink = {
-  href: string;
-  label: string;
-  icon: React.ReactNode;
-};
+export type ProfileCardData = Pick<
+  SiteProfile,
+  "name" | "yearsOfExperience" | "summary" | "phone" | "socials" | "avatarPublicId"
+>;
 
-const name = SITE.name;
-const experienceYears: number = SITE.experienceYears;
-const summary = SITE.summary;
-const phone = SITE.phone;
 const contactHref = "/contact";
-const socialLinks: SocialLink[] = [
-  { href: SOCIAL_LINKS.github, label: "GitHub", icon: <IconBrandGithub className="h-4 w-4" /> },
-  {
-    href: SOCIAL_LINKS.linkedin,
-    label: "LinkedIn",
-    icon: <IconBrandLinkedin className="h-4 w-4" />,
-  },
-];
 
-export const Profile = () => {
+export const Profile = ({ profile }: { profile: ProfileCardData }) => {
+  const { name, yearsOfExperience: experienceYears, summary, phone, avatarPublicId } = profile;
+  const socialLinks = profile.socials.map((link) => ({
+    href: socialHref(link),
+    label: SOCIAL_LABELS[link.platform],
+    icon: <SocialIcon platform={link.platform} className="h-4 w-4" />,
+  }));
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -97,13 +85,15 @@ export const Profile = () => {
                 </button>
 
                 <div className="flex flex-col items-center text-center">
-                  <Image
-                    src={"/profile.png"}
-                    height={140}
-                    width={140}
-                    alt="Profile avatar"
-                    className="h-28 w-28 rounded-full object-cover ring-4 ring-neutral-100 sm:h-32 sm:w-32 dark:ring-neutral-800"
-                  />
+                  {avatarPublicId && (
+                    <CloudImage
+                      publicId={avatarPublicId}
+                      height={140}
+                      width={140}
+                      alt="Profile avatar"
+                      className="h-28 w-28 rounded-full object-cover ring-4 ring-neutral-100 sm:h-32 sm:w-32 dark:ring-neutral-800"
+                    />
+                  )}
 
                   <h2 className="mt-4 text-xl font-semibold sm:text-2xl">{name}</h2>
 

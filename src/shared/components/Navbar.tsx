@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import Image from "next/image";
+import { CloudImage } from "./CloudImage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -14,7 +14,12 @@ import { ToggleButton } from "./ThemeToggle";
 import { HamburgerButton } from "./HamburgerButton";
 import { NAV_ITEMS } from "@/shared/constants/nav";
 
-export const Navbar = () => {
+type NavbarProps = {
+  name: string;
+  avatarPublicId: string | null;
+};
+
+export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
   const [hovered, setHovered] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const pathname = usePathname();
@@ -60,12 +65,14 @@ export const Navbar = () => {
         <button
           type="button"
           onClick={handleProfileClick}
-          aria-label={isHome ? "Open Sumit's profile" : "Go to homepage"}
+          aria-label={
+            isHome ? (name ? `Open ${name}'s profile` : "Open profile") : "Go to homepage"
+          }
           className="shrink-0 rounded-full transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none"
         >
-          <Image
+          <CloudImage
             className="h-10 w-10 rounded-full object-cover"
-            src="/profile.png"
+            publicId={avatarPublicId ?? "/profile.png"}
             height={188}
             width={188}
             alt="Profile avatar"

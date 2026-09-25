@@ -1,22 +1,21 @@
-import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import Link from "next/link";
+import type { SocialLink } from "@/features/settings/schemas/settingsSchema";
 import { Container } from "./Container";
-import { SOCIAL_LINKS } from "@/shared/constants/site";
+import { SocialIcon, SOCIAL_LABELS, socialHref } from "./SocialIcon";
 
-export const Footer = () => {
+export const Footer = ({ socials }: { socials: SocialLink[] }) => {
   return (
     <Container className="flex justify-between border-t border-neutral-200 px-2 py-4 dark:border-neutral-800">
       <p className="text-md text-secondary">Build with Love by Sumit</p>
       <div className="flex items-center justify-center gap-4">
-        {/* <Link href="#">
-                <IconBrandX className="size-4 text-secondary hover:text-primary" />
-                </Link> */}
-        <Link href={SOCIAL_LINKS.github}>
-          <IconBrandGithub className="size-4 text-secondary hover:text-primary" />
-        </Link>
-        <Link href={SOCIAL_LINKS.linkedin}>
-          <IconBrandLinkedin className="size-4 text-secondary hover:text-primary" />
-        </Link>
+        {socials.map((link) => (
+          <Link key={link.url} href={socialHref(link)} aria-label={SOCIAL_LABELS[link.platform]}>
+            <SocialIcon
+              platform={link.platform}
+              className="size-4 text-secondary hover:text-primary"
+            />
+          </Link>
+        ))}
       </div>
     </Container>
   );
