@@ -4,15 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { IconArrowUpRight } from "@tabler/icons-react";
-import { professionalExperience as defaultExperience } from "../constants/professional-experience";
-import type { ProfessionalExperience as ProfessionalExperienceType } from "../interfaces/experience";
+import type { ExperienceCard } from "../interfaces/experience";
 import { SectionHeading } from "@/shared/components/SectionHeading";
 
-export const ProfessionalExperience = ({
-  experience = defaultExperience,
-}: {
-  experience?: ProfessionalExperienceType[];
-}) => {
+export const ProfessionalExperience = ({ experience }: { experience: ExperienceCard[] }) => {
   return (
     <section className="py-10">
       <div className="flex items-end justify-between gap-4">
@@ -38,21 +33,31 @@ export const ProfessionalExperience = ({
           >
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div>
-                <Link
-                  href={`${item.url}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-base font-semibold text-primary"
-                >
-                  {item.companyName}
-                  <IconArrowUpRight className="h-4 w-4" />
-                </Link>
+                {item.companyUrl ? (
+                  <Link
+                    href={item.companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-base font-semibold text-primary"
+                  >
+                    {item.company}
+                    <IconArrowUpRight className="h-4 w-4" />
+                  </Link>
+                ) : (
+                  <p className="text-base font-semibold text-primary">{item.company}</p>
+                )}
                 <p className="pt-1 text-sm font-medium text-primary">{item.role}</p>
-                <p className="pt-2 text-sm text-secondary">{item.description}</p>
+                <p className="pt-2 text-sm text-secondary">{item.summary}</p>
+                {item.hasDetails && (
+                  <Link
+                    href={`/professional-experience/${item.slug}`}
+                    className="mt-2 inline-block text-sm font-medium text-primary"
+                  >
+                    Read more
+                  </Link>
+                )}
               </div>
-              <p className="shrink-0 text-sm text-secondary">
-                {item.dateFrom} - {item.dateTo}
-              </p>
+              <p className="shrink-0 text-sm text-secondary">{item.period}</p>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {item.technologies.map((technology) => (

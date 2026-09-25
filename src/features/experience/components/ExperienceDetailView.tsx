@@ -1,34 +1,22 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { IconExternalLink } from "@tabler/icons-react";
 import { Container } from "@/shared/components/Container";
+import { ContentRenderer } from "@/shared/components/ContentRenderer";
 import { Heading } from "@/shared/components/Heading";
-import type { ExperienceFrontmatter, ProfessionalExperience } from "../interfaces/experience";
+import type { ExperienceDetail } from "../interfaces/experience";
 
-type ExperienceDetailViewProps = {
-  experience: ProfessionalExperience;
-  content: ReactNode;
-  frontmatter: ExperienceFrontmatter;
-};
-
-export const ExperienceDetailView = ({
-  experience,
-  content,
-  frontmatter,
-}: ExperienceDetailViewProps) => {
+export const ExperienceDetailView = ({ experience }: { experience: ExperienceDetail }) => {
   return (
     <main className="flex min-h-screen items-start justify-start">
       <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
         <div className="mb-10">
-          <p className="text-sm text-secondary">
-            {frontmatter.dateFrom} - {frontmatter.dateTo}
-          </p>
-          <Heading className="mb-4 text-4xl font-bold">{frontmatter.companyName}</Heading>
+          <p className="text-sm text-secondary">{experience.period}</p>
+          <Heading className="mb-4 text-4xl font-bold">{experience.company}</Heading>
           <p className="mb-3 text-sm font-medium text-primary">{experience.role}</p>
-          <p className="max-w-2xl text-secondary">{frontmatter.description}</p>
-          {frontmatter.url && (
+          <p className="max-w-2xl text-secondary">{experience.summary}</p>
+          {experience.companyUrl && (
             <Link
-              href={frontmatter.url}
+              href={experience.companyUrl}
               target="_blank"
               rel="noreferrer"
               className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary"
@@ -37,9 +25,9 @@ export const ExperienceDetailView = ({
               <IconExternalLink className="h-4 w-4" />
             </Link>
           )}
-          {frontmatter.technologies && (
+          {experience.technologies.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-2">
-              {frontmatter.technologies.map((technology) => (
+              {experience.technologies.map((technology) => (
                 <span
                   key={technology}
                   className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-secondary dark:border-neutral-800"
@@ -50,7 +38,7 @@ export const ExperienceDetailView = ({
             </div>
           )}
         </div>
-        <div className="prose prose-neutral dark:prose-invert">{content}</div>
+        <ContentRenderer html={experience.contentHtml} />
       </Container>
     </main>
   );
