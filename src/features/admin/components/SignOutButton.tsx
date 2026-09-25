@@ -6,7 +6,8 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { authClient } from "@/shared/libs/authClient";
 
-export const SignOutButton = () => {
+/** `compact` renders an icon-only button (mobile top bar). */
+export const SignOutButton = ({ compact = false }: { compact?: boolean }) => {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -16,6 +17,20 @@ export const SignOutButton = () => {
       router.push("/login");
       router.refresh();
     });
+
+  if (compact) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={signOut}
+        disabled={pending}
+        aria-label="Sign out"
+      >
+        <LogOut />
+      </Button>
+    );
+  }
 
   return (
     <Button
