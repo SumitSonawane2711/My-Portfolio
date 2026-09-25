@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import { Inter } from "next/font/google";
+import "../globals.css";
+import { inter } from "@/shared/configs/fonts";
 import { Navbar } from "@/shared/components/Navbar";
 import { Footer } from "@/shared/components/Footer";
 import { AppProviders } from "@/shared/components/providers";
-
-const inter = Inter({
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Full Stack Developer Portfolio",
   description: "Personal portfolio showcasing full stack development work",
 };
 
-export default function RootLayout({
+// Root layout of the public site. The dashboard has its own root layout in
+// app/(admin) so its shadcn theme can't leak into the site (see local-docs guide, Part 6).
+export default function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
