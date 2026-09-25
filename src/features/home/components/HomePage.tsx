@@ -2,17 +2,19 @@ import { Container } from "@/shared/components/Container";
 import { LandingBlog } from "@/features/blog/components/LandingBlog";
 import { Projects } from "@/features/projects/components/Projects";
 import { ProfessionalExperience } from "@/features/experience/components/ProfessionalExperience";
-import { projects } from "@/features/projects/constants/projects";
+import { getHomeProjects } from "@/features/projects/queries/projectQueries";
 import { Hero } from "./Hero";
 import { Profile } from "./Profile";
 
-export const HomePage = () => {
+export const HomePage = async () => {
+  const projects = await getHomeProjects(3);
+
   return (
     <main className="flex min-h-screen items-start justify-start">
       <Profile />
       <Container className="min-h-screen p-4 pt-10 md:pt-20 md:pb-10">
         <Hero />
-        <Projects projects={projects.slice(0, 3)} />
+        <Projects projects={projects} />
         <ProfessionalExperience />
         <LandingBlog />
         {/* <Testimonials /> */}

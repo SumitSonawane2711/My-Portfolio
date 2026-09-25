@@ -1,11 +1,12 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
+import { CloudImage } from "@/shared/components/CloudImage";
 import { AnimatePresence, motion } from "motion/react";
 import { IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { cn } from "@/shared/libs/utils";
 
 type ProjectGalleryProps = {
+  /** Media public ids (Cloudinary, or /public paths for not-yet-uploaded media). */
   images: string[];
   alt: string;
 };
@@ -66,8 +67,8 @@ export const ProjectGallery = ({ images, alt }: ProjectGalleryProps) => {
         onClick={() => openPopup(activeIndex)}
         className="group block w-full cursor-zoom-in overflow-hidden rounded-lg border border-neutral-200 shadow-xl dark:border-neutral-800"
       >
-        <Image
-          src={images[activeIndex]}
+        <CloudImage
+          publicId={images[activeIndex]}
           alt={alt}
           height={500}
           width={900}
@@ -89,8 +90,8 @@ export const ProjectGallery = ({ images, alt }: ProjectGalleryProps) => {
                   : "border-neutral-200 opacity-70 hover:opacity-100 dark:border-neutral-800",
               )}
             >
-              <Image
-                src={image}
+              <CloudImage
+                publicId={image}
                 alt={`${alt} screenshot ${index + 1}`}
                 height={100}
                 width={160}
@@ -142,8 +143,8 @@ export const ProjectGallery = ({ images, alt }: ProjectGalleryProps) => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="relative z-10 max-h-[85vh] max-w-5xl"
             >
-              <Image
-                src={images[activeIndex]}
+              <CloudImage
+                publicId={images[activeIndex]}
                 alt={`${alt} screenshot ${activeIndex + 1}`}
                 height={600}
                 width={1200}

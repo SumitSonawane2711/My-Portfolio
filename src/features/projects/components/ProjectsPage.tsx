@@ -1,9 +1,9 @@
 import { Container } from "@/shared/components/Container";
 import { Heading } from "@/shared/components/Heading";
-import { projects } from "../constants/projects";
+import type { ProjectCard } from "../interfaces/project";
 import { Projects } from "./Projects";
 
-export const ProjectsPage = () => {
+export const ProjectsPage = ({ projects }: { projects: ProjectCard[] }) => {
   return (
     <div className="flex min-h-screen items-start justify-start">
       <Container className="min-h-screen px-10 pt-20 md:pb-10">

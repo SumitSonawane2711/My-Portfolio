@@ -5,7 +5,7 @@ import Image from "next/image";
 import { FileUp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/shared/components/ui/button";
-import { cldUrl } from "@/shared/libs/cloudinaryUrl";
+import { cldUrl, isLocalMedia } from "@/shared/libs/cloudinaryUrl";
 import { useCloudinaryUpload } from "../hooks/useCloudinaryUpload";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
@@ -51,7 +51,7 @@ export const FileUpload = ({ value, onChange, folder, label }: FileUploadProps) 
         }}
       />
       <div className="relative h-24 w-18 shrink-0 overflow-hidden rounded border bg-muted">
-        {value && (
+        {value && !isLocalMedia(value.publicId) && (
           <Image
             src={cldUrl(value.publicId, { page: 1, format: "jpg", width: 144 })}
             alt="First page preview"

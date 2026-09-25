@@ -45,7 +45,8 @@ export const mediaServices = {
     const asset = await mediaRepository.findById(id);
     if (!asset) return;
     await mediaRepository.delete(id);
-    await destroyAsset(asset.publicId, asset.resourceType);
+    // "local" media lives in /public (not yet uploaded) — nothing to delete remotely.
+    if (asset.resourceType !== "local") await destroyAsset(asset.publicId, asset.resourceType);
   },
 
   async releaseManyIfUnused(ids: (string | null | undefined)[]) {
@@ -57,7 +58,7 @@ export const mediaServices = {
     const unused = await mediaRepository.listUnused(new Date(Date.now() - UNUSED_GRACE_MS));
     for (const asset of unused) {
       await mediaRepository.delete(asset.id);
-      await destroyAsset(asset.publicId, asset.resourceType);
+      if (asset.resourceType !== "local") await destroyAsset(asset.publicId, asset.resourceType);
     }
     return unused.length;
   },

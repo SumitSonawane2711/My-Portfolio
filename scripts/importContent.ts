@@ -12,13 +12,19 @@ type Importer = (ctx: ImportContext) => Promise<void>;
 // Order matters: later importers connect to rows created by earlier ones.
 const importers: Record<string, () => Promise<Importer>> = {
   technologies: async () => (await import("./importers/technologies")).importTechnologies,
+  projects: async () => (await import("./importers/projects")).importProjects,
+  // Last: moves everything imported from /public to Cloudinary (needs valid keys).
+  "upload-local-media": async () => (await import("./importers/localMedia")).uploadLocalMedia,
 };
 
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes("--dry-run");
   const onlyArg = args.find((a) => a.startsWith("--only="));
-  const only = onlyArg ? onlyArg.slice("--only=".length).split(",") : Object.keys(importers);
+  // upload-local-media talks to Cloudinary, so it only runs when named explicitly.
+  const only = onlyArg
+    ? onlyArg.slice("--only=".length).split(",")
+    : Object.keys(importers).filter((name) => name !== "upload-local-media");
 
   const unknown = only.filter((name) => !(name in importers));
   if (unknown.length) {

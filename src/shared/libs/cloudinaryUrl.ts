@@ -16,7 +16,15 @@ export type CldOptions = {
 
 const BASE = () => `https://res.cloudinary.com/${clientEnv.cloudinaryCloudName}/image/upload`;
 
+/**
+ * Media imported from /public that hasn't been uploaded to Cloudinary yet is
+ * stored with its site path ("/projects/x.png") as publicId and resourceType
+ * "local" (see scripts/importers/localMedia.ts). Those are served as-is.
+ */
+export const isLocalMedia = (publicId: string) => publicId.startsWith("/");
+
 export function cldUrl(publicId: string, options: CldOptions = {}) {
+  if (isLocalMedia(publicId)) return publicId;
   const { width, height, crop = "limit", quality, page, format } = options;
   const parts = [
     format ? `f_${format}` : "f_auto",
@@ -33,6 +41,7 @@ export function cldUrl(publicId: string, options: CldOptions = {}) {
 // The original file (e.g. a PDF). `downloadName` makes the browser save it
 // instead of opening it, under that file name.
 export function cldFileUrl(publicId: string, format: string, downloadName?: string) {
+  if (isLocalMedia(publicId)) return publicId;
   const flag = downloadName
     ? `fl_attachment:${encodeURIComponent(downloadName.replace(/\.[a-z0-9]+$/i, ""))}/`
     : "";
