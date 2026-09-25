@@ -45,6 +45,24 @@ export const blogRepository = {
     });
   },
 
+  /** Latest visible posts with full HTML, for the RSS feed. */
+  listVisibleForFeed(take: number) {
+    return db.post.findMany({
+      where: visibleWhere(),
+      orderBy: { publishedAt: "desc" },
+      take,
+      select: {
+        title: true,
+        slug: true,
+        excerpt: true,
+        contentHtml: true,
+        publishedAt: true,
+        updatedAt: true,
+        tags: tagSelect,
+      },
+    });
+  },
+
   findVisibleBySlug(slug: string) {
     return db.post.findFirst({ where: { slug, ...visibleWhere() }, select: postSelect });
   },
