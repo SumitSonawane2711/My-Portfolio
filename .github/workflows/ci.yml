@@ -14,6 +14,17 @@ concurrency:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    env:
+      # A separate Neon branch just for CI (see local-docs guide, Part 2.2).
+      # Public pages read the database at build time, so the build needs a
+      # real, migrated database once content has moved there.
+      DATABASE_URL: ${{ secrets.CI_DATABASE_URL }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.CI_DATABASE_URL_UNPOOLED }}
+      # CI never logs in, uploads or sends mail, so other secrets are skipped.
+      SKIP_ENV_VALIDATION: "true"
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: demo
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,12 +37,16 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      # Also runs `prisma generate` through the postinstall script.
       - name: Install dependencies
         run: npm ci
 
       - name: Lint commit messages
         if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: >-
+          npx commitlint --verbose
+          --from ${{ github.event.pull_request.base.sha }}
+          --to ${{ github.event.pull_request.head.sha }}
 
       - name: Lint
         run: npm run lint
@@ -39,10 +54,15 @@ jobs:
       - name: Format check
         run: npm run format:check
 
+      - name: Validate Prisma schema
+        run: npx prisma validate
+
       - name: Typecheck
         run: npm run typecheck
 
-      # No secrets needed — the contact route reads GMAIL_* lazily at request
-      # time (src/shared/configs/env.ts), so the build doesn't depend on them.
+      - name: Apply migrations to the CI database
+        if: env.DATABASE_URL_UNPOOLED != ''
+        run: npx prisma migrate deploy
+
       - name: Build
         run: npm run build
