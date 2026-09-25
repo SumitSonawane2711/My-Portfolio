@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
       <ReadingProgress />
-      <PostArticle post={post} footer={<RelatedPosts posts={related} />} />
+      <PostArticle post={post} interactive footer={<RelatedPosts posts={related} />} />
     </>
   );
 }

@@ -6,20 +6,24 @@ import { ContentRenderer } from "@/shared/components/ContentRenderer";
 import { Heading } from "@/shared/components/Heading";
 import { formatDate } from "@/shared/libs/format";
 import type { BlogPost } from "../interfaces/blog";
+import { ArticleInteractions } from "./ArticleInteractions";
 import { TableOfContents } from "./TableOfContents";
 
 type PostArticleProps = {
   post: BlogPost;
   /** Shown above the article (the admin preview banner). */
   banner?: ReactNode;
-  /** Shown after the content (likes, feedback, related posts). */
+  /** Shown after the content (related posts). */
   footer?: ReactNode;
+  /** Likes, private feedback and select-to-correct (public page only, not the preview). */
+  interactive?: boolean;
 };
 
 // The article layout, shared by the public page and the admin preview. Keeps
 // the original look (cover image + prose), adding a title and meta line
 // because posts written in the editor don't carry their own heading.
-export const PostArticle = ({ post, banner, footer }: PostArticleProps) => {
+export const PostArticle = ({ post, banner, footer, interactive = false }: PostArticleProps) => {
+  const content = <ContentRenderer html={post.contentHtml} />;
   return (
     <main className="flex min-h-screen items-start justify-start">
       <Container className="min-h-screen p-4 pt-20 md:pb-10">
@@ -53,7 +57,11 @@ export const PostArticle = ({ post, banner, footer }: PostArticleProps) => {
           )}
         </p>
         <TableOfContents items={post.toc} />
-        <ContentRenderer html={post.contentHtml} />
+        {interactive ? (
+          <ArticleInteractions slug={post.slug}>{content}</ArticleInteractions>
+        ) : (
+          content
+        )}
         {footer}
       </Container>
     </main>

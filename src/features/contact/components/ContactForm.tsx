@@ -1,7 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "sonner";
-import { sendContactMessage } from "../services/contactServices";
+import type { TurnstileInstance } from "@marsidev/react-turnstile";
+import { TurnstileField } from "@/shared/components/TurnstileField";
+import { sendContactMessage } from "@/features/inbox/actions/messageActions";
 
 export const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +12,10 @@ export const ContactForm = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Bot protection: Turnstile token + a honeypot field real visitors never see.
+  const [token, setToken] = useState("");
+  const [website, setWebsite] = useState("");
+  const turnstileRef = useRef<TurnstileInstance | undefined>(undefined);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,14 +29,25 @@ export const ContactForm = () => {
 
     setIsSubmitting(true);
 
-    try {
-      const data = await sendContactMessage(formData);
+    if (!token) {
+      toast.error("Please complete the verification first");
+      setIsSubmitting(false);
+      return;
+    }
 
-      toast.success(data.message || "Message sent successfully");
+    try {
+      const result = await sendContactMessage({ ...formData, website, turnstileToken: token });
+      if (!result.ok) {
+        const firstFieldError = Object.values(result.fieldErrors ?? {}).flat()[0];
+        toast.error(firstFieldError ?? result.error);
+        return;
+      }
+      toast.success("Message sent successfully");
       setFormData({ name: "", email: "", message: "" });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong");
     } finally {
+      // A Turnstile token can only be verified once.
+      turnstileRef.current?.reset();
+      setToken("");
       setIsSubmitting(false);
     }
   };
@@ -85,6 +102,18 @@ export const ContactForm = () => {
           onChange={handleChange}
           required
         />
+        {/* Honeypot: hidden from people and screen readers; bots fill it in. */}
+        <input
+          type="text"
+          name="website"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute -left-[9999px] h-0 w-0 opacity-0"
+        />
+        <TurnstileField ref={turnstileRef} onToken={setToken} />
       </div>
       <button
         type="submit"

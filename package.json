@@ -34,6 +34,7 @@
     "@iconify-json/logos": "^1.2.14",
     "@iconify-json/tabler": "^1.2.40",
     "@iconify/utils": "^3.1.7",
+    "@marsidev/react-turnstile": "^1.6.1",
     "@prisma/adapter-neon": "7.10.0",
     "@prisma/client": "7.10.0",
     "@tabler/icons-react": "^3.34.1",
