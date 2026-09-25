@@ -25,6 +25,7 @@
     "node": ">=22.22.1"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
     "@prisma/adapter-neon": "7.10.0",
     "@prisma/client": "7.10.0",
     "@tabler/icons-react": "^3.34.1",
@@ -40,6 +41,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-fast-marquee": "^1.6.5",
+    "react-hook-form": "^7.88.0",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
