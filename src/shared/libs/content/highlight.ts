@@ -32,11 +32,14 @@ export async function highlightCodeBlocks(html: string) {
   if (!html.includes("<pre")) return html;
   const shiki = await getHighlighter();
 
-  return html.replace(CODE_BLOCK, (_match, lang: string | undefined, code: string) =>
-    shiki.codeToHtml(decodeEntities(code).replace(/\n$/, ""), {
-      lang: resolveLang(lang),
+  return html.replace(CODE_BLOCK, (_match, lang: string | undefined, code: string) => {
+    const resolved = resolveLang(lang);
+    const highlighted = shiki.codeToHtml(decodeEntities(code).replace(/\n$/, ""), {
+      lang: resolved,
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: false,
-    }),
-  );
+    });
+    // Remembered on the <pre> so the rendered block can show the language name.
+    return highlighted.replace("<pre ", `<pre data-language="${resolved}" `);
+  });
 }

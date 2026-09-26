@@ -138,16 +138,126 @@
   }
 }
 
-/* ─── Code highlighting (Shiki dual themes, see shared/libs/content) ───── */
+/* ─── Code blocks (Shiki dual themes + editor frame) ─────────────────────
+   Highlighting colors come from --shiki-light / --shiki-dark (set per token
+   by shared/libs/content/highlight.ts). The frame markup is added at render
+   time by shared/libs/content/codeBlocks.ts; `not-prose` keeps the
+   typography plugin's pre/code styles out of it. */
 
 .shiki,
 .shiki span {
   color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
 }
 
 .dark .shiki,
 .dark .shiki span {
   color: var(--shiki-dark);
-  background-color: var(--shiki-dark-bg);
+}
+
+.code-block {
+  --code-bg: var(--color-white);
+  --code-bar: var(--color-neutral-50);
+  --code-border: var(--color-neutral-200);
+  --code-muted: var(--color-neutral-400);
+  margin: 1.75em 0;
+  overflow: hidden;
+  border: 1px solid var(--code-border);
+  border-radius: 0.75rem;
+  background: var(--code-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .code-block {
+  --code-bg: #0d1117;
+  --code-bar: #161b22;
+  --code-border: var(--color-neutral-800);
+  --code-muted: var(--color-neutral-500);
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--code-border);
+  background: var(--code-bar);
+  font-size: 0.75rem;
+  color: var(--code-muted);
+}
+
+.code-block-dots {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.code-block-dots i {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background: #ff5f57;
+}
+.code-block-dots i:nth-child(2) {
+  background: #febc2e;
+}
+.code-block-dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.code-block-lang {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.code-block-copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.code-block-copy:hover,
+.code-block-copy:focus-visible {
+  background: var(--code-border);
+  color: var(--color-primary);
+  outline: none;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem 0;
+  overflow-x: auto;
+  background: var(--code-bg) !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.code-block pre code {
+  counter-reset: line;
+}
+
+/* Line numbers: generated content, so they are never selected or copied. */
+.code-block .line {
+  padding-right: 1.25rem;
+}
+
+.code-block .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2.5rem;
+  margin-right: 1rem;
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--code-border);
+  text-align: right;
+  color: var(--code-muted);
+  user-select: none;
 }

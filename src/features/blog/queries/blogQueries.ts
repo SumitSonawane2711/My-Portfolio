@@ -24,9 +24,15 @@ export const getPost = cache(async (slug: string) => {
   return row ? toBlogPost(row) : null;
 });
 
-export const getRelatedPosts = cache(async (postId: string, tagSlugs: string[]) =>
-  (await blogRepository.findRelated(postId, tagSlugs)).map(toBlogCard),
-);
+/** Up to 3 posts: those sharing a tag first, then the latest others to fill up. */
+export const getRelatedPosts = cache(async (postId: string, tagSlugs: string[], take = 3) => {
+  const byTag = await blogRepository.findRelated(postId, tagSlugs, take);
+  const latest = await blogRepository.listLatestExcept(
+    [postId, ...byTag.map((p) => p.id)],
+    take - byTag.length,
+  );
+  return [...byTag, ...latest].map(toBlogCard);
+});
 
 export const getPostSlugs = cache(() => blogRepository.listVisibleSlugs());
 

@@ -58,7 +58,9 @@ export const PostArticle = ({ post, banner, footer, interactive = false }: PostA
         </p>
         <TableOfContents items={post.toc} />
         {interactive ? (
-          <ArticleInteractions slug={post.slug}>{content}</ArticleInteractions>
+          <ArticleInteractions slug={post.slug} title={post.title}>
+            {content}
+          </ArticleInteractions>
         ) : (
           content
         )}

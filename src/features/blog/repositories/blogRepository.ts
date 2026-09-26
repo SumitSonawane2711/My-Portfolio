@@ -78,7 +78,18 @@ export const blogRepository = {
       where: { ...visibleWhere(), id: { not: postId }, tags: { some: { slug: { in: tagSlugs } } } },
       orderBy: { publishedAt: "desc" },
       take,
-      select: cardSelect,
+      select: { ...cardSelect, id: true },
+    });
+  },
+
+  /** Latest visible posts except the given ids (fills up "related posts"). */
+  listLatestExcept(excludeIds: string[], take: number) {
+    if (take <= 0) return Promise.resolve([]);
+    return db.post.findMany({
+      where: { ...visibleWhere(), id: { notIn: excludeIds } },
+      orderBy: { publishedAt: "desc" },
+      take,
+      select: { ...cardSelect, id: true },
     });
   },
 
