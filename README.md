@@ -57,11 +57,11 @@ scripts/            # content importer (+ legacy-content/, the original MDX)
 
 Local git hooks (Husky) catch everything CI would reject, before it leaves your machine:
 
-| Hook         | When             | What it runs                                                                                                                                                                                          |
-| ------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pre-commit` | every commit     | ESLint + Prettier on staged files (lint-staged); `prisma validate` + format check when the schema is staged                                                                                           |
-| `commit-msg` | every commit     | commitlint: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(blog): …`, `fix(contact): …`)                                                                                         |
-| `pre-push`   | every `git push` | blocks pushes from `main`; refuses uncommitted/untracked files; checks the commit messages being pushed; then `npm run verify` (lint, format, Prisma, schema-has-migrations, typecheck, tests, build) |
+| Hook         | When             | What it runs                                                                                                                                                                                                                                                                                        |
+| ------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pre-commit` | every commit     | ESLint + Prettier on staged files (lint-staged); `prisma validate` + format check when the schema is staged                                                                                                                                                                                         |
+| `commit-msg` | every commit     | commitlint: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(blog): …`, `fix(contact): …`)                                                                                                                                                                                       |
+| `pre-push`   | every `git push` | pushes to **`main`**: always blocked. Pushes to **`dev`**: refuses uncommitted/untracked files, checks the commit messages being pushed, then `npm run verify` (lint, format, Prisma, schema-has-migrations, typecheck, tests, build). Pushes to **any other branch** (e.g. `feature/*`): no checks |
 
 Run `npm run verify` yourself any time (`-- --no-build` to skip the build). The pre-push run
 takes about 1–2 minutes; `git push --no-verify` skips it in an emergency (CI still checks).
