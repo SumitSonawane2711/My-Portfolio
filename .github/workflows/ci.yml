@@ -1,10 +1,16 @@
 name: CI
 
+# Full checks run once per change, on dev:
+#   push to dev         → full pipeline (the "ci" check on the commit)
+#   pull request → dev  → full pipeline (e.g. from a feature branch)
+# Pull requests dev → main don't repeat any of this: the head commit already
+# carries a passing "ci" check from its push to dev. They only run the quick
+# release check in pr-main.yml, and Vercel builds production after the merge.
 on:
-  pull_request:
-    branches: [main, dev]
   push:
-    branches: [main, dev]
+    branches: [dev]
+  pull_request:
+    branches: [dev]
 
 # Cancel an in-progress run when a newer commit lands on the same branch/PR.
 concurrency:
@@ -34,6 +40,7 @@ jobs:
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: demo
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+      NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -72,9 +79,26 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # Fail in seconds with a clear message instead of a confusing build error.
+      - name: Check CI database secrets
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$DATABASE_URL_UNPOOLED" ]; then
+            echo "::error::Repository secrets CI_DATABASE_URL and CI_DATABASE_URL_UNPOOLED are not set (Settings → Secrets and variables → Actions). The build reads the database."
+            exit 1
+          fi
+
       - name: Apply migrations to the CI database
-        if: env.DATABASE_URL_UNPOOLED != ''
         run: npx prisma migrate deploy
 
+      # Reuses Next.js build output from earlier runs → faster rebuilds.
+      - name: Restore Next.js build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**', 'next.config.ts', 'prisma/schema.prisma') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+
       - name: Build
+        timeout-minutes: 10
         run: npm run build
