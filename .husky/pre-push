@@ -1,5 +1,37 @@
+# Runs before every `git push`. Blocks pushes that CI would reject.
+# Emergency bypass (CI still checks everything): git push --no-verify
+
 branch="$(git rev-parse --abbrev-ref HEAD)"
 if [ "$branch" = "main" ]; then
   echo "✖ Direct pushes to main are not allowed. Open a PR from dev."
   exit 1
 fi
+
+# The checks run on your working copy, but only commits are pushed: an
+# uncommitted or untracked file could make the checks pass here and CI fail.
+if [ -n "$(git status --porcelain)" ]; then
+  echo "✖ You have uncommitted or untracked changes:"
+  git status --short
+  echo "  Commit them (or stash them with: git stash -u) and push again, so the"
+  echo "  checks test exactly what you push."
+  exit 1
+fi
+
+# Commit messages of everything being pushed (CI checks these on pull requests;
+# this also catches commits made with --no-verify).
+zero="0000000000000000000000000000000000000000"
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$zero" ] && continue # deleting a remote branch
+  if [ "$remote_sha" = "$zero" ]; then
+    # New remote branch: check the commits that aren't on main yet.
+    from="$(git merge-base origin/main "$local_sha" 2>/dev/null)"
+  else
+    from="$remote_sha"
+  fi
+  if [ -n "$from" ]; then
+    npx --no -- commitlint --from "$from" --to "$local_sha" || exit 1
+  fi
+done
+
+# Everything CI runs: lint, format, prisma, typecheck, tests, build.
+node scripts/verify.mjs

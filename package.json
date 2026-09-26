@@ -22,7 +22,8 @@
     "content:import": "tsx scripts/importContent.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "vercel-build": "prisma migrate deploy && next build"
+    "vercel-build": "prisma migrate deploy && next build",
+    "verify": "node scripts/verify.mjs"
   },
   "engines": {
     "node": ">=22.22.1"
