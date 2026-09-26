@@ -11,17 +11,26 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Least privilege: the workflow only needs to read the repository.
+permissions:
+  contents: read
+
 jobs:
   ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
-      # A separate Neon branch just for CI (see local-docs guide, Part 2.2).
-      # Public pages read the database at build time, so the build needs a
-      # real, migrated database once content has moved there.
+      # A separate Neon branch just for CI (repository secrets, never the
+      # production database). Public pages read the database at build time,
+      # so the build needs a real, migrated database.
       DATABASE_URL: ${{ secrets.CI_DATABASE_URL }}
       DATABASE_URL_UNPOOLED: ${{ secrets.CI_DATABASE_URL_UNPOOLED }}
       # CI never logs in, uploads or sends mail, so other secrets are skipped.
       SKIP_ENV_VALIDATION: "true"
+      # Better Auth refuses its default secret in production builds; these are
+      # placeholders only (no real sessions exist in CI).
+      BETTER_AUTH_SECRET: ci-dummy-secret-at-least-32-characters-long
+      BETTER_AUTH_URL: http://localhost:3000
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: demo
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
