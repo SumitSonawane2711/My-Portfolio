@@ -1,0 +1,365 @@
+generator client {
+  provider        = "prisma-client"
+  previewFeatures = ["relationJoins"]
+  output          = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────── Enums ───────────────────────────
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+}
+
+enum ResumeStatus {
+  ACTIVE // listed on the portfolio
+  UNLISTED // reachable only by its direct link
+  ARCHIVED // hidden everywhere, kept for history
+}
+
+enum MessageKind {
+  CONTACT
+  SUGGESTION
+  CORRECTION
+  THOUGHT
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  ARCHIVED
+}
+
+// ─────────────────────────── Media ───────────────────────────
+
+/// Every file uploaded to Cloudinary. Other tables point here.
+
+model MediaAsset {
+  id           String   @id @default(cuid())
+  publicId     String   @unique
+  /// Cloudinary resource type. PDFs are uploaded as "image" so page thumbnails work.
+  resourceType String   @default("image")
+  format       String?
+  width        Int?
+  height       Int?
+  bytes        Int?
+  alt          String?
+  createdAt    DateTime @default(now())
+
+  projectCovers      Project[]      @relation("ProjectCover")
+  projectImages      ProjectImage[]
+  postCovers         Post[]         @relation("PostCover")
+  experienceLogos    Experience[]   @relation("ExperienceLogo")
+  testimonialAvatars Testimonial[]  @relation("TestimonialAvatar")
+  technologyIcons    Technology[]   @relation("TechnologyIcon")
+  resumes            Resume[]
+  settingsAvatars    SiteSettings[] @relation("SettingsAvatar")
+  settingsOgImages   SiteSettings[] @relation("SettingsOgImage")
+
+  @@index([createdAt])
+}
+
+// ──────────────────────── Technologies ───────────────────────
+
+model Technology {
+  id           String       @id @default(cuid())
+  name         String       @unique
+  slug         String       @unique
+  /// Iconify key, e.g. "tabler:brand-react" or "logos:prisma"
+  icon         String?
+  customIconId String?
+  customIcon   MediaAsset?  @relation("TechnologyIcon", fields: [customIconId], references: [id], onDelete: SetNull)
+  /// Brand color used to tint single-color icons, e.g. "#61DAFB"
+  color        String?
+  order        Int          @default(0)
+  projects     Project[]
+  experiences  Experience[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([order])
+}
+
+// ────────────────────────── Projects ─────────────────────────
+
+model Project {
+  id             String         @id @default(cuid())
+  title          String
+  slug           String         @unique
+  subtitle       String?
+  summary        String
+  /// Free-text date shown on cards, e.g. "July 2026"
+  displayDate    String?
+  coverId        String?
+  cover          MediaAsset?    @relation("ProjectCover", fields: [coverId], references: [id], onDelete: SetNull)
+  images         ProjectImage[]
+  /// Tiptap JSON (editor source of truth)
+  contentJson    Json?
+  /// Sanitized + highlighted HTML (what visitors see)
+  contentHtml    String         @default("")
+  toc            Json           @default("[]")
+  liveUrl        String?
+  repoUrl        String?
+  featured       Boolean        @default(false)
+  published      Boolean        @default(false)
+  order          Int            @default(0)
+  seoTitle       String?
+  seoDescription String?
+  technologies   Technology[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([published, order])
+}
+
+model ProjectImage {
+  id        String     @id @default(cuid())
+  projectId String
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  mediaId   String
+  media     MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  caption   String?
+  order     Int        @default(0)
+
+  @@unique([projectId, mediaId])
+  @@index([projectId, order])
+}
+
+// ─────────────────── Professional experience ─────────────────
+
+model Experience {
+  id           String       @id @default(cuid())
+  company      String
+  slug         String       @unique
+  role         String
+  companyUrl   String?
+  logoId       String?
+  logo         MediaAsset?  @relation("ExperienceLogo", fields: [logoId], references: [id], onDelete: SetNull)
+  location     String?
+  startDate    DateTime
+  /// null = "Present"
+  endDate      DateTime?
+  /// Card text on the home page
+  summary      String
+  contentJson  Json?
+  contentHtml  String       @default("")
+  published    Boolean      @default(true)
+  technologies Technology[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([published, startDate])
+}
+
+// ──────────────────────── Testimonials ───────────────────────
+
+model Testimonial {
+  id          String      @id @default(cuid())
+  name        String
+  role        String?
+  company     String?
+  avatarId    String?
+  avatar      MediaAsset? @relation("TestimonialAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
+  quote       String
+  linkedinUrl String?
+  /// Private: where/when you received it (never shown publicly)
+  sourceNote  String?
+  visible     Boolean     @default(true)
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([visible, order])
+}
+
+// ─────────────────── Site settings (one row) ─────────────────
+
+model SiteSettings {
+  id               Int         @id @default(1)
+  name             String      @default("")
+  siteTitle        String      @default("Full Stack Developer Portfolio")
+  siteDescription  String      @default("")
+  heroHeading      String      @default("")
+  heroSubheading   String      @default("")
+  /// Short line on the profile card
+  summary          String      @default("")
+  about            String      @default("")
+  avatarId         String?
+  avatar           MediaAsset? @relation("SettingsAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
+  ogImageId        String?
+  ogImage          MediaAsset? @relation("SettingsOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  contactEmail     String?
+  phone            String?
+  location         String?
+  availableForWork Boolean     @default(false)
+  /// [{ "platform": "github", "url": "https://github.com/…" }, …]
+  socials          Json        @default("[]")
+  updatedAt        DateTime    @updatedAt
+}
+
+// ─────────────────────────── Resumes ─────────────────────────
+
+model Resume {
+  id            String       @id @default(cuid())
+  /// Shown on the portfolio, e.g. "Full-stack Developer"
+  title         String
+  /// Stable public URL: /resume/<slug>. Survives file replacements.
+  slug          String       @unique
+  description   String?
+  fileId        String
+  file          MediaAsset   @relation(fields: [fileId], references: [id], onDelete: Restrict)
+  /// Download name, e.g. "Sumit_Sonawane_FullStack_2026.pdf"
+  fileName      String
+  status        ResumeStatus @default(ACTIVE)
+  /// The default resume (hero/profile "Resume" button, /resume). At most one.
+  isPrimary     Boolean      @default(false)
+  order         Int          @default(0)
+  downloadCount Int          @default(0)
+  /// Private notes (target role, who received it, …)
+  notes         String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([status, order])
+}
+
+// ──────────────────────────── Blog ───────────────────────────
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  posts Post[]
+}
+
+model Post {
+  id             String      @id @default(cuid())
+  title          String
+  slug           String      @unique
+  excerpt        String      @default("")
+  coverId        String?
+  cover          MediaAsset? @relation("PostCover", fields: [coverId], references: [id], onDelete: SetNull)
+  contentJson    Json?
+  contentHtml    String      @default("")
+  /// [{ id, text, level }] built from h2/h3 at save time
+  toc            Json        @default("[]")
+  readingMinutes Int         @default(1)
+  status         PostStatus  @default(DRAFT)
+  publishedAt    DateTime?
+  seoTitle       String?
+  seoDescription String?
+  tags           Tag[]
+  likes          PostLike[]
+  messages       Message[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([status, publishedAt])
+}
+
+model PostLike {
+  id          String   @id @default(cuid())
+  postId      String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  /// sha256(visitor cookie + HASH_SALT) — never the raw id or IP
+  visitorHash String
+  createdAt   DateTime @default(now())
+
+  @@unique([postId, visitorHash])
+}
+
+// ───────────── Inbox: contact messages + reader feedback ─────────────
+
+model Message {
+  id         String        @id @default(cuid())
+  kind       MessageKind
+  status     MessageStatus @default(UNREAD)
+  postId     String?
+  post       Post?         @relation(fields: [postId], references: [id], onDelete: SetNull)
+  name       String?
+  email      String?
+  message    String
+  quotedText String?
+  createdAt  DateTime      @default(now())
+
+  @@index([status, createdAt])
+  @@index([kind, createdAt])
+}
+
+// ───────────────────────── Rate limit ────────────────────────
+
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

@@ -1,13 +1,18 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+/* shadcn: data-* variants, keyframes and utilities only (no element styles). */
+@import "shadcn/tailwind.css";
 @plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
+
+/* ─── Public site tokens ─────────────────────────────────────────────── */
 
 :root {
   --primary: var(--color-neutral-800);
@@ -26,10 +31,233 @@
   --color-accent: var(--accent);
 
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-xl:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* shadcn/ui token names (dashboard only — values exist inside .admin-theme). */
+  --font-heading:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* ─── Dashboard theme (shadcn "neutral") ─────────────────────────────────
+   Scoped to <body class="admin-theme"> in app/(admin)/layout.tsx. The site
+   and shadcn both use --primary/--secondary/--accent, so shadcn's values
+   must never be set on :root — that would recolor the public site. The body
+   carries the class (not a wrapper div) because dialogs and dropdowns
+   render in portals attached to <body>. */
+
+.admin-theme {
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark .admin-theme {
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  .admin-theme,
+  .admin-theme * {
+    @apply border-border outline-ring/50;
+  }
+  .admin-theme {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ─── Code blocks (Shiki dual themes + editor frame) ─────────────────────
+   Highlighting colors come from --shiki-light / --shiki-dark (set per token
+   by shared/libs/content/highlight.ts). The frame markup is added at render
+   time by shared/libs/content/codeBlocks.ts; `not-prose` keeps the
+   typography plugin's pre/code styles out of it. */
+
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+}
+
+.code-block {
+  --code-bg: var(--color-white);
+  --code-bar: var(--color-neutral-50);
+  --code-border: var(--color-neutral-200);
+  --code-muted: var(--color-neutral-400);
+  margin: 1.75em 0;
+  overflow: hidden;
+  border: 1px solid var(--code-border);
+  border-radius: 0.75rem;
+  background: var(--code-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .code-block {
+  --code-bg: #0d1117;
+  --code-bar: #161b22;
+  --code-border: var(--color-neutral-800);
+  --code-muted: var(--color-neutral-500);
+}
+
+.code-block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--code-border);
+  background: var(--code-bar);
+  font-size: 0.75rem;
+  color: var(--code-muted);
+}
+
+.code-block-dots {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.code-block-dots i {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background: #ff5f57;
+}
+.code-block-dots i:nth-child(2) {
+  background: #febc2e;
+}
+.code-block-dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.code-block-lang {
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.code-block-copy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  color: inherit;
+  cursor: pointer;
+  transition:
+    background-color 150ms,
+    color 150ms;
+}
+
+.code-block-copy:hover,
+.code-block-copy:focus-visible {
+  background: var(--code-border);
+  color: var(--color-primary);
+  outline: none;
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 1rem 0;
+  overflow-x: auto;
+  background: var(--code-bg) !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.7;
+  tab-size: 2;
+}
+
+.code-block pre code {
+  counter-reset: line;
+}
+
+/* Line numbers: generated content, so they are never selected or copied. */
+.code-block .line {
+  padding-right: 1.25rem;
+}
+
+.code-block .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2.5rem;
+  margin-right: 1rem;
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--code-border);
+  text-align: right;
+  color: var(--code-muted);
+  user-select: none;
 }
