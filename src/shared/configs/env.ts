@@ -40,7 +40,12 @@ export function getServerEnv(): ServerEnv {
     return cached;
   }
 
-  const parsed = serverSchema.safeParse(process.env);
+  // Values pasted into hosting dashboards often carry a stray space or newline,
+  // which silently breaks signatures (e.g. Cloudinary "Invalid Signature").
+  const input = Object.fromEntries(
+    Object.entries(process.env).map(([key, value]) => [key, value?.trim()]),
+  );
+  const parsed = serverSchema.safeParse(input);
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `  - ${i.path.join(".")}: ${i.message}`);
     throw new Error(`Invalid environment variables:\n${issues.join("\n")}`);
