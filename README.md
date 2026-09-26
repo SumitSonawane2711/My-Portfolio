@@ -66,6 +66,10 @@ Local git hooks (Husky) catch everything CI would reject, before it leaves your 
 Run `npm run verify` yourself any time (`-- --no-build` to skip the build). The pre-push run
 takes about 1–2 minutes; `git push --no-verify` skips it in an emergency (CI still checks).
 
-- GitHub Actions (`.github/workflows/ci.yml`) runs on pushes and PRs to `main` and `dev`:
-  commit lint (PRs), lint, format check, Prisma validation, typecheck, unit tests, migrations
-  on a CI database (secrets `CI_DATABASE_URL`, `CI_DATABASE_URL_UNPOOLED`) and build.
+- GitHub Actions, full checks once per change:
+  - `ci.yml` (check **`ci`**): pushes and PRs to `dev`: commit lint (PRs), lint, format check,
+    Prisma validation, typecheck, unit tests, migrations on a CI database (repository secrets
+    `CI_DATABASE_URL`, `CI_DATABASE_URL_UNPOOLED`) and build.
+  - `pr-main.yml` (check **`release-check`**): PRs into `main` only verify they come from `dev`
+    and that commit messages are valid. The head commit already has a green `ci` from its push to
+    `dev`, so nothing is rebuilt; Vercel builds production after the merge.
