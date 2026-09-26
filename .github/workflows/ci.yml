@@ -37,6 +37,9 @@ jobs:
       # placeholders only (no real sessions exist in CI).
       BETTER_AUTH_SECRET: ci-dummy-secret-at-least-32-characters-long
       BETTER_AUTH_URL: http://localhost:3000
+      # Silences "Social provider github is missing clientId" during the build.
+      GITHUB_CLIENT_ID: ci-placeholder
+      GITHUB_CLIENT_SECRET: ci-placeholder
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: demo
       NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
