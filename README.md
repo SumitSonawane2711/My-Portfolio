@@ -55,9 +55,17 @@ scripts/            # content importer (+ legacy-content/, the original MDX)
 
 ## Commits and CI
 
-- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/)
-  (`feat(blog): …`, `fix(contact): …`), enforced by commitlint on `commit-msg`.
-- `pre-commit` runs ESLint and Prettier on staged files through lint-staged.
+Local git hooks (Husky) catch everything CI would reject, before it leaves your machine:
+
+| Hook         | When             | What it runs                                                                                                                                                                                          |
+| ------------ | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pre-commit` | every commit     | ESLint + Prettier on staged files (lint-staged); `prisma validate` + format check when the schema is staged                                                                                           |
+| `commit-msg` | every commit     | commitlint: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(blog): …`, `fix(contact): …`)                                                                                         |
+| `pre-push`   | every `git push` | blocks pushes from `main`; refuses uncommitted/untracked files; checks the commit messages being pushed; then `npm run verify` (lint, format, Prisma, schema-has-migrations, typecheck, tests, build) |
+
+Run `npm run verify` yourself any time (`-- --no-build` to skip the build). The pre-push run
+takes about 1–2 minutes; `git push --no-verify` skips it in an emergency (CI still checks).
+
 - GitHub Actions (`.github/workflows/ci.yml`) runs on pushes and PRs to `main` and `dev`:
   commit lint (PRs), lint, format check, Prisma validation, typecheck, unit tests, migrations
   on a CI database (secrets `CI_DATABASE_URL`, `CI_DATABASE_URL_UNPOOLED`) and build.
