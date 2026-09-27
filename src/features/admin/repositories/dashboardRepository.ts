@@ -58,4 +58,27 @@ export async function getDashboardStats() {
   };
 }
 
+// Raw rows for the overview charts; bucketing happens in dashboardCharts.ts.
+export async function getChartRows(since: Date) {
+  const [messages, likes, resumes, likedPosts] = await Promise.all([
+    db.message.findMany({
+      where: { createdAt: { gte: since } },
+      select: { kind: true, createdAt: true },
+    }),
+    db.postLike.findMany({ where: { createdAt: { gte: since } }, select: { createdAt: true } }),
+    db.resume.findMany({
+      orderBy: [{ downloadCount: "desc" }, { order: "asc" }],
+      take: 6,
+      select: { title: true, downloadCount: true, status: true },
+    }),
+    db.post.findMany({
+      where: { likes: { some: {} } },
+      orderBy: { likes: { _count: "desc" } },
+      take: 5,
+      select: { title: true, _count: { select: { likes: true } } },
+    }),
+  ]);
+  return { messages, likes, resumes, likedPosts };
+}
+
 export const countUnreadMessages = () => db.message.count({ where: { status: "UNREAD" } });

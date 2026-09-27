@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Copy, Download, Pencil, Plus, Star } from "lucide-react";
+import { Copy, Download, Eye, Pencil, Plus, Star } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
@@ -27,6 +27,7 @@ import {
 } from "../actions/resumeActions";
 import type { ResumeAdminRow } from "../interfaces/resume";
 import { ResumeDialog } from "./ResumeDialog";
+import { ResumePreviewDialog, resumeFileUrls } from "./ResumePreviewDialog";
 
 export const ResumesManager = ({ resumes }: { resumes: ResumeAdminRow[] }) => {
   const router = useRouter();
@@ -35,6 +36,7 @@ export const ResumesManager = ({ resumes }: { resumes: ResumeAdminRow[] }) => {
     open: false,
     resume: null,
   });
+  const [preview, setPreview] = useState<ResumeAdminRow | null>(null);
 
   const act = (task: () => Promise<{ ok: boolean; error?: string }>, success: string) =>
     startTransition(async () => {
@@ -129,6 +131,24 @@ export const ResumesManager = ({ resumes }: { resumes: ResumeAdminRow[] }) => {
             <Button
               variant="ghost"
               size="icon"
+              aria-label={`Preview ${resume.title}`}
+              title="Preview"
+              onClick={() => setPreview(resume)}
+            >
+              <Eye />
+            </Button>
+            <Button variant="ghost" size="icon" title="Download" asChild>
+              <a
+                href={resumeFileUrls(resume).download}
+                download={resume.fileName}
+                aria-label={`Download ${resume.title}`}
+              >
+                <Download />
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
               aria-label="Copy link"
               title="Copy link"
               disabled={resume.status === "ARCHIVED"}
@@ -158,6 +178,7 @@ export const ResumesManager = ({ resumes }: { resumes: ResumeAdminRow[] }) => {
         resume={dialog.resume}
         onOpenChange={(open) => setDialog((d) => ({ ...d, open }))}
       />
+      <ResumePreviewDialog resume={preview} onOpenChange={(open) => !open && setPreview(null)} />
     </>
   );
 };

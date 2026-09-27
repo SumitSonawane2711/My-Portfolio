@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { explainCloudinaryError } from "@/shared/libs/cloudinaryErrors";
 import { getUploadSignature, registerUpload } from "../actions/mediaActions";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
@@ -76,7 +77,7 @@ function postWithProgress(url: string, body: FormData, onProgress: (percent: num
     xhr.onload = () => {
       const data = JSON.parse(xhr.responseText || "{}");
       if (xhr.status >= 200 && xhr.status < 300) resolve(data);
-      else reject(new Error(data?.error?.message ?? "Upload failed."));
+      else reject(new Error(explainCloudinaryError(data?.error?.message)));
     };
     xhr.onerror = () => reject(new Error("Upload failed. Check your connection."));
     xhr.send(body);

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   Briefcase,
@@ -10,17 +11,45 @@ import {
   Newspaper,
 } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/shared/components/ui/card";
 import { formatDate, truncate } from "@/shared/libs/format";
 import type { getDashboardStats } from "../repositories/dashboardRepository";
+import { CHART_MONTHS, MESSAGE_KINDS, type DashboardCharts } from "../services/dashboardCharts";
+import { BarList } from "./charts/BarList";
+import { ColumnChart } from "./charts/ColumnChart";
 import { PageHeader } from "./PageHeader";
 import { StatCard } from "./StatCard";
 
 type DashboardOverviewProps = {
   stats: Awaited<ReturnType<typeof getDashboardStats>>;
+  charts: DashboardCharts;
 };
 
-export const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
+const ChartCard = ({
+  title,
+  description,
+  children,
+}: {
+  title: string;
+  description: string;
+  children: ReactNode;
+}) => (
+  <Card>
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </CardHeader>
+    <CardContent>{children}</CardContent>
+  </Card>
+);
+
+export const DashboardOverview = ({ stats, charts }: DashboardOverviewProps) => {
   return (
     <>
       <PageHeader title="Overview" description="Everything on your portfolio at a glance." />
@@ -71,6 +100,37 @@ export const DashboardOverview = ({ stats }: DashboardOverviewProps) => {
           icon={MessageSquareQuote}
         />
         <StatCard label="Post likes" value={stats.likes} href="/admin/blog" icon={Heart} />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <ChartCard
+          title="Messages"
+          description={`Received per month by kind, last ${CHART_MONTHS} months`}
+        >
+          <ColumnChart
+            data={charts.messagesByMonth}
+            series={MESSAGE_KINDS.map((k) => k.label)}
+            unit="messages"
+            emptyText={`No messages in the last ${CHART_MONTHS} months.`}
+          />
+        </ChartCard>
+        <ChartCard
+          title="Post likes"
+          description={`New likes per month, last ${CHART_MONTHS} months`}
+        >
+          <ColumnChart
+            data={charts.likesByMonth}
+            series={["Likes"]}
+            unit="likes"
+            emptyText={`No likes in the last ${CHART_MONTHS} months.`}
+          />
+        </ChartCard>
+        <ChartCard title="Resume downloads" description="All-time downloads per resume">
+          <BarList data={charts.resumeDownloads} emptyText="No resumes yet." />
+        </ChartCard>
+        <ChartCard title="Most liked posts" description="Top 5 posts by all-time likes">
+          <BarList data={charts.topLikedPosts} emptyText="No post has been liked yet." />
+        </ChartCard>
       </div>
 
       <Card className="mt-6">
