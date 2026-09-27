@@ -66,7 +66,11 @@ export const RichEditor = ({
       handlePaste: (_view, event) => insertImageFiles(event.clipboardData?.files),
       handleDrop: (_view, event) => insertImageFiles((event as DragEvent).dataTransfer?.files),
     },
-    onUpdate: ({ editor: e }) => onChange({ json: e.getJSON(), html: e.getHTML() }),
+    // ProseMirror builds node attrs with Object.create(null). Server actions only
+    // accept plain objects (React turns others into temporary references, which
+    // Prisma then fails on), so hand the form a plain JSON copy.
+    onUpdate: ({ editor: e }) =>
+      onChange({ json: JSON.parse(JSON.stringify(e.getJSON())), html: e.getHTML() }),
   });
 
   useEffect(() => {
