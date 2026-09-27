@@ -66,7 +66,11 @@ export const RichEditor = ({
       handlePaste: (_view, event) => insertImageFiles(event.clipboardData?.files),
       handleDrop: (_view, event) => insertImageFiles((event as DragEvent).dataTransfer?.files),
     },
-    onUpdate: ({ editor: e }) => onChange({ json: e.getJSON(), html: e.getHTML() }),
+    // ProseMirror builds node attrs with Object.create(null). Server actions only
+    // accept plain objects (React turns others into temporary references, which
+    // Prisma then fails on), so hand the form a plain JSON copy.
+    onUpdate: ({ editor: e }) =>
+      onChange({ json: JSON.parse(JSON.stringify(e.getJSON())), html: e.getHTML() }),
   });
 
   useEffect(() => {
@@ -108,10 +112,12 @@ export const RichEditor = ({
   if (!editor) return <Skeleton className="h-96 w-full" />;
 
   return (
-    <div className="overflow-hidden rounded-lg border">
+    // At most one screen tall (minus the 3.5rem admin topbar): once the editor
+    // reaches the top, the content scrolls inside it and the toolbar stays put.
+    <div className="flex max-h-[calc(100dvh-3.5rem)] flex-col overflow-hidden rounded-lg border">
       <EditorToolbar editor={editor} onPickImage={insertImage} isUploading={isUploading} />
-      <EditorContent editor={editor} />
-      <div className="border-t px-4 py-1.5 text-right text-xs text-muted-foreground">
+      <EditorContent editor={editor} className="min-h-0 flex-1 overflow-y-auto" />
+      <div className="shrink-0 border-t px-4 py-1.5 text-right text-xs text-muted-foreground">
         {words} words
       </div>
     </div>

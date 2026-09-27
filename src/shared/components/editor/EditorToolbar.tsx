@@ -96,7 +96,7 @@ export const EditorToolbar = ({ editor, onPickImage, isUploading }: EditorToolba
   };
 
   return (
-    <div className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b bg-background p-1">
+    <div className="flex shrink-0 flex-wrap items-center gap-0.5 border-b bg-background p-1">
       <ToolButton label="Bold" active={state.bold} onClick={() => chain().toggleBold().run()}>
         <Bold />
       </ToolButton>
