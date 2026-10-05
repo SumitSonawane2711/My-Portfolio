@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
 import { requireAdmin } from "@/shared/libs/authGuard";
-import { PostsManager } from "@/features/blog/components/PostsManager";
-import { getPostsForAdmin } from "@/features/blog/queries/blogQueries";
+import { MediumPostsManager } from "@/features/medium/components/MediumPostsManager";
+import {
+  getMediumPostsForAdmin,
+  getMediumSyncStatusForAdmin,
+} from "@/features/medium/queries/mediumQueries";
 
 export const metadata: Metadata = { title: "Blog" };
 
-interface PageProps {
-  searchParams: Promise<{ status?: string }>;
-}
-
-export default async function AdminBlogPage({ searchParams }: PageProps) {
+export default async function AdminBlogPage() {
   await requireAdmin();
-  const { status } = await searchParams;
-  return <PostsManager posts={await getPostsForAdmin(status)} />;
+  const [posts, status] = await Promise.all([
+    getMediumPostsForAdmin(),
+    getMediumSyncStatusForAdmin(),
+  ]);
+  const syncedLabel = status.syncedAt
+    ? `${status.syncedAt.toLocaleString("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" })} UTC`
+    : null;
+  return <MediumPostsManager posts={posts} feedUrl={status.feedUrl} syncedLabel={syncedLabel} />;
 }

@@ -272,3 +272,33 @@
   color: var(--code-muted);
   user-select: none;
 }
+
+/* ─── Site motion (CSS only) ─────────────────────────────────────────────
+   Content is visible in the server HTML: nothing waits for JavaScript.
+   .fade-up   one-off entrance for above-the-fold content; stagger with
+              style={{ "--delay": "120ms" }}.
+   .reveal    fades sections in as they scroll into view (scroll-driven
+              animation; browsers without it just show the content).
+   Both are off for people who prefer reduced motion. */
+
+@keyframes site-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    animation: site-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: site-fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}

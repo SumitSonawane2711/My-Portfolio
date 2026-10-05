@@ -19,11 +19,10 @@ describe("admin breadcrumbs", () => {
   });
 
   it("handles nested pages with links to each level", () => {
-    expect(toCrumbs("/admin/blog/cmabc123/preview")).toEqual([
+    expect(toCrumbs("/admin/experience/cmabc123")).toEqual([
       { label: "Dashboard", href: "/admin" },
-      { label: "Blog", href: "/admin/blog" },
-      { label: "Edit post", href: "/admin/blog/cmabc123" },
-      { label: "Preview", href: "/admin/blog/cmabc123/preview" },
+      { label: "Experience", href: "/admin/experience" },
+      { label: "Edit experience", href: "/admin/experience/cmabc123" },
     ]);
   });
 

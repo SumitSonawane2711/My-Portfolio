@@ -1,5 +1,5 @@
 import "server-only";
-import { cache } from "react";
+import { CACHE_TAGS, cachedQuery } from "@/shared/libs/dataCache";
 import { getYearsOfExperience } from "@/features/experience/queries/experienceQueries";
 import type { SettingsFormData, SiteProfile } from "../interfaces/settings";
 import { settingsRepository } from "../repositories/settingsRepository";
@@ -11,27 +11,31 @@ const parseSocials = (value: unknown) => {
   return parsed.success ? parsed.data : [];
 };
 
-/** Site-wide settings; cached so layout, metadata and pages share one query per render. */
-export const getSettings = cache(async (): Promise<SiteProfile> => {
-  const [row, years] = await Promise.all([settingsRepository.get(), getYearsOfExperience()]);
-  return {
-    name: row.name,
-    siteTitle: row.siteTitle,
-    siteDescription: row.siteDescription,
-    heroHeading: fillYears(row.heroHeading, years),
-    heroSubheading: fillYears(row.heroSubheading, years),
-    summary: fillYears(row.summary, years),
-    about: fillYears(row.about, years),
-    avatarPublicId: row.avatar?.publicId ?? null,
-    ogImagePublicId: row.ogImage?.publicId ?? null,
-    contactEmail: row.contactEmail,
-    phone: row.phone,
-    location: row.location,
-    availableForWork: row.availableForWork,
-    socials: parseSocials(row.socials),
-    yearsOfExperience: years,
-  };
-});
+/** Site-wide settings (data cache; the hero text uses the years of experience). */
+export const getSettings = cachedQuery(
+  "settings:profile",
+  [CACHE_TAGS.settings, CACHE_TAGS.experience],
+  async (): Promise<SiteProfile> => {
+    const [row, years] = await Promise.all([settingsRepository.get(), getYearsOfExperience()]);
+    return {
+      name: row.name,
+      siteTitle: row.siteTitle,
+      siteDescription: row.siteDescription,
+      heroHeading: fillYears(row.heroHeading, years),
+      heroSubheading: fillYears(row.heroSubheading, years),
+      summary: fillYears(row.summary, years),
+      about: fillYears(row.about, years),
+      avatarPublicId: row.avatar?.publicId ?? null,
+      ogImagePublicId: row.ogImage?.publicId ?? null,
+      contactEmail: row.contactEmail,
+      phone: row.phone,
+      location: row.location,
+      availableForWork: row.availableForWork,
+      socials: parseSocials(row.socials),
+      yearsOfExperience: years,
+    };
+  },
+);
 
 export async function getSettingsForEdit(): Promise<SettingsFormData> {
   const row = await settingsRepository.get();

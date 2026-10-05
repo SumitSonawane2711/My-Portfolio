@@ -23,8 +23,13 @@ function createPrismaClient() {
     connectionString: url.toString(),
     ssl: { rejectUnauthorized: true },
     max: 5,
-    connectionTimeoutMillis: 10_000,
-    idleTimeoutMillis: 30_000,
+    // Opening a TLS connection to Neon can take several seconds on a slow
+    // network; 10 s made pages fail with "connection timeout".
+    connectionTimeoutMillis: 30_000,
+    // Reuse warm connections instead of reconnecting after a short pause.
+    // Below Neon's 5-minute auto-suspend, so pooled connections aren't dropped.
+    idleTimeoutMillis: 240_000,
+    keepAlive: true,
   });
 
   return new PrismaClient({

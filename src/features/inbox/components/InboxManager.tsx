@@ -1,20 +1,11 @@
 "use client";
 
 import { useTransition } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Archive, Mail, MailOpen, Reply } from "lucide-react";
 import { toast } from "sonner";
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/shared/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { formatDate } from "@/shared/libs/format";
 import { cn } from "@/shared/libs/utils";
@@ -24,7 +15,6 @@ import { deleteMessage, markMessage } from "../actions/messageActions";
 import type { InboxMessage } from "../queries/messageQueries";
 
 const STATUSES = ["UNREAD", "READ", "ARCHIVED"] as const;
-const KINDS = ["all", "CONTACT", "SUGGESTION", "CORRECTION", "THOUGHT"] as const;
 
 export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
   const router = useRouter();
@@ -32,10 +22,6 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
   const [status, setStatus] = useQueryState(
     "status",
     parseAsStringLiteral(STATUSES).withDefault("UNREAD").withOptions({ shallow: false }),
-  );
-  const [kind, setKind] = useQueryState(
-    "kind",
-    parseAsStringLiteral(KINDS).withDefault("all").withOptions({ shallow: false }),
   );
 
   const mark = (id: string, next: (typeof STATUSES)[number]) =>
@@ -49,7 +35,7 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
     <>
       <PageHeader
         title="Inbox"
-        description="Contact messages and private reader feedback. Only you can see these."
+        description="Messages from the contact form. Only you can see these."
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -60,18 +46,6 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
             <TabsTrigger value="ARCHIVED">Archived</TabsTrigger>
           </TabsList>
         </Tabs>
-        <Select value={kind} onValueChange={(v) => void setKind(v as (typeof KINDS)[number])}>
-          <SelectTrigger className="w-40" aria-label="Type">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All types</SelectItem>
-            <SelectItem value="CONTACT">Contact</SelectItem>
-            <SelectItem value="SUGGESTION">Suggestions</SelectItem>
-            <SelectItem value="CORRECTION">Corrections</SelectItem>
-            <SelectItem value="THOUGHT">Thoughts</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {messages.length === 0 ? (
@@ -87,37 +61,20 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
               )}
             >
               <div className="flex flex-wrap items-center gap-2 text-sm">
-                <Badge variant="secondary">{message.kind.toLowerCase()}</Badge>
                 <span className="font-medium">{message.name || "Anonymous"}</span>
                 {message.email && <span className="text-muted-foreground">{message.email}</span>}
-                {message.post && (
-                  <Link
-                    href={`/blog/${message.post.slug}`}
-                    target="_blank"
-                    className="text-muted-foreground underline-offset-2 hover:underline"
-                  >
-                    on “{message.post.title}”
-                  </Link>
-                )}
                 <span className="ml-auto text-xs text-muted-foreground">
                   {formatDate(message.createdAt)}
                 </span>
               </div>
 
-              {message.quotedText && (
-                <blockquote className="mt-3 border-l-2 pl-3 text-sm text-muted-foreground italic">
-                  {message.quotedText}
-                </blockquote>
-              )}
               <p className="mt-3 text-sm whitespace-pre-wrap">{message.message}</p>
 
               <div className="mt-3 flex flex-wrap gap-1">
                 {message.email && (
                   <Button asChild variant="outline" size="sm">
                     <a
-                      href={`mailto:${message.email}?subject=${encodeURIComponent(
-                        message.post ? `Re: ${message.post.title}` : "Re: your message",
-                      )}`}
+                      href={`mailto:${message.email}?subject=${encodeURIComponent("Re: your message")}`}
                       onClick={() => message.status === "UNREAD" && mark(message.id, "READ")}
                     >
                       <Reply /> Reply

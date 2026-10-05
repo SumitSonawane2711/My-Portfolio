@@ -3,6 +3,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "../globals.css";
 import { inter } from "@/shared/configs/fonts";
 import { AppProviders } from "@/shared/components/providers";
+import { NavigationProgress } from "@/shared/components/NavigationProgress";
 
 export const metadata: Metadata = {
   title: { default: "Dashboard", template: "%s · Dashboard" },
@@ -20,6 +21,7 @@ export default function AdminRootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} admin-theme font-sans antialiased`}>
         <AppProviders>
+          <NavigationProgress />
           <NuqsAdapter>{children}</NuqsAdapter>
         </AppProviders>
       </body>

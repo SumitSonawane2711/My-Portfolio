@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// Fields every public form shares: bot checks.
+// Bot checks for the public contact form.
 const botFields = {
   /** Honeypot — hidden from people; bots fill it in. Any value is accepted here so
    *  bots get a normal response; the service then silently drops the message. */
@@ -16,17 +16,3 @@ export const contactSchema = z.object({
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
-
-export const FEEDBACK_KINDS = ["SUGGESTION", "CORRECTION", "THOUGHT"] as const;
-
-export const feedbackSchema = z.object({
-  postSlug: z.string().max(100),
-  kind: z.enum(FEEDBACK_KINDS),
-  message: z.string().trim().min(10, "At least 10 characters").max(2000),
-  quotedText: z.string().trim().max(500),
-  name: z.string().trim().max(80),
-  email: z.union([z.email("Please enter a valid email address"), z.literal("")]),
-  ...botFields,
-});
-
-export type FeedbackInput = z.infer<typeof feedbackSchema>;

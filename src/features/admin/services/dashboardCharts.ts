@@ -1,17 +1,7 @@
-import type { MessageKind } from "@/generated/prisma/client";
-
 // Pure shaping for the overview charts (no database access), so it's unit-tested.
 // Months are UTC calendar months, like every other date in the app.
 
 export const CHART_MONTHS = 6;
-
-// Fixed order = fixed color per kind, whatever the counts are.
-export const MESSAGE_KINDS: { kind: MessageKind; label: string }[] = [
-  { kind: "CONTACT", label: "Contact" },
-  { kind: "SUGGESTION", label: "Suggestion" },
-  { kind: "CORRECTION", label: "Correction" },
-  { kind: "THOUGHT", label: "Thought" },
-];
 
 export type MonthBucket = { key: string; label: string; fullLabel: string };
 
@@ -60,32 +50,24 @@ export function countByMonth<T extends { createdAt: Date }>(
 }
 
 type ChartRows = {
-  messages: { kind: MessageKind; createdAt: Date }[];
-  likes: { createdAt: Date }[];
+  messages: { createdAt: Date }[];
+  stories: { publishedAt: Date }[];
   resumes: { title: string; downloadCount: number; status: string }[];
-  likedPosts: { title: string; _count: { likes: number } }[];
 };
 
 export function buildDashboardCharts(rows: ChartRows, now: Date) {
   const buckets = monthBuckets(now);
-  const kindIndex = new Map(MESSAGE_KINDS.map(({ kind }, i) => [kind, i]));
-
   return {
-    messagesByMonth: countByMonth(
-      rows.messages,
+    messagesByMonth: countByMonth(rows.messages, buckets, 1),
+    storiesByMonth: countByMonth(
+      rows.stories.map((story) => ({ createdAt: story.publishedAt })),
       buckets,
-      MESSAGE_KINDS.length,
-      (message) => kindIndex.get(message.kind) ?? -1,
+      1,
     ),
-    likesByMonth: countByMonth(rows.likes, buckets, 1),
     resumeDownloads: rows.resumes.map<BarDatum>((resume) => ({
       label: resume.title,
       value: resume.downloadCount,
       note: resume.status === "ACTIVE" ? undefined : resume.status.toLowerCase(),
-    })),
-    topLikedPosts: rows.likedPosts.map<BarDatum>((post) => ({
-      label: post.title,
-      value: post._count.likes,
     })),
   };
 }

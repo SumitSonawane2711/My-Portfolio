@@ -4,6 +4,7 @@ import { inter } from "@/shared/configs/fonts";
 import { clientEnv } from "@/shared/configs/clientEnv";
 import { Navbar } from "@/shared/components/Navbar";
 import { Footer } from "@/shared/components/Footer";
+import { NavigationProgress } from "@/shared/components/NavigationProgress";
 import { AppProviders } from "@/shared/components/providers";
 import { cldUrl } from "@/shared/libs/cloudinaryUrl";
 import { getSettings } from "@/features/settings/queries/settingsQueries";
@@ -41,9 +42,10 @@ export default async function SiteLayout({
         className={`${inter.variable} bg-neutral-100 font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100`}
       >
         <AppProviders>
+          <NavigationProgress />
           <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
           {children}
-          <Footer socials={settings.socials} />
+          <Footer name={settings.name} socials={settings.socials} />
         </AppProviders>
       </body>
     </html>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CloudImage } from "./CloudImage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -13,6 +13,10 @@ import {
 import { ToggleButton } from "./ThemeToggle";
 import { HamburgerButton } from "./HamburgerButton";
 import { NAV_ITEMS } from "@/shared/constants/nav";
+import { cn } from "@/shared/libs/utils";
+
+const isActive = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
 type NavbarProps = {
   name: string;
@@ -38,6 +42,11 @@ export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
 
   const y = useTransform(scrollY, [0, 100], [0, 10]);
   const width = useTransform(scrollY, [0, 100], ["min(92%, 56rem)", "min(88%, 48rem)"]);
+
+  // The avatar is a button (not a <Link>), so warm the home page ourselves.
+  useEffect(() => {
+    if (!isHome) router.prefetch("/");
+  }, [isHome, router]);
 
   const handleProfileClick = () => {
     if (isHome) {
@@ -86,23 +95,38 @@ export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
           )}
         </button>
         <div className="flex items-center gap-1 md:gap-2">
-          {NAV_ITEMS.map((item, idx) => (
-            <Link
-              className="relative hidden px-2 py-1 text-sm md:block"
-              href={item.href}
-              key={item.href}
-              onMouseEnter={() => setHovered(idx)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              {hovered === idx && (
-                <motion.span
-                  layoutId="hovered-span"
-                  className="absolute inset-0 h-full w-full rounded-md bg-neutral-200 dark:bg-neutral-800"
-                />
-              )}
-              <span className="relative z-10">{item.title}</span>
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item, idx) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <Link
+                className={cn(
+                  "relative hidden rounded-md px-2.5 py-1 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none md:block",
+                  active
+                    ? "font-medium text-neutral-900 dark:text-white"
+                    : "text-neutral-600 dark:text-neutral-300",
+                )}
+                href={item.href}
+                key={item.href}
+                aria-current={active ? "page" : undefined}
+                onMouseEnter={() => setHovered(idx)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                {hovered === idx && (
+                  <motion.span
+                    layoutId="hovered-span"
+                    className="absolute inset-0 h-full w-full rounded-md bg-neutral-200 dark:bg-neutral-800"
+                  />
+                )}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-2.5 -bottom-0.5 h-0.5 rounded-full bg-neutral-900 dark:bg-white"
+                  />
+                )}
+                <span className="relative z-10">{item.title}</span>
+              </Link>
+            );
+          })}
 
           <ToggleButton />
 
@@ -127,7 +151,8 @@ export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-md px-2 py-2 text-sm hover:bg-neutral-200 dark:hover:bg-neutral-800"
+                  aria-current={isActive(pathname, item.href) ? "page" : undefined}
+                  className="rounded-md px-2 py-2 text-sm hover:bg-neutral-200 aria-[current=page]:bg-neutral-100 aria-[current=page]:font-medium dark:hover:bg-neutral-800 dark:aria-[current=page]:bg-neutral-800"
                 >
                   {item.title}
                 </Link>

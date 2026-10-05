@@ -11,8 +11,7 @@ export async function exportAllContent() {
     experience,
     testimonials,
     resumes,
-    tags,
-    posts,
+    mediumPosts,
     messages,
   ] = await Promise.all([
     db.siteSettings.findMany(),
@@ -27,16 +26,13 @@ export async function exportAllContent() {
     db.experience.findMany({ include: { technologies: { select: { id: true } } } }),
     db.testimonial.findMany(),
     db.resume.findMany(),
-    db.tag.findMany(),
-    db.post.findMany({
-      include: { tags: { select: { id: true } }, _count: { select: { likes: true } } },
-    }),
+    db.mediumPost.findMany(),
     db.message.findMany(),
   ]);
 
   return {
     exportedAt: new Date().toISOString(),
-    version: 1,
+    version: 2,
     settings,
     media,
     technologies,
@@ -44,8 +40,7 @@ export async function exportAllContent() {
     experience,
     testimonials,
     resumes,
-    tags,
-    posts,
+    mediumPosts,
     messages,
   };
 }

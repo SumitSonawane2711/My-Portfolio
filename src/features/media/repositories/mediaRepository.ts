@@ -17,7 +17,6 @@ export const mediaSelect = {
 const unusedWhere = {
   projectCovers: { none: {} },
   projectImages: { none: {} },
-  postCovers: { none: {} },
   experienceLogos: { none: {} },
   testimonialAvatars: { none: {} },
   technologyIcons: { none: {} },
@@ -31,7 +30,6 @@ const usageCount = {
     select: {
       projectCovers: true,
       projectImages: true,
-      postCovers: true,
       experienceLogos: true,
       testimonialAvatars: true,
       technologyIcons: true,

@@ -3,23 +3,27 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
 import { CloudImage } from "@/shared/components/CloudImage";
-import { SectionHeading } from "@/shared/components/SectionHeading";
+import { SectionHeader } from "@/shared/components/SectionHeader";
 import type { TestimonialCard as TestimonialCardData } from "../interfaces/testimonial";
 
 // Same marquee design as the original placeholder section, now fed by the
 // dashboard. Rendered only when at least one testimonial is visible.
 export const Testimonials = ({ items }: { items: TestimonialCardData[] }) => {
   return (
-    <div className="py-10">
-      <SectionHeading delay={0.8}>What Our Clients Say</SectionHeading>
-      <div className="[mask-image:linear-gradient(to_right,transparent,white_10%,white_90%, transparent)] flex">
+    <section aria-labelledby="testimonials-title" className="py-12">
+      <SectionHeader
+        id="testimonials-title"
+        title="Testimonials"
+        description="What people I've worked with say."
+      />
+      <div className="mt-4 flex [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
         <Marquee speed={25} pauseOnHover gradient={false} className="py-4">
           {items.map((item) => (
             <TestimonialCard key={item.id} {...item} />
           ))}
         </Marquee>
       </div>
-    </div>
+    </section>
   );
 };
 
@@ -33,9 +37,11 @@ const initials = (name: string) =>
 
 const TestimonialCard = ({ quote, name, byline, avatarPublicId }: TestimonialCardData) => {
   return (
-    <div className="mx-2 flex h-50 w-full max-w-60 flex-col justify-between gap-4 rounded-xl border border-neutral-200 p-4 shadow-md dark:border-neutral-800 dark:bg-neutral-950">
-      <p className="text-sm text-primary">{quote}</p>
-      <div className="flex items-center gap-4">
+    <figure className="mx-2 flex h-52 w-full max-w-64 flex-col justify-between gap-4 rounded-2xl border border-neutral-200 bg-white p-5 transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-950">
+      <blockquote className="line-clamp-5 text-sm leading-relaxed text-primary">
+        “{quote}”
+      </blockquote>
+      <figcaption className="flex items-center gap-3">
         {avatarPublicId ? (
           <CloudImage
             publicId={avatarPublicId}
@@ -51,10 +57,10 @@ const TestimonialCard = ({ quote, name, byline, avatarPublicId }: TestimonialCar
           </span>
         )}
         <div>
-          <p className="text-sm text-secondary">{name}</p>
+          <p className="text-sm font-medium text-primary">{name}</p>
           {byline && <p className="text-xs text-secondary">{byline}</p>}
         </div>
-      </div>
-    </div>
+      </figcaption>
+    </figure>
   );
 };
