@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
     globalNotFound: true,
     // Long posts send their editor HTML through a server action.
     serverActions: { bodySizeLimit: "2mb" },
+    // Keep visited pages in the browser's router cache, so going back to a
+    // page (e.g. home) is instant instead of a new server round trip.
+    // Saves still show at once: server actions clear this cache.
+    staleTimes: { dynamic: 60, static: 300 },
   },
 
   async redirects() {

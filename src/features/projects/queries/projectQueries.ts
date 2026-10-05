@@ -1,26 +1,30 @@
 import "server-only";
-import { cache } from "react";
 import type { JSONContent } from "@tiptap/react";
+import { CACHE_TAGS, cachedQuery } from "@/shared/libs/dataCache";
 import type { ProjectAdminRow, ProjectFormData } from "../interfaces/project";
 import { projectRepository } from "../repositories/projectRepository";
 import { toProjectCard, toProjectDetail } from "../services/projectServices";
 
-// ── Public (cached per request; pages are static + revalidated on save) ──
+// ── Public (data cache, cleared on save via revalidateSite) ──────────────
+// Project cards show technology icons, so technology edits clear them too.
+const PROJECT_TAGS = [CACHE_TAGS.projects, CACHE_TAGS.technologies];
 
-export const getHomeProjects = cache(async (take = 3) =>
+export const getHomeProjects = cachedQuery("projects:home", PROJECT_TAGS, async (take: number) =>
   (await projectRepository.listForHome(take)).map(toProjectCard),
 );
 
-export const getAllProjects = cache(async () =>
+export const getAllProjects = cachedQuery("projects:all", PROJECT_TAGS, async () =>
   (await projectRepository.listPublished()).map(toProjectCard),
 );
 
-export const getProject = cache(async (slug: string) => {
+export const getProject = cachedQuery("projects:one", PROJECT_TAGS, async (slug: string) => {
   const row = await projectRepository.findPublishedBySlug(slug);
   return row ? toProjectDetail(row) : null;
 });
 
-export const getProjectSlugs = cache(() => projectRepository.listPublishedSlugs());
+export const getProjectSlugs = cachedQuery("projects:slugs", PROJECT_TAGS, () =>
+  projectRepository.listPublishedSlugs(),
+);
 
 // ── Admin ────────────────────────────────────────────────────────────────
 

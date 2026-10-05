@@ -7,6 +7,7 @@ import { getServerEnv } from "@/shared/configs/env";
 import { fail, ok, validationFail, type ActionResult } from "@/shared/libs/actionResult";
 import { toErrorMessage } from "@/shared/libs/errors";
 import { revalidatePath } from "next/cache";
+import { revalidateSite } from "@/shared/libs/revalidate";
 import { MEDIA_FOLDERS, type MediaRef } from "../interfaces/media";
 import { mediaRepository } from "../repositories/mediaRepository";
 import { mediaServices } from "../services/mediaServices";
@@ -54,7 +55,9 @@ export async function registerUpload(
 export async function updateMediaAlt(id: string, alt: string): Promise<ActionResult<MediaRef>> {
   await requireAdmin();
   try {
-    return ok(await mediaRepository.setAlt(id, alt.trim().slice(0, 200) || null));
+    const media = await mediaRepository.setAlt(id, alt.trim().slice(0, 200) || null);
+    revalidateSite.everything(); // alt text is shown wherever the image is
+    return ok(media);
   } catch (error) {
     return fail(toErrorMessage(error));
   }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CloudImage } from "./CloudImage";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -42,6 +42,11 @@ export const Navbar = ({ name, avatarPublicId }: NavbarProps) => {
 
   const y = useTransform(scrollY, [0, 100], [0, 10]);
   const width = useTransform(scrollY, [0, 100], ["min(92%, 56rem)", "min(88%, 48rem)"]);
+
+  // The avatar is a button (not a <Link>), so warm the home page ourselves.
+  useEffect(() => {
+    if (!isHome) router.prefetch("/");
+  }, [isHome, router]);
 
   const handleProfileClick = () => {
     if (isHome) {
