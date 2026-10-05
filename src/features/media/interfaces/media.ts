@@ -25,7 +25,6 @@ export type CloudinaryUploadResult = {
 
 export const MEDIA_FOLDERS = [
   "projects",
-  "blog",
   "avatars",
   "technologies",
   "experience",

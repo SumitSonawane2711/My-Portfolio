@@ -6,12 +6,12 @@ import { rateLimit } from "@/shared/libs/rateLimit";
 import { hashValue } from "@/shared/libs/request";
 import { verifyTurnstile } from "@/shared/libs/turnstile";
 import { messageRepository } from "../repositories/messageRepository";
-import type { ContactInput, FeedbackInput } from "../schemas/messageSchema";
+import type { ContactInput } from "../schemas/messageSchema";
 
 const MESSAGES_PER_HOUR = 5;
 
 /**
- * Checks shared by every public form. Returns false for a honeypot hit: the
+ * Bot checks for the contact form. Returns false for a honeypot hit: the
  * bot gets a normal "sent" response but nothing is stored.
  */
 async function passesBotChecks(input: { website?: string; turnstileToken: string }, ip: string) {
@@ -40,7 +40,6 @@ export const messageServices = {
   async submitContact(input: ContactInput, ip: string) {
     if (!(await passesBotChecks(input, ip))) return;
     await messageRepository.create({
-      kind: "CONTACT",
       name: input.name,
       email: input.email,
       message: input.message,
@@ -52,29 +51,6 @@ export const messageServices = {
         ["Name", input.name],
         ["Email", input.email],
         ["Message", input.message],
-      ],
-    });
-  },
-
-  async submitFeedback(input: FeedbackInput, ip: string) {
-    if (!(await passesBotChecks(input, ip))) return;
-    const post = input.postSlug ? await messageRepository.findVisiblePost(input.postSlug) : null;
-    await messageRepository.create({
-      kind: input.kind,
-      postId: post?.id ?? null,
-      name: input.name || null,
-      email: input.email || null,
-      message: input.message,
-      quotedText: input.quotedText || null,
-    });
-    notifyLater({
-      subject: `New ${input.kind.toLowerCase()} on "${post?.title ?? "your blog"}"`,
-      replyTo: input.email || null,
-      fields: [
-        ["Post", post?.title],
-        ["Quoted text", input.quotedText],
-        ["Message", input.message],
-        ["From", [input.name, input.email].filter(Boolean).join(" · ")],
       ],
     });
   },

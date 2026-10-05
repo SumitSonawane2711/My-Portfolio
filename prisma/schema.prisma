@@ -10,23 +10,10 @@ datasource db {
 
 // ─────────────────────────── Enums ───────────────────────────
 
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  SCHEDULED
-}
-
 enum ResumeStatus {
   ACTIVE // listed on the portfolio
   UNLISTED // reachable only by its direct link
   ARCHIVED // hidden everywhere, kept for history
-}
-
-enum MessageKind {
-  CONTACT
-  SUGGESTION
-  CORRECTION
-  THOUGHT
 }
 
 enum MessageStatus {
@@ -53,7 +40,6 @@ model MediaAsset {
 
   projectCovers      Project[]      @relation("ProjectCover")
   projectImages      ProjectImage[]
-  postCovers         Post[]         @relation("PostCover")
   experienceLogos    Experience[]   @relation("ExperienceLogo")
   testimonialAvatars Testimonial[]  @relation("TestimonialAvatar")
   technologyIcons    Technology[]   @relation("TechnologyIcon")
@@ -199,6 +185,8 @@ model SiteSettings {
   availableForWork Boolean     @default(false)
   /// [{ "platform": "github", "url": "https://github.com/…" }, …]
   socials          Json        @default("[]")
+  /// Last successful Medium RSS sync (shown in admin).
+  mediumSyncedAt   DateTime?
   updatedAt        DateTime    @updatedAt
 }
 
@@ -228,67 +216,48 @@ model Resume {
   @@index([status, order])
 }
 
-// ──────────────────────────── Blog ───────────────────────────
+// ───────────────────────── Medium posts ──────────────────────
 
-model Tag {
-  id    String @id @default(cuid())
-  name  String @unique
-  slug  String @unique
-  posts Post[]
+enum MediumPostSource {
+  RSS // synced from the Medium RSS feed (latest ~10 stories)
+  MANUAL // added by hand in admin (older stories)
 }
 
-model Post {
-  id             String      @id @default(cuid())
-  title          String
-  slug           String      @unique
-  excerpt        String      @default("")
-  coverId        String?
-  cover          MediaAsset? @relation("PostCover", fields: [coverId], references: [id], onDelete: SetNull)
-  contentJson    Json?
-  contentHtml    String      @default("")
-  /// [{ id, text, level }] built from h2/h3 at save time
-  toc            Json        @default("[]")
-  readingMinutes Int         @default(1)
-  status         PostStatus  @default(DRAFT)
-  publishedAt    DateTime?
-  seoTitle       String?
-  seoDescription String?
-  tags           Tag[]
-  likes          PostLike[]
-  messages       Message[]
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+/// Stories published on Medium. The portfolio lists them and links out; there
+/// is no on-site article page.
+model MediumPost {
+  id          String           @id @default(cuid())
+  /// Medium's stable story id (RSS guid, e.g. https://medium.com/p/62edea66ffa4);
+  /// the canonical URL for manual posts. Sync upserts on this.
+  guid        String           @unique
+  url         String
+  title       String
+  excerpt     String           @default("")
+  coverUrl    String?
+  tags        String[]
+  publishedAt DateTime
+  source      MediumPostSource @default(RSS)
+  /// Hidden posts stay hidden across syncs.
+  hidden      Boolean          @default(false)
+  /// Featured posts come first on the home page.
+  featured    Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
-  @@index([status, publishedAt])
+  @@index([hidden, publishedAt])
 }
 
-model PostLike {
-  id          String   @id @default(cuid())
-  postId      String
-  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  /// sha256(visitor cookie + HASH_SALT) — never the raw id or IP
-  visitorHash String
-  createdAt   DateTime @default(now())
-
-  @@unique([postId, visitorHash])
-}
-
-// ───────────── Inbox: contact messages + reader feedback ─────────────
+// ──────────────────── Inbox: contact messages ────────────────────
 
 model Message {
-  id         String        @id @default(cuid())
-  kind       MessageKind
-  status     MessageStatus @default(UNREAD)
-  postId     String?
-  post       Post?         @relation(fields: [postId], references: [id], onDelete: SetNull)
-  name       String?
-  email      String?
-  message    String
-  quotedText String?
-  createdAt  DateTime      @default(now())
+  id        String        @id @default(cuid())
+  status    MessageStatus @default(UNREAD)
+  name      String?
+  email     String?
+  message   String
+  createdAt DateTime      @default(now())
 
   @@index([status, createdAt])
-  @@index([kind, createdAt])
 }
 
 // ───────────────────────── Rate limit ────────────────────────

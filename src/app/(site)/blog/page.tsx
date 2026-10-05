@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
-import { BlogListPage } from "@/features/blog/components/BlogListPage";
-import { getPosts } from "@/features/blog/queries/blogQueries";
+import { BlogListPage } from "@/features/medium/components/BlogListPage";
+import { getMediumStories, getMediumSyncStatus } from "@/features/medium/queries/mediumQueries";
 
-// Hourly revalidation also makes scheduled posts appear without a cron job.
+// Refreshed hourly and right after a sync or an admin change (revalidatePath).
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "All Blogs - Sumit Sonawane",
-  description: "All Blogs by sumit",
+  title: "Writing - Sumit Sonawane",
+  description: "Stories by Sumit Sonawane on software development, published on Medium.",
 };
 
-export default async function Blogs() {
-  return <BlogListPage posts={await getPosts()} />;
+export default async function Blog() {
+  const [stories, { profileUrl }] = await Promise.all([getMediumStories(), getMediumSyncStatus()]);
+  return <BlogListPage stories={stories} profileUrl={profileUrl} />;
 }

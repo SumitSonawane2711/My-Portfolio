@@ -19,7 +19,6 @@ const importers: Record<string, () => Promise<Importer>> = {
   projects: async () => (await import("./importers/projects")).importProjects,
   experience: async () => (await import("./importers/experience")).importExperience,
   resumes: async () => (await import("./importers/resumes")).importResumes,
-  blog: async () => (await import("./importers/blog")).importBlog,
   // Last: moves everything imported from /public to Cloudinary (needs valid keys).
   "upload-local-media": async () => (await import("./importers/localMedia")).uploadLocalMedia,
 };

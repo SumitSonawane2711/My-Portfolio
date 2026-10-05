@@ -43,7 +43,7 @@ export default async function SiteLayout({
         <AppProviders>
           <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
           {children}
-          <Footer socials={settings.socials} />
+          <Footer name={settings.name} socials={settings.socials} />
         </AppProviders>
       </body>
     </html>

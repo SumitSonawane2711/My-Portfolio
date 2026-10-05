@@ -23,6 +23,8 @@ const serverSchema = z.object({
   GMAIL_USER: z.email(),
   GMAIL_APP_PASSWORD: z.string().min(1),
   CONTACT_RECEIVER_EMAIL: z.union([z.email(), z.literal("")]).optional(),
+  /** Protects /api/cron/medium; Vercel sends it on scheduled runs. */
+  CRON_SECRET: z.union([z.string().min(16), z.literal("")]).optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverSchema>;

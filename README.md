@@ -2,8 +2,8 @@
 
 Personal portfolio with a private dashboard: Next.js 16 (App Router), Tailwind CSS v4,
 Postgres (Neon) through Prisma 7, Better Auth (GitHub login), Cloudinary and a Tiptap editor.
-Projects, blog posts, experience, technologies, testimonials, resumes and site details are
-all managed at `/admin`.
+Projects, experience, technologies, testimonials, resumes and site details are all managed
+at `/admin`. Blog posts live on Medium: the site lists them and links out (see below).
 
 ## Getting started
 
@@ -18,6 +18,20 @@ npm run dev            # http://localhost:3000 — dashboard at /admin
 ```
 
 There is a single environment file, `.env`; it is validated when the server starts.
+
+## Blog (Medium)
+
+Posts are written on Medium. Add your profile link (e.g. `https://medium.com/@you`) in
+**Admin → Settings → Socials**, then use **Admin → Blog**:
+
+- **Sync now** pulls your Medium RSS feed (Medium only serves the latest ~10 stories). A Vercel
+  cron (`vercel.json`) also syncs daily at 06:00 UTC through `/api/cron/medium`, which needs a
+  `CRON_SECRET` environment variable in Vercel (`openssl rand -hex 32`).
+- **Add story** adds older stories by hand (Medium blocks automated page reads, so title and
+  date are typed in). A hand-added story later seen in the feed is updated, not duplicated.
+- **Feature** puts a story first on the home page; **hide** keeps it off the site across syncs.
+
+Old `/blog/<slug>` links redirect to the Medium profile, and `/rss.xml` to the Medium feed.
 
 ## Scripts
 
@@ -60,7 +74,7 @@ Local git hooks (Husky) catch everything CI would reject, before it leaves your 
 | Hook         | When             | What it runs                                                                                                                                                                                                                                                                                        |
 | ------------ | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pre-commit` | every commit     | ESLint + Prettier on staged files (lint-staged); `prisma validate` + format check when the schema is staged                                                                                                                                                                                         |
-| `commit-msg` | every commit     | commitlint: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(blog): …`, `fix(contact): …`)                                                                                                                                                                                       |
+| `commit-msg` | every commit     | commitlint: [Conventional Commits](https://www.conventionalcommits.org/) (`feat(projects): …`, `fix(contact): …`)                                                                                                                                                                                   |
 | `pre-push`   | every `git push` | pushes to **`main`**: always blocked. Pushes to **`dev`**: refuses uncommitted/untracked files, checks the commit messages being pushed, then `npm run verify` (lint, format, Prisma, schema-has-migrations, typecheck, tests, build). Pushes to **any other branch** (e.g. `feature/*`): no checks |
 
 Run `npm run verify` yourself any time (`-- --no-build` to skip the build). The pre-push run

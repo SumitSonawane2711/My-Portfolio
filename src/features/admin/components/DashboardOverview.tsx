@@ -2,15 +2,14 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   Briefcase,
+  Cpu,
   Download,
   FileText,
   FolderKanban,
-  Heart,
   Inbox,
   MessageSquareQuote,
   Newspaper,
 } from "lucide-react";
-import { Badge } from "@/shared/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -20,7 +19,7 @@ import {
 } from "@/shared/components/ui/card";
 import { formatDate, truncate } from "@/shared/libs/format";
 import type { getDashboardStats } from "../repositories/dashboardRepository";
-import { CHART_MONTHS, MESSAGE_KINDS, type DashboardCharts } from "../services/dashboardCharts";
+import { CHART_MONTHS, type DashboardCharts } from "../services/dashboardCharts";
 import { BarList } from "./charts/BarList";
 import { ColumnChart } from "./charts/ColumnChart";
 import { PageHeader } from "./PageHeader";
@@ -62,9 +61,9 @@ export const DashboardOverview = ({ stats, charts }: DashboardOverviewProps) => 
           icon={FolderKanban}
         />
         <StatCard
-          label="Published posts"
-          value={stats.publishedPosts}
-          hint={`${stats.draftPosts} draft${stats.draftPosts === 1 ? "" : "s"}`}
+          label="Medium stories"
+          value={stats.mediumStories}
+          hint={stats.hiddenStories > 0 ? `${stats.hiddenStories} hidden` : undefined}
           href="/admin/blog"
           icon={Newspaper}
         />
@@ -99,38 +98,42 @@ export const DashboardOverview = ({ stats, charts }: DashboardOverviewProps) => 
           href="/admin/testimonials"
           icon={MessageSquareQuote}
         />
-        <StatCard label="Post likes" value={stats.likes} href="/admin/blog" icon={Heart} />
+        <StatCard
+          label="Technologies"
+          value={stats.technologies}
+          href="/admin/technologies"
+          icon={Cpu}
+        />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
         <ChartCard
           title="Messages"
-          description={`Received per month by kind, last ${CHART_MONTHS} months`}
+          description={`Contact messages per month, last ${CHART_MONTHS} months`}
         >
           <ColumnChart
             data={charts.messagesByMonth}
-            series={MESSAGE_KINDS.map((k) => k.label)}
+            series={["Messages"]}
             unit="messages"
             emptyText={`No messages in the last ${CHART_MONTHS} months.`}
           />
         </ChartCard>
         <ChartCard
-          title="Post likes"
-          description={`New likes per month, last ${CHART_MONTHS} months`}
+          title="Medium stories"
+          description={`Stories published per month, last ${CHART_MONTHS} months`}
         >
           <ColumnChart
-            data={charts.likesByMonth}
-            series={["Likes"]}
-            unit="likes"
-            emptyText={`No likes in the last ${CHART_MONTHS} months.`}
+            data={charts.storiesByMonth}
+            series={["Stories"]}
+            unit="stories"
+            emptyText={`No stories in the last ${CHART_MONTHS} months.`}
           />
         </ChartCard>
-        <ChartCard title="Resume downloads" description="All-time downloads per resume">
-          <BarList data={charts.resumeDownloads} emptyText="No resumes yet." />
-        </ChartCard>
-        <ChartCard title="Most liked posts" description="Top 5 posts by all-time likes">
-          <BarList data={charts.topLikedPosts} emptyText="No post has been liked yet." />
-        </ChartCard>
+        <div className="lg:col-span-2">
+          <ChartCard title="Resume downloads" description="All-time downloads per resume">
+            <BarList data={charts.resumeDownloads} emptyText="No resumes yet." />
+          </ChartCard>
+        </div>
       </div>
 
       <Card className="mt-6">
@@ -146,11 +149,7 @@ export const DashboardOverview = ({ stats, charts }: DashboardOverviewProps) => 
                 <li key={message.id} className="py-3 first:pt-0 last:pb-0">
                   <Link href="/admin/inbox" className="block hover:opacity-80">
                     <div className="flex flex-wrap items-center gap-2 text-sm">
-                      <Badge variant="secondary">{message.kind.toLowerCase()}</Badge>
                       <span className="font-medium">{message.name || "Anonymous"}</span>
-                      {message.post && (
-                        <span className="text-muted-foreground">on “{message.post.title}”</span>
-                      )}
                       <span className="ml-auto text-xs text-muted-foreground">
                         {formatDate(message.createdAt)}
                       </span>

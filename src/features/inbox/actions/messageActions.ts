@@ -6,12 +6,7 @@ import { fail, ok, validationFail, type ActionResult } from "@/shared/libs/actio
 import { toErrorMessage } from "@/shared/libs/errors";
 import { getClientIp } from "@/shared/libs/request";
 import { revalidateSite } from "@/shared/libs/revalidate";
-import {
-  contactSchema,
-  feedbackSchema,
-  type ContactInput,
-  type FeedbackInput,
-} from "../schemas/messageSchema";
+import { contactSchema, type ContactInput } from "../schemas/messageSchema";
 import { messageRepository } from "../repositories/messageRepository";
 import { messageServices } from "../services/messageServices";
 
@@ -22,17 +17,6 @@ export async function sendContactMessage(input: ContactInput): Promise<ActionRes
   if (!parsed.success) return validationFail(parsed.error);
   try {
     await messageServices.submitContact(parsed.data, await getClientIp());
-    return ok();
-  } catch (error) {
-    return fail(toErrorMessage(error));
-  }
-}
-
-export async function submitFeedback(input: FeedbackInput): Promise<ActionResult> {
-  const parsed = feedbackSchema.safeParse(input);
-  if (!parsed.success) return validationFail(parsed.error);
-  try {
-    await messageServices.submitFeedback(parsed.data, await getClientIp());
     return ok();
   } catch (error) {
     return fail(toErrorMessage(error));

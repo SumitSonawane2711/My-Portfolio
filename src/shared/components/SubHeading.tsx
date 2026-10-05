@@ -1,31 +1,21 @@
-"use client";
-import { cn } from "@/shared/libs/utils";
 import React from "react";
-import { motion } from "motion/react";
+import { cn } from "@/shared/libs/utils";
 
 export const SubHeading = ({
-  as: Tag = "h2",
+  as: Tag = "p",
   children,
   className,
 }: {
-  as?: "h2" | "h3" | "h4" | "h5" | "h6";
+  as?: "p" | "h2" | "h3" | "h4" | "h5" | "h6";
   children: React.ReactNode;
   className?: string;
 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, filter: "blur(10px)", y: 10 }}
-      animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-      transition={{
-        duration: 0.3,
-        ease: "easeInOut",
-        delay: 0.1,
-      }}
-      viewport={{ once: true }}
+    <Tag
+      className={cn("fade-up max-w-2xl pt-4 text-base text-pretty text-secondary", className)}
+      style={{ "--delay": "80ms" } as React.CSSProperties}
     >
-      <Tag className={cn("max-w-xl pt-4 text-sm text-secondary md:text-sm", className)}>
-        {children}
-      </Tag>
-    </motion.div>
+      {children}
+    </Tag>
   );
 };

@@ -1,18 +1,19 @@
 import { Container } from "@/shared/components/Container";
 import { Heading } from "@/shared/components/Heading";
+import { SubHeading } from "@/shared/components/SubHeading";
 import type { ProjectCard } from "../interfaces/project";
-import { Projects } from "./Projects";
+import { ProjectGrid } from "./Projects";
 
 export const ProjectsPage = ({ projects }: { projects: ProjectCard[] }) => {
   return (
-    <div className="flex min-h-screen items-start justify-start">
-      <Container className="min-h-screen px-10 pt-20 md:pb-10">
+    <main className="flex min-h-screen items-start justify-start">
+      <Container className="min-h-screen pt-28 pb-16">
         <Heading>Projects</Heading>
-        {/* <SubHeading>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores qui adipisci, velit similique quidem odio iste non perspiciatis corporis aliquid.
-                </SubHeading> */}
-        <Projects projects={projects} />
+        <SubHeading>
+          Things I&apos;ve designed and built: the problem, the stack and what shipped.
+        </SubHeading>
+        <ProjectGrid projects={projects} className="mt-10" />
       </Container>
-    </div>
+    </main>
   );
 };

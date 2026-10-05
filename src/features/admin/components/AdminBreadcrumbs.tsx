@@ -18,18 +18,16 @@ type Crumb = { label: string; href: string };
 // Labels for fixed segments; anything else under a section is a record id.
 const SEGMENT_LABELS: Record<string, string> = {
   new: "New",
-  preview: "Preview",
 };
 
 const EDIT_LABELS: Record<string, string> = {
-  blog: "Edit post",
   projects: "Edit project",
   experience: "Edit experience",
 };
 
-/** "/admin/blog/abc123/preview" → Dashboard › Blog › Edit post › Preview */
+/** "/admin/projects/abc123" → Dashboard › Projects › Edit project */
 export function toCrumbs(pathname: string): Crumb[] {
-  const segments = pathname.split("/").filter(Boolean); // ["admin", "blog", "abc123", "preview"]
+  const segments = pathname.split("/").filter(Boolean); // ["admin", "projects", "abc123"]
   if (segments[0] !== "admin") return [];
 
   const crumbs: Crumb[] = [{ label: "Dashboard", href: "/admin" }];

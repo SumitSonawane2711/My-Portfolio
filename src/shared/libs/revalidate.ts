@@ -13,10 +13,9 @@ export const revalidateSite = {
     paths("/", "/projects", "/sitemap.xml");
     slugPaths("/projects", slugs);
   },
-  blog(slugs: (string | null | undefined)[] = []) {
-    paths("/", "/blog", "/rss.xml", "/sitemap.xml");
-    revalidatePath("/blog/tag/[tag]", "page");
-    slugPaths("/blog", slugs);
+  // Medium stories: listed on the home page and /blog (they link out to Medium).
+  blog() {
+    paths("/", "/blog");
   },
   experience(slugs: (string | null | undefined)[] = []) {
     paths("/", "/sitemap.xml");

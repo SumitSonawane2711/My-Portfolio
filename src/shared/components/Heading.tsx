@@ -1,7 +1,5 @@
-"use client";
-import { cn } from "@/shared/libs/utils";
 import React from "react";
-import { motion } from "motion/react";
+import { cn } from "@/shared/libs/utils";
 
 export const Heading = ({
   as: Tag = "h1",
@@ -13,23 +11,13 @@ export const Heading = ({
   className?: string;
 }) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, filter: "blur(10px)", x: 10 }}
-      animate={{ opacity: 1, filter: "blur(0px)", x: 0 }}
-      transition={{
-        duration: 0.3,
-        ease: "easeInOut",
-      }}
-      viewport={{ once: true }}
+    <Tag
+      className={cn(
+        "fade-up text-3xl font-bold tracking-tighter text-balance text-primary md:text-5xl",
+        className,
+      )}
     >
-      <Tag
-        className={cn(
-          "text-2xl font-bold tracking-tighter text-primary drop-shadow-md md:text-4xl",
-          className,
-        )}
-      >
-        {children}
-      </Tag>
-    </motion.div>
+      {children}
+    </Tag>
   );
 };
