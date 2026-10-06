@@ -13,6 +13,7 @@ export default async function MediaPage() {
   const items = assets.map(({ _count, ...asset }) => ({
     id: asset.id,
     publicId: asset.publicId,
+    resourceType: asset.resourceType,
     format: asset.format,
     bytes: asset.bytes,
     width: asset.width,

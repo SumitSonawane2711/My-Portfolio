@@ -18,6 +18,7 @@ import { applyFieldErrors } from "@/shared/libs/form";
 import { FormField } from "@/features/admin/components/FormField";
 import { GalleryField } from "@/features/media/components/GalleryField";
 import { ImageUpload } from "@/features/media/components/ImageUpload";
+import { VideoUpload } from "@/features/media/components/VideoUpload";
 import type { TechnologyAdminRow } from "@/features/technologies/interfaces/technology";
 import { TechnologyPicker } from "@/features/technologies/components/TechnologyPicker";
 import { createProject, updateProject } from "../actions/projectActions";
@@ -34,12 +35,16 @@ const EMPTY: FormValues = {
   displayDate: "",
   cover: null,
   images: [],
+  previewVideo: null,
   contentJson: null,
   contentHtml: "",
   liveUrl: "",
   repoUrl: "",
   featured: false,
   published: false,
+  freelance: false,
+  clientName: "",
+  outcome: "",
   technologyIds: [],
   seoTitle: "",
   seoDescription: "",
@@ -60,11 +65,12 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
 
   const onSubmit = handleSubmit((values) =>
     startTransition(async () => {
-      const { cover, images, ...rest } = values;
+      const { cover, images, previewVideo, ...rest } = values;
       const input: ProjectInput = {
         ...rest,
         coverId: cover?.id ?? null,
         imageIds: images.map((m) => m.id),
+        previewVideoId: previewVideo?.id ?? null,
       };
       const result = project ? await updateProject(project.id, input) : await createProject(input);
 
@@ -150,6 +156,52 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
                 </Button>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Freelance page</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Controller
+              control={control}
+              name="freelance"
+              render={({ field }) => (
+                <div className="flex items-center justify-between gap-3">
+                  <Label htmlFor="freelance">Show in /freelance Work</Label>
+                  <Switch id="freelance" checked={field.value} onCheckedChange={field.onChange} />
+                </div>
+              )}
+            />
+            <FormField
+              label="Client"
+              htmlFor="clientName"
+              hint="Shown first in the caption. Empty uses the project title."
+              error={errors.clientName?.message}
+            >
+              <Input id="clientName" {...register("clientName")} placeholder="Acme Health" />
+            </FormField>
+            <FormField
+              label="Outcome"
+              htmlFor="outcome"
+              hint="One line about the result for the client. Empty uses the summary."
+              error={errors.outcome?.message}
+            >
+              <Textarea id="outcome" rows={2} {...register("outcome")} />
+            </FormField>
+            <FormField
+              label="Preview video (optional)"
+              hint="A short silent screen recording (5–15 s). It loops on the Work card in place of the images."
+            >
+              <Controller
+                control={control}
+                name="previewVideo"
+                render={({ field }) => (
+                  <VideoUpload value={field.value} onChange={field.onChange} folder="projects" />
+                )}
+              />
+            </FormField>
           </CardContent>
         </Card>
 

@@ -19,5 +19,6 @@ export type TestimonialAdminRow = {
   linkedinUrl: string;
   sourceNote: string;
   visible: boolean;
+  freelance: boolean;
   avatar: MediaRef | null;
 };

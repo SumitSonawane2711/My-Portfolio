@@ -47,3 +47,17 @@ export function cldFileUrl(publicId: string, format: string, downloadName?: stri
     : "";
   return `${BASE()}/${flag}${publicId}.${format}`;
 }
+
+const VIDEO_BASE = () => `https://res.cloudinary.com/${clientEnv.cloudinaryCloudName}/video/upload`;
+
+// A short screen recording, resized and without sound (ac_none), as MP4 so
+// every browser can play it; vc_auto picks the best codec for the browser.
+export function cldVideoUrl(publicId: string, width: number) {
+  return `${VIDEO_BASE()}/ac_none,q_auto,vc_auto,c_limit,w_${width}/${publicId}.mp4`;
+}
+
+// The video's first frame as an image: shown before it plays, and instead of
+// it when the visitor prefers reduced motion.
+export function cldVideoPosterUrl(publicId: string, width: number) {
+  return `${VIDEO_BASE()}/so_0,q_auto,c_limit,w_${width}/${publicId}.jpg`;
+}

@@ -30,6 +30,7 @@ export async function getTestimonialsForAdmin(): Promise<TestimonialAdminRow[]> 
     linkedinUrl: row.linkedinUrl ?? "",
     sourceNote: row.sourceNote ?? "",
     visible: row.visible,
+    freelance: row.freelance,
     avatar: row.avatar,
   }));
 }

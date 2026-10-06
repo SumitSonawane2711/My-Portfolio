@@ -81,6 +81,7 @@ export const projectRepository = {
       where: { id },
       include: {
         cover: { select: mediaSelect },
+        previewVideo: { select: mediaSelect },
         images: { include: { media: { select: mediaSelect } }, orderBy: { order: "asc" } },
         technologies: { select: { id: true } },
       },
@@ -90,7 +91,13 @@ export const projectRepository = {
   findById(id: string) {
     return db.project.findUnique({
       where: { id },
-      select: { id: true, slug: true, coverId: true, images: { select: { mediaId: true } } },
+      select: {
+        id: true,
+        slug: true,
+        coverId: true,
+        previewVideoId: true,
+        images: { select: { mediaId: true } },
+      },
     });
   },
 

@@ -17,12 +17,15 @@ export const mediaSelect = {
 const unusedWhere = {
   projectCovers: { none: {} },
   projectImages: { none: {} },
+  projectVideos: { none: {} },
   experienceLogos: { none: {} },
   testimonialAvatars: { none: {} },
   technologyIcons: { none: {} },
   resumes: { none: {} },
   settingsAvatars: { none: {} },
   settingsOgImages: { none: {} },
+  freelancePortraits: { none: {} },
+  freelanceOgImages: { none: {} },
 } satisfies Prisma.MediaAssetWhereInput;
 
 const usageCount = {
@@ -30,12 +33,15 @@ const usageCount = {
     select: {
       projectCovers: true,
       projectImages: true,
+      projectVideos: true,
       experienceLogos: true,
       testimonialAvatars: true,
       technologyIcons: true,
       resumes: true,
       settingsAvatars: true,
       settingsOgImages: true,
+      freelancePortraits: true,
+      freelanceOgImages: true,
     },
   },
 } satisfies Prisma.MediaAssetInclude;

@@ -16,7 +16,7 @@ const slugPaths = (prefix: string, slugs: (string | null | undefined)[]) =>
 export const revalidateSite = {
   projects(slugs: (string | null | undefined)[] = []) {
     tags(CACHE_TAGS.projects);
-    paths("/", "/projects", "/sitemap.xml");
+    paths("/", "/projects", "/freelance", "/sitemap.xml");
     slugPaths("/projects", slugs);
   },
   // Medium stories: listed on the home page and /blog (they link out to Medium).
@@ -36,7 +36,12 @@ export const revalidateSite = {
   },
   testimonials() {
     tags(CACHE_TAGS.testimonials);
-    paths("/");
+    paths("/", "/freelance");
+  },
+  // The /freelance one-pager (its copy, services and offers).
+  freelance() {
+    tags(CACHE_TAGS.freelance);
+    paths("/freelance");
   },
   // Settings and technologies appear in the shared layout or on many pages.
   everything() {

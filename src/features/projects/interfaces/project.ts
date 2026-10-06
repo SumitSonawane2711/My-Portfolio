@@ -48,12 +48,16 @@ export type ProjectFormData = {
   displayDate: string;
   cover: MediaRef | null;
   images: MediaRef[];
+  previewVideo: MediaRef | null;
   contentJson: JSONContent | null;
   contentHtml: string;
   liveUrl: string;
   repoUrl: string;
   featured: boolean;
   published: boolean;
+  freelance: boolean;
+  clientName: string;
+  outcome: string;
   technologyIds: string[];
   seoTitle: string;
   seoDescription: string;

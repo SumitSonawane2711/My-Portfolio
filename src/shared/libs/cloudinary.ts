@@ -21,6 +21,7 @@ function sdk() {
 export const UPLOAD_KINDS = {
   image: { allowedFormats: "jpg,jpeg,png,webp,avif,gif,svg", maxBytes: 5 * 1024 * 1024 },
   pdf: { allowedFormats: "pdf", maxBytes: 10 * 1024 * 1024 },
+  video: { allowedFormats: "mp4,webm,mov", maxBytes: 20 * 1024 * 1024 },
 } as const;
 
 export type UploadKind = keyof typeof UPLOAD_KINDS;

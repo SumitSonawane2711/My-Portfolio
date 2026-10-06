@@ -15,6 +15,7 @@ export const projectSchema = z.object({
   summary: z.string().trim().min(10, "At least 10 characters").max(300),
   displayDate: z.string().trim().max(40),
   coverId: z.string().nullable(),
+  previewVideoId: z.string().nullable(),
   imageIds: z.array(z.string()).max(12, "At most 12 gallery images"),
   contentJson: z.unknown().nullable(),
   contentHtml: z.string().max(500_000),
@@ -22,6 +23,10 @@ export const projectSchema = z.object({
   repoUrl: optionalUrl,
   featured: z.boolean(),
   published: z.boolean(),
+  /** Also in the Work section of /freelance, captioned "<client> – <outcome>". */
+  freelance: z.boolean(),
+  clientName: z.string().trim().max(80),
+  outcome: z.string().trim().max(200),
   technologyIds: z.array(z.string()),
   seoTitle: z.string().trim().max(70),
   seoDescription: z.string().trim().max(160),

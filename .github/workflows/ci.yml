@@ -90,19 +90,21 @@ jobs:
             exit 1
           fi
 
-      # Neon suspends the idle CI branch; the first connection has to wake its
-      # compute, which can outlast Prisma's default connect timeout (P1001
-      # "Can't reach database server"). Give it 30 s and retry with backoff.
+      # Neon's DNS lists IPv6 addresses first, but GitHub-hosted runners have
+      # no IPv6 route. Prefer IPv4 so Prisma's native engine doesn't fail on it.
+      - name: Prefer IPv4 on the runner
+        run: echo "precedence ::ffff:0:0/96 100" | sudo tee -a /etc/gai.conf
+
+      # Neon suspends the idle CI branch; this wakes it (with retries) and, if
+      # it can't connect, prints the real reason instead of Prisma's generic
+      # P1001 "Can't reach database server". No secrets are printed.
+      - name: Wait for the CI database
+        run: node --no-warnings scripts/wait-for-db.mjs
+
       - name: Apply migrations to the CI database
         run: |
           export DATABASE_URL_UNPOOLED="$(node -e 'const u = new URL(process.env.DATABASE_URL_UNPOOLED.trim()); u.searchParams.set("connect_timeout", "30"); process.stdout.write(u.toString())')"
-          for attempt in 1 2 3 4; do
-            npx prisma migrate deploy && exit 0
-            echo "::warning::Database not reachable yet (attempt $attempt of 4); retrying in $((attempt * 10)) s"
-            sleep $((attempt * 10))
-          done
-          echo "::error::Could not reach the CI database. Check the CI_DATABASE_URL* secrets and that the Neon branch exists."
-          exit 1
+          npx prisma migrate deploy
 
       # Reuses Next.js build output from earlier runs → faster rebuilds.
       - name: Restore Next.js build cache

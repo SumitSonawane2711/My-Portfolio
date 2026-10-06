@@ -7,6 +7,7 @@ import { Footer } from "@/shared/components/Footer";
 import { NavigationProgress } from "@/shared/components/NavigationProgress";
 import { AppProviders } from "@/shared/components/providers";
 import { cldUrl } from "@/shared/libs/cloudinaryUrl";
+import { LiveVisitorBeacon } from "@/features/analytics/components/LiveVisitorBeacon";
 import { getSettings } from "@/features/settings/queries/settingsQueries";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,6 +44,7 @@ export default async function SiteLayout({
       >
         <AppProviders>
           <NavigationProgress />
+          <LiveVisitorBeacon site="PORTFOLIO" />
           <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
           {children}
           <Footer name={settings.name} socials={settings.socials} />

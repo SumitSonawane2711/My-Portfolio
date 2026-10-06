@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Archive, Mail, MailOpen, Reply } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { formatDate } from "@/shared/libs/format";
@@ -62,7 +63,16 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
             >
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="font-medium">{message.name || "Anonymous"}</span>
+                {message.source === "FREELANCE" && <Badge variant="secondary">freelance</Badge>}
                 {message.email && <span className="text-muted-foreground">{message.email}</span>}
+                {message.phone && (
+                  <a
+                    href={`tel:${message.phone}`}
+                    className="text-muted-foreground hover:underline"
+                  >
+                    {message.phone}
+                  </a>
+                )}
                 <span className="ml-auto text-xs text-muted-foreground">
                   {formatDate(message.createdAt)}
                 </span>
