@@ -4,20 +4,36 @@ import { RichText } from "@/shared/components/RichText";
 import type { FreelanceCopy } from "@/features/freelance/interfaces/freelance";
 import { contactPillClass } from "./contactActions";
 import { ContactButton } from "./ContactDialog";
+import { SPLIT_HALF_HEIGHT, SplitBackground } from "./SplitBackground";
+import { cn } from "@/shared/libs/utils";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 
+// The background's top half sits behind the hero (see SplitBackground).
 export const FreelanceHero = ({ copy }: { copy: FreelanceCopy }) => (
   <section
     id="top"
     data-tone="light"
     aria-labelledby="hero-title"
-    className="flex min-h-[88svh] items-center bg-stone-50 pt-32 pb-20 text-neutral-900"
+    className={cn(
+      "relative isolate flex items-center bg-stone-50 pt-38 pb-24 text-neutral-900",
+      SPLIT_HALF_HEIGHT,
+    )}
   >
-    <div className="mx-auto w-full max-w-6xl px-6 md:px-10">
-      <h1 id="hero-title" className="max-w-4xl font-bold tracking-tight text-balance">
+    <SplitBackground anchor="top" priority />
+    {/* Light washes keep the text readable over the photo. */}
+    <div
+      aria-hidden
+      className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-50/95 via-stone-50/75 to-stone-50/25"
+    />
+    <div
+      aria-hidden
+      className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-stone-50/80 to-transparent"
+    />
+    <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
+      <h1 id="hero-title" className="max-w-5xl font-bold tracking-tight text-balance">
         {copy.greeting && (
-          <span className="fade-up block text-2xl text-amber-600 sm:text-3xl lg:text-4xl">
+          <span className="fade-up block text-2xl text-amber-700 sm:text-3xl lg:text-4xl">
             {copy.greeting}
           </span>
         )}
@@ -30,7 +46,7 @@ export const FreelanceHero = ({ copy }: { copy: FreelanceCopy }) => (
       </h1>
 
       {copy.intro && (
-        <div className="fade-up mt-7 max-w-2xl" style={delay(160)}>
+        <div className="fade-up mt-7 max-w-xl" style={delay(160)}>
           <RichText
             text={copy.intro}
             className="text-base leading-relaxed text-neutral-600 md:text-lg"

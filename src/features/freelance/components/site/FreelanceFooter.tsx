@@ -1,9 +1,20 @@
 import { SOCIAL_LABELS, SocialIcon, socialHref } from "@/shared/components/SocialIcon";
 import type { SocialLink } from "@/features/settings/schemas/settingsSchema";
+import { SPLIT_HALF_HEIGHT, SplitBackground } from "./SplitBackground";
 
+// A closing band showing the background's bottom half (see SplitBackground),
+// with the credits on a frosted strip at the very end.
 export const FreelanceFooter = ({ name, socials }: { name: string; socials: SocialLink[] }) => (
-  <footer className="bg-stone-100 text-neutral-500">
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 border-t border-neutral-900/10 px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-10">
+  <footer
+    className={`relative isolate flex flex-col justify-end bg-stone-100 text-neutral-500 ${SPLIT_HALF_HEIGHT}`}
+  >
+    <SplitBackground anchor="bottom" />
+    {/* Blends out of the contact section above. */}
+    <div
+      aria-hidden
+      className="absolute inset-x-0 top-0 -z-10 h-1/3 bg-gradient-to-b from-stone-100 to-transparent"
+    />
+    <div className="mx-4 mb-4 flex flex-col gap-4 rounded-2xl bg-stone-50/80 px-6 py-5 text-neutral-600 shadow-sm backdrop-blur-md sm:flex-row sm:items-center sm:justify-between md:mx-auto md:mb-6 md:w-full md:max-w-[calc(72rem-5rem)] md:px-8">
       <p className="text-sm">
         © {new Date().getFullYear()} {name}
       </p>
