@@ -4,31 +4,30 @@ import { RichText } from "@/shared/components/RichText";
 import type { FreelanceCopy } from "@/features/freelance/interfaces/freelance";
 import { contactPillClass } from "./contactActions";
 import { ContactButton } from "./ContactDialog";
-import { SPLIT_HALF_HEIGHT, SplitBackground } from "./SplitBackground";
-import { cn } from "@/shared/libs/utils";
+import { NatureBackground } from "./NatureBackground";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 
-// The background's top half sits behind the hero (see SplitBackground).
+// The nature photo's sky/scenery behind the hero, washed out to a soft cream
+// so the text reads like it's printed on the photo (see NatureBackground).
 export const FreelanceHero = ({ copy }: { copy: FreelanceCopy }) => (
   <section
     id="top"
     data-tone="light"
     aria-labelledby="hero-title"
-    className={cn(
-      "relative isolate flex items-center bg-stone-50 pt-38 pb-24 text-neutral-900",
-      SPLIT_HALF_HEIGHT,
-    )}
+    className="relative isolate flex min-h-[88svh] items-center bg-stone-50 pt-38 pb-24 text-neutral-900"
   >
-    <SplitBackground anchor="top" priority />
-    {/* Light washes keep the text readable over the photo. */}
+    <NatureBackground focus="top" priority />
+    {/* Misty wash over the whole photo, stronger behind the text and at the
+        bottom edge, so the image only shows softly around it. */}
+    <div aria-hidden className="absolute inset-0 -z-10 bg-stone-50/20" />
     <div
       aria-hidden
-      className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-50/95 via-stone-50/75 to-stone-50/25"
+      className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-50/85 via-stone-50/40 via-45% to-transparent"
     />
     <div
       aria-hidden
-      className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-stone-50/80 to-transparent"
+      className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-50/60 via-transparent via-40% to-stone-50/90"
     />
     <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
       <h1 id="hero-title" className="max-w-5xl font-bold tracking-tight text-balance">
