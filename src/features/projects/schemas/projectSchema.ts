@@ -22,6 +22,10 @@ export const projectSchema = z.object({
   repoUrl: optionalUrl,
   featured: z.boolean(),
   published: z.boolean(),
+  /** Also in the Work section of /freelance, captioned "<client> – <outcome>". */
+  freelance: z.boolean(),
+  clientName: z.string().trim().max(80),
+  outcome: z.string().trim().max(200),
   technologyIds: z.array(z.string()),
   seoTitle: z.string().trim().max(70),
   seoDescription: z.string().trim().max(160),

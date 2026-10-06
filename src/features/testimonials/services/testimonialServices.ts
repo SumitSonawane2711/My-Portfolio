@@ -14,6 +14,7 @@ const fields = (input: TestimonialInput) => ({
   linkedinUrl: empty(input.linkedinUrl),
   sourceNote: empty(input.sourceNote),
   visible: input.visible,
+  freelance: input.freelance,
 });
 
 export const testimonialServices = {

@@ -40,6 +40,9 @@ const EMPTY: FormValues = {
   repoUrl: "",
   featured: false,
   published: false,
+  freelance: false,
+  clientName: "",
+  outcome: "",
   technologyIds: [],
   seoTitle: "",
   seoDescription: "",
@@ -150,6 +153,40 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
                 </Button>
               )}
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Freelance page</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <Controller
+              control={control}
+              name="freelance"
+              render={({ field }) => (
+                <div className="flex items-center justify-between gap-3">
+                  <Label htmlFor="freelance">Show in /freelance Work</Label>
+                  <Switch id="freelance" checked={field.value} onCheckedChange={field.onChange} />
+                </div>
+              )}
+            />
+            <FormField
+              label="Client"
+              htmlFor="clientName"
+              hint="Shown first in the caption. Empty uses the project title."
+              error={errors.clientName?.message}
+            >
+              <Input id="clientName" {...register("clientName")} placeholder="Acme Health" />
+            </FormField>
+            <FormField
+              label="Outcome"
+              htmlFor="outcome"
+              hint="One line about the result for the client. Empty uses the summary."
+              error={errors.outcome?.message}
+            >
+              <Textarea id="outcome" rows={2} {...register("outcome")} />
+            </FormField>
           </CardContent>
         </Card>
 

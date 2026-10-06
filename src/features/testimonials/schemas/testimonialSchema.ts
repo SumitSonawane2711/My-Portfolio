@@ -9,6 +9,8 @@ export const testimonialSchema = z.object({
   linkedinUrl: z.union([z.url("Enter a full URL (https://…)"), z.literal("")]),
   sourceNote: z.string().trim().max(500),
   visible: z.boolean(),
+  /** Also shown on /freelance. */
+  freelance: z.boolean(),
 });
 
 export type TestimonialInput = z.infer<typeof testimonialSchema>;

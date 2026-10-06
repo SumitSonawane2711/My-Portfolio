@@ -6,7 +6,7 @@ import { rateLimit } from "@/shared/libs/rateLimit";
 import { hashValue } from "@/shared/libs/request";
 import { verifyTurnstile } from "@/shared/libs/turnstile";
 import { messageRepository } from "../repositories/messageRepository";
-import type { ContactInput } from "../schemas/messageSchema";
+import type { ContactData } from "../schemas/messageSchema";
 
 const MESSAGES_PER_HOUR = 5;
 
@@ -37,15 +37,16 @@ const notifyLater = (notification: Parameters<typeof notifyOwner>[0]) =>
   );
 
 export const messageServices = {
-  async submitContact(input: ContactInput, ip: string) {
+  async submitContact(input: ContactData, ip: string) {
     if (!(await passesBotChecks(input, ip))) return;
     await messageRepository.create({
       name: input.name,
       email: input.email,
       message: input.message,
+      source: input.source,
     });
     notifyLater({
-      subject: `New portfolio message from ${input.name}`,
+      subject: `New ${input.source === "FREELANCE" ? "freelance inquiry" : "portfolio message"} from ${input.name}`,
       replyTo: input.email,
       fields: [
         ["Name", input.name],

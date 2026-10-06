@@ -16,6 +16,12 @@ enum ResumeStatus {
   ARCHIVED // hidden everywhere, kept for history
 }
 
+/// Which site a contact message came from.
+enum MessageSource {
+  PORTFOLIO
+  FREELANCE
+}
+
 enum MessageStatus {
   UNREAD
   READ
@@ -38,14 +44,16 @@ model MediaAsset {
   alt          String?
   createdAt    DateTime @default(now())
 
-  projectCovers      Project[]      @relation("ProjectCover")
+  projectCovers      Project[]           @relation("ProjectCover")
   projectImages      ProjectImage[]
-  experienceLogos    Experience[]   @relation("ExperienceLogo")
-  testimonialAvatars Testimonial[]  @relation("TestimonialAvatar")
-  technologyIcons    Technology[]   @relation("TechnologyIcon")
+  experienceLogos    Experience[]        @relation("ExperienceLogo")
+  testimonialAvatars Testimonial[]       @relation("TestimonialAvatar")
+  technologyIcons    Technology[]        @relation("TechnologyIcon")
   resumes            Resume[]
-  settingsAvatars    SiteSettings[] @relation("SettingsAvatar")
-  settingsOgImages   SiteSettings[] @relation("SettingsOgImage")
+  settingsAvatars    SiteSettings[]      @relation("SettingsAvatar")
+  settingsOgImages   SiteSettings[]      @relation("SettingsOgImage")
+  freelancePortraits FreelanceSettings[] @relation("FreelancePortrait")
+  freelanceOgImages  FreelanceSettings[] @relation("FreelanceOgImage")
 
   @@index([createdAt])
 }
@@ -93,6 +101,11 @@ model Project {
   repoUrl        String?
   featured       Boolean        @default(false)
   published      Boolean        @default(false)
+  /// Also shown in the Work section of /freelance.
+  freelance      Boolean        @default(false)
+  /// Freelance caption: "<client> – <outcome>"
+  clientName     String?
+  outcome        String?
   order          Int            @default(0)
   seoTitle       String?
   seoDescription String?
@@ -156,6 +169,8 @@ model Testimonial {
   /// Private: where/when you received it (never shown publicly)
   sourceNote  String?
   visible     Boolean     @default(true)
+  /// Also shown on /freelance.
+  freelance   Boolean     @default(false)
   order       Int         @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -252,6 +267,7 @@ model MediumPost {
 model Message {
   id        String        @id @default(cuid())
   status    MessageStatus @default(UNREAD)
+  source    MessageSource @default(PORTFOLIO)
   name      String?
   email     String?
   message   String
@@ -331,4 +347,70 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// ───────────────────── Freelance one-pager (/freelance) ─────────────────────
+// Copy fields support **bold** and blank-line paragraphs.
+
+/// Page copy, contact options and SEO for /freelance (one row, id 1).
+model FreelanceSettings {
+  id               Int         @id @default(1)
+  greeting         String      @default("")
+  headline         String      @default("")
+  intro            String      @default("")
+  workTitle        String      @default("")
+  workIntro        String      @default("")
+  servicesTitle    String      @default("")
+  servicesIntro    String      @default("")
+  aboutTitle       String      @default("")
+  about            String      @default("")
+  portraitId       String?
+  portrait         MediaAsset? @relation("FreelancePortrait", fields: [portraitId], references: [id], onDelete: SetNull)
+  processTitle     String      @default("")
+  processIntro     String      @default("")
+  offersTitle      String      @default("")
+  contactTitle     String      @default("")
+  contactIntro     String      @default("")
+  /// e.g. "Taking on new projects from November 2026"
+  availabilityNote String      @default("")
+  /// Digits with country code (e.g. 919876543210). "Message now" opens WhatsApp when set.
+  whatsapp         String?
+  seoTitle         String      @default("")
+  seoDescription   String      @default("")
+  ogImageId        String?
+  ogImage          MediaAsset? @relation("FreelanceOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
+  updatedAt        DateTime    @updatedAt
+}
+
+/// "What I do": the numbered accordion.
+model FreelanceService {
+  id        String   @id @default(cuid())
+  title     String
+  /// Always visible under the title.
+  summary   String
+  /// Shown when the item is open.
+  details   String   @default("")
+  visible   Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([visible, order])
+}
+
+/// "Ways to begin": engagement options with a "What you will get" list.
+model FreelanceOffer {
+  id           String   @id @default(cuid())
+  name         String
+  /// Small label, e.g. "Most popular"
+  badge        String?
+  tagline      String   @default("")
+  description  String   @default("")
+  deliverables String[]
+  visible      Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([visible, order])
 }

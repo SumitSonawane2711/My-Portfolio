@@ -4,8 +4,15 @@ import { toast } from "sonner";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { TurnstileField } from "@/shared/components/TurnstileField";
 import { sendContactMessage } from "@/features/inbox/actions/messageActions";
+import { cn } from "@/shared/libs/utils";
 
-export const ContactForm = () => {
+type ContactFormProps = {
+  /** Shown in the inbox, so you know which site the message came from. */
+  source?: "PORTFOLIO" | "FREELANCE";
+  className?: string;
+};
+
+export const ContactForm = ({ source = "PORTFOLIO", className }: ContactFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -36,7 +43,12 @@ export const ContactForm = () => {
     }
 
     try {
-      const result = await sendContactMessage({ ...formData, website, turnstileToken: token });
+      const result = await sendContactMessage({
+        ...formData,
+        source,
+        website,
+        turnstileToken: token,
+      });
       if (!result.ok) {
         const firstFieldError = Object.values(result.fieldErrors ?? {}).flat()[0];
         toast.error(firstFieldError ?? result.error);
@@ -59,7 +71,10 @@ export const ContactForm = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-900"
+      className={cn(
+        "mx-auto mt-10 flex w-full max-w-lg flex-col gap-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md dark:border-neutral-700 dark:bg-neutral-900",
+        className,
+      )}
     >
       <div className="flex flex-col gap-2">
         <label htmlFor="name" className="text-sm font-medium tracking-tight text-primary">

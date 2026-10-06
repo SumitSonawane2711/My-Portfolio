@@ -54,6 +54,9 @@ export type ProjectFormData = {
   repoUrl: string;
   featured: boolean;
   published: boolean;
+  freelance: boolean;
+  clientName: string;
+  outcome: string;
   technologyIds: string[];
   seoTitle: string;
   seoDescription: string;

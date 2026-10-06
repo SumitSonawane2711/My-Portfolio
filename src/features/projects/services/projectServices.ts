@@ -63,6 +63,9 @@ const scalarFields = (input: ProjectInput) => ({
   repoUrl: empty(input.repoUrl),
   featured: input.featured,
   published: input.published,
+  freelance: input.freelance,
+  clientName: empty(input.clientName),
+  outcome: empty(input.outcome),
   seoTitle: empty(input.seoTitle),
   seoDescription: empty(input.seoDescription),
 });

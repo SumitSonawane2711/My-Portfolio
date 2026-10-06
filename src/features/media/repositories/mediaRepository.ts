@@ -23,6 +23,8 @@ const unusedWhere = {
   resumes: { none: {} },
   settingsAvatars: { none: {} },
   settingsOgImages: { none: {} },
+  freelancePortraits: { none: {} },
+  freelanceOgImages: { none: {} },
 } satisfies Prisma.MediaAssetWhereInput;
 
 const usageCount = {
@@ -36,6 +38,8 @@ const usageCount = {
       resumes: true,
       settingsAvatars: true,
       settingsOgImages: true,
+      freelancePortraits: true,
+      freelanceOgImages: true,
     },
   },
 } satisfies Prisma.MediaAssetInclude;

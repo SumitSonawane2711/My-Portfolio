@@ -32,6 +32,7 @@ const EMPTY: FormValues = {
   linkedinUrl: "",
   sourceNote: "",
   visible: true,
+  freelance: false,
   avatar: null,
 };
 
@@ -124,6 +125,16 @@ export const TestimonialDialog = ({ open, onOpenChange, testimonial }: Testimoni
               <div className="flex items-center gap-3">
                 <Switch id="t-visible" checked={field.value} onCheckedChange={field.onChange} />
                 <Label htmlFor="t-visible">Visible on the site</Label>
+              </div>
+            )}
+          />
+          <Controller
+            control={control}
+            name="freelance"
+            render={({ field }) => (
+              <div className="flex items-center gap-3">
+                <Switch id="t-freelance" checked={field.value} onCheckedChange={field.onChange} />
+                <Label htmlFor="t-freelance">Also show on /freelance</Label>
               </div>
             )}
           />
