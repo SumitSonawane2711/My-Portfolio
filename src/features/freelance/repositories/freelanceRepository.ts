@@ -52,6 +52,8 @@ export const freelanceRepository = {
         clientName: true,
         outcome: true,
         displayDate: true,
+        liveUrl: true,
+        previewVideo: { select: { publicId: true } },
         cover: { select: { publicId: true, alt: true } },
         images: {
           select: { media: { select: { publicId: true, alt: true } } },

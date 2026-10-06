@@ -18,6 +18,7 @@ import { applyFieldErrors } from "@/shared/libs/form";
 import { FormField } from "@/features/admin/components/FormField";
 import { GalleryField } from "@/features/media/components/GalleryField";
 import { ImageUpload } from "@/features/media/components/ImageUpload";
+import { VideoUpload } from "@/features/media/components/VideoUpload";
 import type { TechnologyAdminRow } from "@/features/technologies/interfaces/technology";
 import { TechnologyPicker } from "@/features/technologies/components/TechnologyPicker";
 import { createProject, updateProject } from "../actions/projectActions";
@@ -34,6 +35,7 @@ const EMPTY: FormValues = {
   displayDate: "",
   cover: null,
   images: [],
+  previewVideo: null,
   contentJson: null,
   contentHtml: "",
   liveUrl: "",
@@ -63,11 +65,12 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
 
   const onSubmit = handleSubmit((values) =>
     startTransition(async () => {
-      const { cover, images, ...rest } = values;
+      const { cover, images, previewVideo, ...rest } = values;
       const input: ProjectInput = {
         ...rest,
         coverId: cover?.id ?? null,
         imageIds: images.map((m) => m.id),
+        previewVideoId: previewVideo?.id ?? null,
       };
       const result = project ? await updateProject(project.id, input) : await createProject(input);
 
@@ -186,6 +189,18 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
               error={errors.outcome?.message}
             >
               <Textarea id="outcome" rows={2} {...register("outcome")} />
+            </FormField>
+            <FormField
+              label="Preview video (optional)"
+              hint="A short silent screen recording (5–15 s). It loops on the Work card in place of the images."
+            >
+              <Controller
+                control={control}
+                name="previewVideo"
+                render={({ field }) => (
+                  <VideoUpload value={field.value} onChange={field.onChange} folder="projects" />
+                )}
+              />
             </FormField>
           </CardContent>
         </Card>

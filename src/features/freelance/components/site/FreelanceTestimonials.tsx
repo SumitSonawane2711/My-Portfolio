@@ -32,7 +32,7 @@ export const FreelanceTestimonials = ({ items }: { items: TestimonialCard[] }) =
           {items.map((item) => (
             <figure
               key={item.id}
-              className="reveal mb-6 break-inside-avoid rounded-3xl bg-white/[0.06] p-8 ring-1 ring-white/10"
+              className="reveal border-beam mb-6 break-inside-avoid rounded-3xl bg-white/[0.06] p-8 ring-1 ring-white/10"
             >
               <blockquote className="text-lg leading-relaxed text-neutral-300">
                 <RichText text={`“${item.quote}”`} boldClassName="text-white" />

@@ -12,7 +12,7 @@ import { MEDIA_FOLDERS, type MediaRef } from "../interfaces/media";
 import { mediaRepository } from "../repositories/mediaRepository";
 import { mediaServices } from "../services/mediaServices";
 
-const kindSchema = z.enum(["image", "pdf"]);
+const kindSchema = z.enum(["image", "pdf", "video"]);
 const folderSchema = z.enum(MEDIA_FOLDERS);
 
 export async function getUploadSignature(folder: string, kind: UploadKind) {

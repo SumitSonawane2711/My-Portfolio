@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CloudImage } from "@/shared/components/CloudImage";
 import { cn } from "@/shared/libs/utils";
 import { ContactButton } from "./ContactDialog";
+import { MobileMenu } from "./MobileMenu";
 
 export type HeaderLink = { id: string; label: string };
 
@@ -12,6 +13,8 @@ type FreelanceHeaderProps = {
   avatarPublicId: string | null;
   available: boolean;
   links: HeaderLink[];
+  /** Digits with country code (for the WhatsApp button in the mobile menu). */
+  whatsapp: string | null;
 };
 
 const HEADER_HEIGHT = 96;
@@ -23,6 +26,7 @@ export const FreelanceHeader = ({
   avatarPublicId,
   available,
   links,
+  whatsapp,
 }: FreelanceHeaderProps) => {
   const [active, setActive] = useState<string | null>(null);
   const [tone, setTone] = useState<"light" | "dark">("light");
@@ -59,9 +63,8 @@ export const FreelanceHeader = ({
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-        scrolled &&
-          (dark ? "bg-neutral-950/75 backdrop-blur-md" : "bg-stone-50/80 backdrop-blur-md"),
+        "fixed inset-x-0 top-0 z-50 backdrop-blur-md transition-colors duration-300",
+        scrolled && (dark ? "bg-neutral-950/75" : "bg-stone-50/80"),
         dark ? "text-white" : "text-neutral-900",
       )}
     >
@@ -130,12 +133,15 @@ export const FreelanceHeader = ({
 
         <ContactButton
           className={cn(
-            "ml-auto rounded-full border px-6 py-3 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none md:ml-0",
+            // Phones get the menu button instead (MobileMenu).
+            "hidden rounded-full border px-6 py-3 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none md:inline-block",
             dark
               ? "border-white/30 hover:bg-white hover:text-neutral-950"
               : "border-neutral-900/20 hover:bg-neutral-900 hover:text-white",
           )}
         />
+
+        <MobileMenu name={name} links={links} whatsapp={whatsapp} active={active} />
       </div>
     </header>
   );

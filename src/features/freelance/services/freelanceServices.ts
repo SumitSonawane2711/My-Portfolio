@@ -29,6 +29,8 @@ export function toWorkItem(row: WorkRow): FreelanceWorkItem {
     outcome: row.outcome?.trim() || firstSentence(row.summary),
     displayDate: row.displayDate,
     images: images.slice(0, 3),
+    videoPublicId: row.previewVideo?.publicId ?? null,
+    liveUrl: row.liveUrl,
     technologies: row.technologies.map(toTechBadge),
   };
 }

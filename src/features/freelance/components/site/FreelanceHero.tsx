@@ -8,8 +8,9 @@ import { NatureBackground } from "./NatureBackground";
 
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 
-// The nature photo's sky/scenery behind the hero, washed out to a soft cream
-// so the text reads like it's printed on the photo (see NatureBackground).
+// The painting covers the top of the screen (behind the header too) and fades
+// into the page colour; the solid colour starts at about the headline's second
+// line, so the intro and buttons sit on a calm background.
 export const FreelanceHero = ({ copy }: { copy: FreelanceCopy }) => (
   <section
     id="top"
@@ -18,16 +19,9 @@ export const FreelanceHero = ({ copy }: { copy: FreelanceCopy }) => (
     className="relative isolate flex min-h-[88svh] items-center bg-stone-50 pt-38 pb-24 text-neutral-900"
   >
     <NatureBackground focus="top" priority />
-    {/* Misty wash over the whole photo, stronger behind the text and at the
-        bottom edge, so the image only shows softly around it. */}
-    <div aria-hidden className="absolute inset-0 -z-10 bg-stone-50/20" />
     <div
       aria-hidden
-      className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-50/85 via-stone-50/40 via-45% to-transparent"
-    />
-    <div
-      aria-hidden
-      className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-50/60 via-transparent via-40% to-stone-50/90"
+      className="absolute inset-0 -z-10 bg-gradient-to-b from-transparent from-5% via-stone-50/55 via-24% to-stone-50 to-38% md:via-28% md:to-45%"
     />
     <div className="mx-auto w-full max-w-6xl px-6 md:px-16">
       <h1 id="hero-title" className="max-w-5xl font-bold tracking-tight text-balance">

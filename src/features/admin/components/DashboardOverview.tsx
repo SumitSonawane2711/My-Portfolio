@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { formatDate, truncate } from "@/shared/libs/format";
+import { LiveVisitors } from "@/features/analytics/components/LiveVisitors";
 import type { getDashboardStats } from "../repositories/dashboardRepository";
 import { CHART_MONTHS, type DashboardCharts } from "../services/dashboardCharts";
 import { BarList } from "./charts/BarList";
@@ -52,6 +53,8 @@ export const DashboardOverview = ({ stats, charts }: DashboardOverviewProps) => 
   return (
     <>
       <PageHeader title="Overview" description="Everything on your portfolio at a glance." />
+
+      <LiveVisitors />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard

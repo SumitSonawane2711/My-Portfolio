@@ -65,6 +65,14 @@ export const InboxManager = ({ messages }: { messages: InboxMessage[] }) => {
                 <span className="font-medium">{message.name || "Anonymous"}</span>
                 {message.source === "FREELANCE" && <Badge variant="secondary">freelance</Badge>}
                 {message.email && <span className="text-muted-foreground">{message.email}</span>}
+                {message.phone && (
+                  <a
+                    href={`tel:${message.phone}`}
+                    className="text-muted-foreground hover:underline"
+                  >
+                    {message.phone}
+                  </a>
+                )}
                 <span className="ml-auto text-xs text-muted-foreground">
                   {formatDate(message.createdAt)}
                 </span>

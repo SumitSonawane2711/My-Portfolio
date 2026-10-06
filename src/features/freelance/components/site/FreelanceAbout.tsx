@@ -31,15 +31,17 @@ export const FreelanceAbout = ({ title, text, name, imagePublicId }: FreelanceAb
           />
         </div>
         {imagePublicId && (
-          <div className="reveal relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] bg-neutral-900">
+          <div className="reveal relative mx-auto aspect-[4/5] w-full max-w-60 overflow-hidden rounded-[2rem] sm:max-w-sm md:max-w-md">
             <CloudImage
               publicId={imagePublicId}
               alt={name}
               fill
-              sizes="(min-width: 768px) 448px, 90vw"
+              sizes="(min-width: 768px) 448px, (min-width: 640px) 384px, 240px"
               className="object-cover"
             />
-            {/* Soft fade into the section at the bottom. */}
+            {/* No box colour behind the photo, so a cut-out (transparent PNG)
+                portrait sits straight on the dark section. Soft fade at the
+                bottom into the section. */}
             <span
               aria-hidden
               className="absolute inset-x-0 bottom-0 h-1/4 bg-gradient-to-t from-neutral-950/70 to-transparent"

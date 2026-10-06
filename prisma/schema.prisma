@@ -46,6 +46,7 @@ model MediaAsset {
 
   projectCovers      Project[]           @relation("ProjectCover")
   projectImages      ProjectImage[]
+  projectVideos      Project[]           @relation("ProjectPreviewVideo")
   experienceLogos    Experience[]        @relation("ExperienceLogo")
   testimonialAvatars Testimonial[]       @relation("TestimonialAvatar")
   technologyIcons    Technology[]        @relation("TechnologyIcon")
@@ -92,6 +93,9 @@ model Project {
   coverId        String?
   cover          MediaAsset?    @relation("ProjectCover", fields: [coverId], references: [id], onDelete: SetNull)
   images         ProjectImage[]
+  /// Short silent screen recording, looped on the /freelance Work card.
+  previewVideoId String?
+  previewVideo   MediaAsset?    @relation("ProjectPreviewVideo", fields: [previewVideoId], references: [id], onDelete: SetNull)
   /// Tiptap JSON (editor source of truth)
   contentJson    Json?
   /// Sanitized + highlighted HTML (what visitors see)
@@ -270,6 +274,8 @@ model Message {
   source    MessageSource @default(PORTFOLIO)
   name      String?
   email     String?
+  /// International format, e.g. "+919876543210"
+  phone     String?
   message   String
   createdAt DateTime      @default(now())
 
@@ -413,4 +419,22 @@ model FreelanceOffer {
   updatedAt    DateTime @updatedAt
 
   @@index([visible, order])
+}
+
+// ─────────────────────── Live visitors ───────────────────────
+
+enum VisitorSite {
+  PORTFOLIO
+  FREELANCE
+}
+
+/// One row per visitor with a tab open on a site, refreshed by a heartbeat.
+/// "Live now" = rows seen in the last minute. No personal data: the id is a
+/// salted hash of the IP, browser and site.
+model LiveVisitor {
+  id       String      @id
+  site     VisitorSite
+  lastSeen DateTime    @default(now())
+
+  @@index([site, lastSeen])
 }

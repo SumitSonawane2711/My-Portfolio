@@ -81,6 +81,7 @@ export const projectServices = {
       slug,
       order: (await projectRepository.maxOrder()) + 1,
       ...(input.coverId && { cover: { connect: { id: input.coverId } } }),
+      ...(input.previewVideoId && { previewVideo: { connect: { id: input.previewVideoId } } }),
       images: { create: input.imageIds.map((mediaId, order) => ({ mediaId, order })) },
       technologies: { connect: input.technologyIds.map((id) => ({ id })) },
     });
@@ -104,15 +105,20 @@ export const projectServices = {
         ...(await contentFields(input)),
         slug,
         cover: input.coverId ? { connect: { id: input.coverId } } : { disconnect: true },
+        previewVideo: input.previewVideoId
+          ? { connect: { id: input.previewVideoId } }
+          : { disconnect: true },
         technologies: { set: input.technologyIds.map((tid) => ({ id: tid })) },
       },
       input.imageIds,
     );
 
     // Release files this project no longer uses (only deleted if nothing else uses them).
-    const kept = new Set([input.coverId, ...input.imageIds]);
+    const kept = new Set([input.coverId, input.previewVideoId, ...input.imageIds]);
     await mediaServices.releaseManyIfUnused(
-      [existing.coverId, ...existing.images.map((i) => i.mediaId)].filter((m) => !kept.has(m)),
+      [existing.coverId, existing.previewVideoId, ...existing.images.map((i) => i.mediaId)].filter(
+        (m) => !kept.has(m),
+      ),
     );
 
     return { oldSlug: existing.slug, slug: updated.slug };
@@ -124,6 +130,7 @@ export const projectServices = {
     await projectRepository.delete(id);
     await mediaServices.releaseManyIfUnused([
       existing.coverId,
+      existing.previewVideoId,
       ...existing.images.map((i) => i.mediaId),
     ]);
     return { slug: existing.slug };

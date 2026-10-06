@@ -5,11 +5,15 @@ import { explainCloudinaryError } from "@/shared/libs/cloudinaryErrors";
 import { getUploadSignature, registerUpload } from "../actions/mediaActions";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
-type UploadKind = "image" | "pdf";
+type UploadKind = "image" | "pdf" | "video";
 
 const LIMITS: Record<UploadKind, { maxBytes: number; accept: (type: string) => boolean }> = {
   image: { maxBytes: 5 * 1024 * 1024, accept: (type) => type.startsWith("image/") },
   pdf: { maxBytes: 10 * 1024 * 1024, accept: (type) => type === "application/pdf" },
+  video: {
+    maxBytes: 20 * 1024 * 1024,
+    accept: (type) => ["video/mp4", "video/webm", "video/quicktime"].includes(type),
+  },
 };
 
 // Signed direct upload: the file goes straight from the browser to Cloudinary
@@ -21,7 +25,13 @@ export function useCloudinaryUpload(folder: MediaFolder, kind: UploadKind = "ima
   async function upload(file: File): Promise<MediaRef> {
     const limit = LIMITS[kind];
     if (!limit.accept(file.type)) {
-      throw new Error(kind === "pdf" ? "Please choose a PDF file." : "Please choose an image.");
+      throw new Error(
+        kind === "pdf"
+          ? "Please choose a PDF file."
+          : kind === "video"
+            ? "Please choose an MP4, WebM or MOV video."
+            : "Please choose an image.",
+      );
     }
     if (file.size > limit.maxBytes) {
       throw new Error(`File is too large (max ${limit.maxBytes / 1024 / 1024} MB).`);
@@ -50,7 +60,8 @@ export function useCloudinaryUpload(folder: MediaFolder, kind: UploadKind = "ima
       form.append("signature", signature);
 
       const result = await postWithProgress(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        // Videos go to Cloudinary's video pipeline; PDFs are stored as images.
+        `https://api.cloudinary.com/v1_1/${cloudName}/${kind === "video" ? "video" : "image"}/upload`,
         form,
         setProgress,
       );

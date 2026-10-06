@@ -42,6 +42,7 @@ export const messageServices = {
     await messageRepository.create({
       name: input.name,
       email: input.email,
+      phone: input.phone,
       message: input.message,
       source: input.source,
     });
@@ -51,6 +52,7 @@ export const messageServices = {
       fields: [
         ["Name", input.name],
         ["Email", input.email],
+        ["Mobile", input.phone],
         ["Message", input.message],
       ],
     });

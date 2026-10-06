@@ -7,12 +7,13 @@ import { toast } from "sonner";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { CloudImage } from "@/shared/components/CloudImage";
-import { cldUrl, isLocalMedia } from "@/shared/libs/cloudinaryUrl";
+import { cldUrl, cldVideoPosterUrl, isLocalMedia } from "@/shared/libs/cloudinaryUrl";
 import { deleteUnusedMedia } from "../actions/mediaActions";
 
 export type MediaLibraryItem = {
   id: string;
   publicId: string;
+  resourceType: string;
   format: string | null;
   bytes: number | null;
   width: number | null;
@@ -57,7 +58,14 @@ export const MediaLibrary = ({ items }: { items: MediaLibraryItem[] }) => {
           {items.map((item) => (
             <li key={item.id} className="overflow-hidden rounded-lg border">
               <div className="relative aspect-square bg-muted">
-                {item.format === "pdf" && isLocalMedia(item.publicId) ? (
+                {item.resourceType === "video" ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- Cloudinary-rendered video frame
+                  <img
+                    src={cldVideoPosterUrl(item.publicId, 300)}
+                    alt="Video first frame"
+                    className="h-full w-full object-cover object-top"
+                  />
+                ) : item.format === "pdf" && isLocalMedia(item.publicId) ? (
                   <span className="flex h-full items-center justify-center text-sm font-semibold text-muted-foreground">
                     PDF
                   </span>

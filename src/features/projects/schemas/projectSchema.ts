@@ -15,6 +15,7 @@ export const projectSchema = z.object({
   summary: z.string().trim().min(10, "At least 10 characters").max(300),
   displayDate: z.string().trim().max(40),
   coverId: z.string().nullable(),
+  previewVideoId: z.string().nullable(),
   imageIds: z.array(z.string()).max(12, "At most 12 gallery images"),
   contentJson: z.unknown().nullable(),
   contentHtml: z.string().max(500_000),

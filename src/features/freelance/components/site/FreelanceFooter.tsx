@@ -1,18 +1,11 @@
 import { SOCIAL_LABELS, SocialIcon, socialHref } from "@/shared/components/SocialIcon";
 import type { SocialLink } from "@/features/settings/schemas/settingsSchema";
-import { NatureBackground } from "./NatureBackground";
 
-// The usual footer row, with the bottom of the nature photo (same image as
-// the hero) fading in below it, like a meadow under the page.
+// Sits over the bottom of the painting (inside ContactAndFooter), so the row
+// is on a light frosted strip to stay readable.
 export const FreelanceFooter = ({ name, socials }: { name: string; socials: SocialLink[] }) => (
-  <footer className="relative isolate bg-stone-100 text-neutral-500">
-    <NatureBackground focus="bottom" />
-    {/* Solid cream behind the footer row, clearing towards the bottom. */}
-    <div
-      aria-hidden
-      className="absolute inset-0 -z-10 bg-gradient-to-b from-stone-100 from-20% via-stone-100/50 via-50% to-stone-100/0 to-80%"
-    />
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 border-t border-neutral-900/10 px-6 py-8 sm:flex-row sm:items-center sm:justify-between md:px-10">
+  <footer className="px-4 pb-4 text-neutral-600 md:px-10 md:pb-6">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 rounded-2xl bg-stone-50/80 px-6 py-2 shadow-sm ring-1 ring-neutral-900/5 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between md:px-8">
       <p className="text-sm">
         © {new Date().getFullYear()} {name}
       </p>
@@ -34,7 +27,5 @@ export const FreelanceFooter = ({ name, socials }: { name: string; socials: Soci
         </ul>
       </div>
     </div>
-    {/* Room for the meadow to show. */}
-    <div aria-hidden className="h-[36svh] md:h-[46svh]" />
   </footer>
 );

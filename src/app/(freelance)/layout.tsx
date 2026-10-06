@@ -3,6 +3,7 @@ import { Toaster } from "sonner";
 import "../globals.css";
 import { inter } from "@/shared/configs/fonts";
 import { clientEnv } from "@/shared/configs/clientEnv";
+import { LiveVisitorBeacon } from "@/features/analytics/components/LiveVisitorBeacon";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.siteUrl),
@@ -20,6 +21,7 @@ export default function FreelanceRootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${inter.variable} bg-stone-50 font-sans text-neutral-900 antialiased`}>
         <Toaster position="top-center" />
+        <LiveVisitorBeacon site="FREELANCE" />
         {children}
       </body>
     </html>

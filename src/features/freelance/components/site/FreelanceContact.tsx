@@ -28,7 +28,9 @@ export const FreelanceContact = ({ title, intro, channels }: FreelanceContactPro
       id="contact"
       data-tone="light"
       aria-labelledby="contact-title"
-      className="bg-stone-100 py-24 text-neutral-900 md:py-32"
+      // Transparent: the painting behind it (and the footer) comes from
+      // ContactAndFooter. The bottom padding leaves room for the painting.
+      className="pt-24 pb-20 text-neutral-900 md:pt-32 md:pb-5"
     >
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 md:grid-cols-2 md:gap-16 md:px-10">
         <div className="reveal">

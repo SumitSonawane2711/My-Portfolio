@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireAdmin } from "@/shared/libs/authGuard";
 import { fail, ok, validationFail, type ActionResult } from "@/shared/libs/actionResult";
 import { toErrorMessage } from "@/shared/libs/errors";
+import { checkEmailAddress } from "@/shared/libs/emailCheck";
 import { getClientIp } from "@/shared/libs/request";
 import { revalidateSite } from "@/shared/libs/revalidate";
 import { contactSchema, type ContactInput } from "../schemas/messageSchema";
@@ -15,6 +16,10 @@ import { messageServices } from "../services/messageServices";
 export async function sendContactMessage(input: ContactInput): Promise<ActionResult> {
   const parsed = contactSchema.safeParse(input);
   if (!parsed.success) return validationFail(parsed.error);
+  // Throwaway or non-existent email domains (checked here, not in the form,
+  // because it needs the server: a big domain list and a DNS lookup).
+  const emailProblem = await checkEmailAddress(parsed.data.email);
+  if (emailProblem) return fail(emailProblem, { email: [emailProblem] });
   try {
     await messageServices.submitContact(parsed.data, await getClientIp());
     return ok();

@@ -1,6 +1,7 @@
 import type { SiteProfile } from "@/features/settings/interfaces/settings";
 import type { FreelancePage as FreelancePageData } from "@/features/freelance/interfaces/freelance";
 import { BackToTop } from "./BackToTop";
+import { ContactAndFooter } from "./ContactAndFooter";
 import { ContactDialog } from "./ContactDialog";
 import type { ContactChannels } from "./contactActions";
 import { FreelanceAbout } from "./FreelanceAbout";
@@ -35,6 +36,7 @@ export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
         avatarPublicId={profile.avatarPublicId}
         available={profile.availableForWork}
         links={links}
+        whatsapp={page.whatsapp}
       />
       <main>
         <FreelanceHero copy={copy} />
@@ -52,9 +54,16 @@ export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
           imagePublicId={page.portraitPublicId ?? profile.avatarPublicId}
         />
         <FreelanceProcess copy={copy} offers={page.offers} />
-        <FreelanceContact title={copy.contactTitle} intro={copy.contactIntro} channels={channels} />
+        {/* Contact and footer share the painting as one background. */}
+        <ContactAndFooter>
+          <FreelanceContact
+            title={copy.contactTitle}
+            intro={copy.contactIntro}
+            channels={channels}
+          />
+          <FreelanceFooter name={profile.name} socials={profile.socials} />
+        </ContactAndFooter>
       </main>
-      <FreelanceFooter name={profile.name} socials={profile.socials} />
       <BackToTop />
       <ContactDialog whatsapp={channels.whatsapp} email={channels.email} />
     </>

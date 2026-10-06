@@ -45,6 +45,7 @@ export async function getProjectForEdit(id: string): Promise<ProjectFormData | n
     displayDate: row.displayDate ?? "",
     cover: row.cover,
     images: row.images.map((i) => i.media),
+    previewVideo: row.previewVideo,
     contentJson: (row.contentJson as JSONContent | null) ?? null,
     contentHtml: row.contentHtml,
     liveUrl: row.liveUrl ?? "",

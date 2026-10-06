@@ -7,7 +7,7 @@ import { ContactForm } from "@/features/contact/components/ContactForm";
 import { cn } from "@/shared/libs/utils";
 import { whatsappHref } from "./contactActions";
 
-const OPEN_EVENT = "open-contact";
+export const OPEN_EVENT = "open-contact";
 
 /** Any "Contact now" button on the page opens the one dialog below. */
 export const ContactButton = ({

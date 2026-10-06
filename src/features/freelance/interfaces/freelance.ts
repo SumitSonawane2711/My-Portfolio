@@ -41,6 +41,10 @@ export type FreelanceWorkItem = {
   displayDate: string | null;
   /** Cover first, then gallery images (up to three in total). */
   images: { publicId: string; alt: string | null }[];
+  /** Looping screen recording, shown instead of the images. */
+  videoPublicId: string | null;
+  /** The "Visit live site" link; the card has no link without it. */
+  liveUrl: string | null;
   technologies: TechBadge[];
 };
 

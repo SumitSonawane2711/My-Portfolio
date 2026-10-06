@@ -48,6 +48,7 @@ export type ProjectFormData = {
   displayDate: string;
   cover: MediaRef | null;
   images: MediaRef[];
+  previewVideo: MediaRef | null;
   contentJson: JSONContent | null;
   contentHtml: string;
   liveUrl: string;
