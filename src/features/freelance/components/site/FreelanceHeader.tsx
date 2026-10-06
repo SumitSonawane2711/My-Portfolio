@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CloudImage } from "@/shared/components/CloudImage";
 import { cn } from "@/shared/libs/utils";
+import { ContactButton } from "./ContactDialog";
 
 export type HeaderLink = { id: string; label: string };
 
@@ -13,7 +14,7 @@ type FreelanceHeaderProps = {
   links: HeaderLink[];
 };
 
-const HEADER_HEIGHT = 80;
+const HEADER_HEIGHT = 96;
 
 // Sticky header: the link of the section in view is underlined, and the colours
 // follow the section underneath (sections carry data-tone="light" | "dark").
@@ -64,7 +65,7 @@ export const FreelanceHeader = ({
         dark ? "text-white" : "text-neutral-900",
       )}
     >
-      <div className="mx-auto flex h-20 w-full max-w-6xl items-center gap-6 px-6 md:px-10">
+      <div className="mx-auto flex h-24 w-full max-w-6xl items-center gap-6 px-6 md:px-10">
         <a
           href="#top"
           className="flex shrink-0 items-center gap-3 rounded-full focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
@@ -76,25 +77,25 @@ export const FreelanceHeader = ({
                 alt=""
                 width={188}
                 height={188}
-                className="size-10 rounded-full object-cover"
+                className="size-12 rounded-full object-cover md:size-13"
                 priority
               />
             ) : (
-              <span className="flex size-10 items-center justify-center rounded-full bg-neutral-300 font-semibold text-neutral-900">
+              <span className="flex size-12 items-center justify-center rounded-full bg-neutral-300 text-lg font-semibold text-neutral-900 md:size-13">
                 {name.charAt(0)}
               </span>
             )}
             {available && (
               <span
                 className={cn(
-                  "absolute -right-0.5 -bottom-0.5 size-3 rounded-full bg-emerald-500 ring-2",
+                  "absolute right-0 bottom-0 size-3.5 rounded-full bg-emerald-500 ring-2",
                   dark ? "ring-neutral-950" : "ring-stone-50",
                 )}
                 aria-label="Available for new projects"
               />
             )}
           </span>
-          <span className="hidden text-sm font-semibold tracking-[0.2em] uppercase sm:block">
+          <span className="hidden text-base font-semibold tracking-[0.2em] uppercase sm:block">
             {name}
           </span>
         </a>
@@ -111,7 +112,7 @@ export const FreelanceHeader = ({
               href={`#${link.id}`}
               aria-current={active === link.id ? "true" : undefined}
               className={cn(
-                "relative rounded-md px-3 py-2 text-sm transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none",
+                "relative rounded-md px-3 py-2 text-base transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none",
                 active === link.id ? "opacity-100" : "opacity-75",
               )}
             >
@@ -127,17 +128,14 @@ export const FreelanceHeader = ({
           ))}
         </nav>
 
-        <a
-          href="#contact"
+        <ContactButton
           className={cn(
-            "ml-auto rounded-full border px-5 py-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none md:ml-0",
+            "ml-auto rounded-full border px-6 py-3 text-base font-medium transition-colors focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none md:ml-0",
             dark
               ? "border-white/30 hover:bg-white hover:text-neutral-950"
               : "border-neutral-900/20 hover:bg-neutral-900 hover:text-white",
           )}
-        >
-          Contact now
-        </a>
+        />
       </div>
     </header>
   );

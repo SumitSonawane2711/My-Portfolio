@@ -1,7 +1,8 @@
-import { IconCheck } from "@tabler/icons-react";
+import { IconCheck, IconMessageCircle } from "@tabler/icons-react";
 import { RichText } from "@/shared/components/RichText";
 import type { FreelanceCopy, FreelanceOffer } from "@/features/freelance/interfaces/freelance";
-import { CtaButtons, type ContactChannels } from "./contactActions";
+import { contactPillClass } from "./contactActions";
+import { ContactButton } from "./ContactDialog";
 
 // Decorative: two message bubbles meeting, i.e. "we talk, then we build".
 const Illustration = () => (
@@ -19,10 +20,9 @@ const Illustration = () => (
 type FreelanceProcessProps = {
   copy: Pick<FreelanceCopy, "processTitle" | "processIntro" | "offersTitle" | "availabilityNote">;
   offers: FreelanceOffer[];
-  channels: ContactChannels;
 };
 
-export const FreelanceProcess = ({ copy, offers, channels }: FreelanceProcessProps) => (
+export const FreelanceProcess = ({ copy, offers }: FreelanceProcessProps) => (
   <section
     id="process"
     data-tone="light"
@@ -98,7 +98,13 @@ export const FreelanceProcess = ({ copy, offers, channels }: FreelanceProcessPro
       )}
 
       <div className="reveal mt-14 flex flex-wrap items-center justify-center gap-x-6 gap-y-4">
-        <CtaButtons channels={channels} />
+        <ContactButton className={contactPillClass()}>
+          <IconMessageCircle
+            aria-hidden
+            className="size-4 transition-transform duration-300 group-hover:-rotate-12"
+          />
+          Contact now
+        </ContactButton>
         {copy.availabilityNote && (
           <p className="flex items-center gap-2 text-neutral-600">
             <span className="relative flex size-2.5">

@@ -10,9 +10,11 @@ type ContactFormProps = {
   /** Shown in the inbox, so you know which site the message came from. */
   source?: "PORTFOLIO" | "FREELANCE";
   className?: string;
+  /** Called after a successful send (e.g. to close a popup). */
+  onSent?: () => void;
 };
 
-export const ContactForm = ({ source = "PORTFOLIO", className }: ContactFormProps) => {
+export const ContactForm = ({ source = "PORTFOLIO", className, onSent }: ContactFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -55,6 +57,7 @@ export const ContactForm = ({ source = "PORTFOLIO", className }: ContactFormProp
         return;
       }
       toast.success("Message sent successfully");
+      onSent?.();
       setFormData({ name: "", email: "", message: "" });
     } finally {
       // A Turnstile token can only be verified once.

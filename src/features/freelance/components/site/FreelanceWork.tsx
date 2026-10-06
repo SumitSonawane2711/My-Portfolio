@@ -10,7 +10,7 @@ import { WorkCarousel } from "./WorkCarousel";
 // One big image, or a collage: the first image large, up to two beside it.
 const Collage = ({ item }: { item: FreelanceWorkItem }) => {
   const [first, ...rest] = item.images;
-  const tile = "relative overflow-hidden rounded-3xl bg-neutral-800";
+  const tile = "relative overflow-hidden rounded-2xl bg-neutral-800";
   const image = (publicId: string, alt: string | null, sizes: string, priority = false) => (
     <CloudImage
       publicId={publicId}
@@ -24,29 +24,37 @@ const Collage = ({ item }: { item: FreelanceWorkItem }) => {
 
   if (!first) {
     return (
-      <div className={cn(tile, "flex aspect-[16/9] items-end p-8")}>
-        <p className="text-2xl font-semibold text-white/80">{item.title}</p>
+      <div className={cn(tile, "flex aspect-[16/10] items-end p-6")}>
+        <p className="text-xl font-semibold text-white/80">{item.title}</p>
       </div>
     );
   }
   if (rest.length === 0) {
     return (
-      <div className={cn(tile, "aspect-[16/9]")}>
-        {image(first.publicId, first.alt, "(min-width: 1280px) 1024px, 88vw")}
+      <div className={cn(tile, "aspect-[16/10]")}>
+        {image(
+          first.publicId,
+          first.alt,
+          "(min-width: 1280px) 544px, (min-width: 768px) 56vw, 84vw",
+        )}
       </div>
     );
   }
   return (
-    <div className="grid aspect-[16/9] grid-cols-3 grid-rows-2 gap-3 md:gap-4">
+    <div className="grid aspect-[16/10] grid-cols-3 grid-rows-2 gap-2 md:gap-3">
       <div className={cn(tile, "col-span-2 row-span-2")}>
-        {image(first.publicId, first.alt, "(min-width: 1280px) 680px, 60vw")}
+        {image(
+          first.publicId,
+          first.alt,
+          "(min-width: 1280px) 360px, (min-width: 768px) 37vw, 56vw",
+        )}
       </div>
       {rest.map((img, index) => (
         <div
           key={img.publicId}
           className={cn(tile, rest.length === 1 && "row-span-2", index > 1 && "hidden")}
         >
-          {image(img.publicId, img.alt, "(min-width: 1280px) 340px, 30vw")}
+          {image(img.publicId, img.alt, "(min-width: 1280px) 180px, (min-width: 768px) 19vw, 28vw")}
         </div>
       ))}
     </div>
@@ -56,8 +64,8 @@ const Collage = ({ item }: { item: FreelanceWorkItem }) => {
 const Slide = ({ item }: { item: FreelanceWorkItem }) => (
   <article className="group">
     <Collage item={item} />
-    <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-10">
-      <p className="max-w-3xl text-lg leading-relaxed text-neutral-300 md:text-xl">
+    <div className="mt-5 flex flex-col items-start gap-4">
+      <p className="line-clamp-3 text-base leading-relaxed text-neutral-300">
         <strong className="font-semibold text-white">{item.clientName || item.title}</strong>
         <span aria-hidden> – </span>
         <span className="sr-only">: </span>

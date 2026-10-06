@@ -1,19 +1,12 @@
-import { IconArrowUpRight, IconBrandWhatsapp, IconMail, IconPhone } from "@tabler/icons-react";
+import { IconArrowUpRight, IconBrandWhatsapp, IconMail } from "@tabler/icons-react";
 import { RichText } from "@/shared/components/RichText";
 import { ContactForm } from "@/features/contact/components/ContactForm";
-import { callHref, whatsappHref, type ContactChannels } from "./contactActions";
+import { whatsappHref, type ContactChannels } from "./contactActions";
 
 type FreelanceContactProps = { title: string; intro: string; channels: ContactChannels };
 
 export const FreelanceContact = ({ title, intro, channels }: FreelanceContactProps) => {
   const direct = [
-    channels.phone && {
-      href: callHref(channels.phone),
-      label: "Call now",
-      detail: channels.phone,
-      Icon: IconPhone,
-      external: false,
-    },
     channels.whatsapp && {
       href: whatsappHref(channels.whatsapp),
       label: "Message on WhatsApp",

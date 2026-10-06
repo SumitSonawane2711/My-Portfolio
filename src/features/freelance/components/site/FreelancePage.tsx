@@ -1,6 +1,7 @@
 import type { SiteProfile } from "@/features/settings/interfaces/settings";
 import type { FreelancePage as FreelancePageData } from "@/features/freelance/interfaces/freelance";
 import { BackToTop } from "./BackToTop";
+import { ContactDialog } from "./ContactDialog";
 import type { ContactChannels } from "./contactActions";
 import { FreelanceAbout } from "./FreelanceAbout";
 import { FreelanceContact } from "./FreelanceContact";
@@ -18,11 +19,7 @@ type FreelancePageProps = { page: FreelancePageData; profile: SiteProfile };
 // there are any) → about → process → contact.
 export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
   const { copy } = page;
-  const channels: ContactChannels = {
-    phone: profile.phone,
-    whatsapp: page.whatsapp,
-    email: profile.contactEmail,
-  };
+  const channels: ContactChannels = { whatsapp: page.whatsapp, email: profile.contactEmail };
 
   const links: HeaderLink[] = [
     page.work.length > 0 && { id: "work", label: "Work" },
@@ -40,7 +37,7 @@ export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
         links={links}
       />
       <main>
-        <FreelanceHero copy={copy} channels={channels} />
+        <FreelanceHero copy={copy} />
         <FreelanceWork title={copy.workTitle} intro={copy.workIntro} items={page.work} />
         <FreelanceServices
           title={copy.servicesTitle}
@@ -54,11 +51,12 @@ export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
           name={profile.name}
           imagePublicId={page.portraitPublicId ?? profile.avatarPublicId}
         />
-        <FreelanceProcess copy={copy} offers={page.offers} channels={channels} />
+        <FreelanceProcess copy={copy} offers={page.offers} />
         <FreelanceContact title={copy.contactTitle} intro={copy.contactIntro} channels={channels} />
       </main>
       <FreelanceFooter name={profile.name} socials={profile.socials} />
       <BackToTop />
+      <ContactDialog whatsapp={channels.whatsapp} email={channels.email} />
     </>
   );
 };
