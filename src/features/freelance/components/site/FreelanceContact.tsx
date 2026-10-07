@@ -32,7 +32,7 @@ export const FreelanceContact = ({ title, intro, channels }: FreelanceContactPro
       // ContactAndFooter. The bottom padding leaves room for the painting.
       className="pt-24 pb-20 text-neutral-900 md:pt-32 md:pb-5"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 md:grid-cols-2 md:gap-16 md:px-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 *:min-w-0 md:grid-cols-2 md:gap-16 md:px-10">
         <div className="reveal">
           <h2 id="contact-title" className="text-3xl font-bold tracking-tight md:text-5xl">
             {title}

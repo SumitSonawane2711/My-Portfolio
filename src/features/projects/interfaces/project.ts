@@ -35,6 +35,8 @@ export type ProjectAdminRow = {
   slug: string;
   published: boolean;
   featured: boolean;
+  portfolio: boolean;
+  freelance: boolean;
   displayDate: string | null;
   coverPublicId: string | null;
 };
@@ -55,6 +57,7 @@ export type ProjectFormData = {
   repoUrl: string;
   featured: boolean;
   published: boolean;
+  portfolio: boolean;
   freelance: boolean;
   clientName: string;
   outcome: string;

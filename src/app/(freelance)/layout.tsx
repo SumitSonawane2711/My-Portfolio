@@ -18,8 +18,10 @@ export default function FreelanceRootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.variable} bg-stone-50 font-sans text-neutral-900 antialiased`}>
+    <html lang="en" className="overflow-x-clip scroll-smooth">
+      <body
+        className={`${inter.variable} overflow-x-clip bg-stone-50 font-sans text-neutral-900 antialiased`}
+      >
         <Toaster position="top-center" />
         <LiveVisitorBeacon site="FREELANCE" />
         {children}

@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import { ArrowLeft, ArrowRight, ImagePlus, Loader2, X } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { ArrowLeft, ArrowRight, ImagePlus, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { CloudImage } from "@/shared/components/CloudImage";
-import { useCloudinaryUpload } from "../hooks/useCloudinaryUpload";
+import { MediaPicker } from "./MediaPicker";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
 type GalleryFieldProps = {
@@ -17,21 +16,7 @@ type GalleryFieldProps = {
 
 // Ordered list of images (project screenshots). Use with RHF's <Controller>.
 export const GalleryField = ({ value, onChange, folder, max = 12 }: GalleryFieldProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { upload, isUploading, progress } = useCloudinaryUpload(folder, "image");
-
-  async function addFiles(files: FileList | null) {
-    const list = Array.from(files ?? []).slice(0, max - value.length);
-    let next = value;
-    for (const file of list) {
-      try {
-        next = [...next, await upload(file)];
-        onChange(next);
-      } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Upload failed.");
-      }
-    }
-  }
+  const [picking, setPicking] = useState(false);
 
   const move = (index: number, by: -1 | 1) => {
     const target = index + by;
@@ -43,16 +28,17 @@ export const GalleryField = ({ value, onChange, folder, max = 12 }: GalleryField
 
   return (
     <div className="flex flex-col gap-2">
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
+      <MediaPicker
+        open={picking}
+        onOpenChange={setPicking}
+        kind="image"
+        folder={folder}
         multiple
-        className="hidden"
-        onChange={(e) => {
-          void addFiles(e.target.files);
-          e.target.value = "";
-        }}
+        max={max - value.length}
+        exclude={value.map((m) => m.id)}
+        onSelect={(media) =>
+          onChange([...value, ...media.filter((m) => !value.some((v) => v.id === m.id))])
+        }
       />
       <ul className="grid grid-cols-3 gap-2">
         {value.map((media, index) => (
@@ -102,16 +88,11 @@ export const GalleryField = ({ value, onChange, folder, max = 12 }: GalleryField
           <li>
             <button
               type="button"
-              disabled={isUploading}
-              onClick={() => inputRef.current?.click()}
+              onClick={() => setPicking(true)}
               className="flex aspect-video w-full flex-col items-center justify-center gap-1 rounded-md border border-dashed text-xs text-muted-foreground hover:bg-muted/50"
             >
-              {isUploading ? (
-                <Loader2 className="size-4 animate-spin" />
-              ) : (
-                <ImagePlus className="size-4" />
-              )}
-              {isUploading ? `${progress}%` : "Add images"}
+              <ImagePlus className="size-4" />
+              Add images
             </button>
           </li>
         )}

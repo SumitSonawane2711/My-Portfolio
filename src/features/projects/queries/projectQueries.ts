@@ -52,6 +52,7 @@ export async function getProjectForEdit(id: string): Promise<ProjectFormData | n
     repoUrl: row.repoUrl ?? "",
     featured: row.featured,
     published: row.published,
+    portfolio: row.portfolio,
     freelance: row.freelance,
     clientName: row.clientName ?? "",
     outcome: row.outcome ?? "",

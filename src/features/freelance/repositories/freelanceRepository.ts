@@ -44,7 +44,9 @@ export const freelanceRepository = {
   listWork() {
     return db.project.findMany({
       where: { published: true, freelance: true },
-      orderBy: [{ featured: "desc" }, { order: "asc" }],
+      // The admin's project order; the carousel shows three at most.
+      orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+      take: 3,
       select: {
         slug: true,
         title: true,

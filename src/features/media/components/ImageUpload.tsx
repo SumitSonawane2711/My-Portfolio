@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type DragEvent } from "react";
+import { useState, type DragEvent } from "react";
 import { ImagePlus, Loader2, RefreshCw, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/shared/components/ui/button";
@@ -9,6 +9,7 @@ import { CloudImage } from "@/shared/components/CloudImage";
 import { cn } from "@/shared/libs/utils";
 import { updateMediaAlt } from "../actions/mediaActions";
 import { useCloudinaryUpload } from "../hooks/useCloudinaryUpload";
+import { MediaPicker } from "./MediaPicker";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
 type ImageUploadProps = {
@@ -32,8 +33,8 @@ export const ImageUpload = ({
   withAlt = true,
   className,
 }: ImageUploadProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [picking, setPicking] = useState(false);
   const { upload, isUploading, progress } = useCloudinaryUpload(folder, "image");
 
   async function handleFile(file: File | undefined) {
@@ -60,15 +61,13 @@ export const ImageUpload = ({
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={(e) => {
-          void handleFile(e.target.files?.[0]);
-          e.target.value = "";
-        }}
+      <MediaPicker
+        open={picking}
+        onOpenChange={setPicking}
+        kind="image"
+        folder={folder}
+        exclude={value ? [value.id] : []}
+        onSelect={([media]) => onChange(media)}
       />
 
       {value ? (
@@ -87,7 +86,7 @@ export const ImageUpload = ({
               variant="secondary"
               aria-label="Replace image"
               disabled={isUploading}
-              onClick={() => inputRef.current?.click()}
+              onClick={() => setPicking(true)}
             >
               {isUploading ? <Loader2 className="animate-spin" /> : <RefreshCw />}
             </Button>
@@ -105,7 +104,7 @@ export const ImageUpload = ({
       ) : (
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
+          onClick={() => setPicking(true)}
           onDragOver={(e) => {
             e.preventDefault();
             setDragging(true);
@@ -127,7 +126,7 @@ export const ImageUpload = ({
           ) : (
             <>
               <ImagePlus className="size-5" />
-              Click or drop an image
+              Choose from library, or drop an image
             </>
           )}
         </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { cn } from "@/shared/libs/utils";
 
@@ -175,13 +175,11 @@ export const WorkCarousel = ({ slides, labels }: WorkCarouselProps) => {
           <li
             key={index}
             data-index={index}
-            // Each card's border light (.border-beam) starts at a different point.
-            style={{ "--beam-delay": `${index * -2.3}s` } as CSSProperties}
             aria-roledescription="slide"
             aria-label={`${index + 1} of ${slides.length}: ${labels[index]}`}
             // relative keeps absolutely positioned children (e.g. sr-only text)
             // inside the scroller, so off-screen slides can't widen the page.
-            className="relative w-[84%] shrink-0 snap-start scroll-ml-6 sm:w-[68%] md:w-[56%] md:scroll-ml-10 lg:w-[44%] xl:w-[34rem] xl:scroll-ml-[max(2.5rem,calc((100vw-72rem)/2+2.5rem))]"
+            className="relative w-[88%] shrink-0 snap-start scroll-ml-6 md:w-[84%] md:scroll-ml-10 xl:w-[62rem] xl:scroll-ml-[max(2.5rem,calc((100vw-72rem)/2+2.5rem))]"
           >
             {slide}
           </li>

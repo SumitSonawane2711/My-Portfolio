@@ -54,6 +54,8 @@ export const ProjectsManager = ({ projects }: { projects: ProjectAdminRow[] }) =
               <p className="text-xs text-muted-foreground">{project.displayDate}</p>
             </div>
             <div className="hidden gap-1 sm:flex">
+              {project.portfolio && <Badge variant="secondary">portfolio</Badge>}
+              {project.freelance && <Badge variant="secondary">freelance</Badge>}
               {project.featured && <Badge variant="secondary">featured</Badge>}
               <Badge variant={project.published ? "default" : "outline"}>
                 {project.published ? "published" : "draft"}
