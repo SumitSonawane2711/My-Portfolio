@@ -16,14 +16,19 @@ export const projectSchema = z.object({
   displayDate: z.string().trim().max(40),
   coverId: z.string().nullable(),
   previewVideoId: z.string().nullable(),
-  imageIds: z.array(z.string()).max(12, "At most 12 gallery images"),
+  imageIds: z
+    .array(z.string())
+    .max(12, "At most 12 gallery images")
+    .transform((ids) => [...new Set(ids)]), // each image once
   contentJson: z.unknown().nullable(),
   contentHtml: z.string().max(500_000),
   liveUrl: optionalUrl,
   repoUrl: optionalUrl,
   featured: z.boolean(),
   published: z.boolean(),
-  /** Also in the Work section of /freelance, captioned "<client> – <outcome>". */
+  /** On the developer portfolio (home, /projects, its own page). */
+  portfolio: z.boolean(),
+  /** In the Work section of /freelance (at most three projects). */
   freelance: z.boolean(),
   clientName: z.string().trim().max(80),
   outcome: z.string().trim().max(200),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type CSSProperties } from "react";
+import { useId, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { IconChevronDown } from "@tabler/icons-react";
 import { RichText } from "@/shared/components/RichText";
@@ -42,14 +42,9 @@ export const ServicesAccordion = ({ services }: { services: FreelanceService[] }
               </motion.span>
 
               <div
-                data-active={isOpen || undefined}
-                // Each card's light starts at a different point on its border.
-                style={{ "--beam-delay": `${index * -1.7}s` } as CSSProperties}
                 className={cn(
-                  "border-beam min-w-0 flex-1 rounded-3xl ring-1 transition-colors duration-300",
-                  isOpen
-                    ? "bg-white/[0.07] ring-white/15"
-                    : "bg-white/[0.04] ring-white/10 hover:ring-white/20",
+                  "min-w-0 flex-1 rounded-3xl transition-colors duration-300",
+                  isOpen ? "bg-white/[0.07]" : "bg-white/[0.04] hover:bg-white/[0.06]",
                 )}
               >
                 <h3>

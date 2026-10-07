@@ -61,6 +61,22 @@ export const mediaRepository = {
     });
   },
 
+  /** Uploaded images (not PDFs) or videos, newest first, for the media picker. */
+  listForPicker(kind: "image" | "video") {
+    return db.mediaAsset.findMany({
+      where:
+        kind === "video"
+          ? { resourceType: "video" }
+          : {
+              resourceType: { in: ["image", "local"] },
+              NOT: { format: "pdf" },
+            },
+      orderBy: { createdAt: "desc" },
+      take: 300,
+      select: mediaSelect,
+    });
+  },
+
   findById(id: string) {
     return db.mediaAsset.findUnique({ where: { id }, select: mediaSelect });
   },

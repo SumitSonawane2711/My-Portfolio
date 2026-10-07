@@ -105,7 +105,9 @@ model Project {
   repoUrl        String?
   featured       Boolean        @default(false)
   published      Boolean        @default(false)
-  /// Also shown in the Work section of /freelance.
+  /// Shown on the developer portfolio (home, /projects and its own page).
+  portfolio      Boolean        @default(true)
+  /// Shown in the Work section of /freelance (at most three projects).
   freelance      Boolean        @default(false)
   /// Freelance caption: "<client> – <outcome>"
   clientName     String?

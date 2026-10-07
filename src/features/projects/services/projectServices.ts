@@ -63,6 +63,7 @@ const scalarFields = (input: ProjectInput) => ({
   repoUrl: empty(input.repoUrl),
   featured: input.featured,
   published: input.published,
+  portfolio: input.portfolio,
   freelance: input.freelance,
   clientName: empty(input.clientName),
   outcome: empty(input.outcome),
@@ -70,8 +71,21 @@ const scalarFields = (input: ProjectInput) => ({
   seoDescription: empty(input.seoDescription),
 });
 
+/** The freelance page shows a carousel of at most this many projects. */
+export const MAX_FREELANCE_PROJECTS = 3;
+
+async function assertFreelanceRoom(input: ProjectInput, projectId?: string) {
+  if (!input.freelance) return;
+  if ((await projectRepository.countFreelance(projectId)) >= MAX_FREELANCE_PROJECTS) {
+    throw new AppError(
+      `The freelance page shows at most ${MAX_FREELANCE_PROJECTS} projects. Turn "Freelance page" off on another project first.`,
+    );
+  }
+}
+
 export const projectServices = {
   async create(input: ProjectInput) {
+    await assertFreelanceRoom(input);
     const slug = await uniqueSlug(input.slug || input.title, (s) =>
       projectRepository.slugExists(s),
     );
@@ -91,6 +105,7 @@ export const projectServices = {
   async update(id: string, input: ProjectInput) {
     const existing = await projectRepository.findById(id);
     if (!existing) throw new AppError("Project not found.", "NOT_FOUND");
+    await assertFreelanceRoom(input, id);
 
     // The slug only changes when edited explicitly, so shared links keep working.
     const slug =

@@ -42,6 +42,7 @@ const EMPTY: FormValues = {
   repoUrl: "",
   featured: false,
   published: false,
+  portfolio: true,
   freelance: false,
   clientName: "",
   outcome: "",
@@ -134,16 +135,49 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
                 </div>
               )}
             />
-            <Controller
-              control={control}
-              name="featured"
-              render={({ field }) => (
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="featured">Featured on home page</Label>
-                  <Switch id="featured" checked={field.value} onCheckedChange={field.onChange} />
-                </div>
-              )}
-            />
+            <div className="flex flex-col gap-3 border-t pt-4">
+              <p className="text-sm font-medium">Show on</p>
+              <Controller
+                control={control}
+                name="portfolio"
+                render={({ field }) => (
+                  <div className="flex items-center justify-between gap-3">
+                    <Label htmlFor="portfolio" className="font-normal">
+                      Developer portfolio
+                    </Label>
+                    <Switch id="portfolio" checked={field.value} onCheckedChange={field.onChange} />
+                  </div>
+                )}
+              />
+              <Controller
+                control={control}
+                name="featured"
+                render={({ field }) => (
+                  <div className="flex items-center justify-between gap-3 pl-4">
+                    <Label htmlFor="featured" className="font-normal text-muted-foreground">
+                      Featured on its home page
+                    </Label>
+                    <Switch id="featured" checked={field.value} onCheckedChange={field.onChange} />
+                  </div>
+                )}
+              />
+              <Controller
+                control={control}
+                name="freelance"
+                render={({ field }) => (
+                  <div className="flex items-center justify-between gap-3">
+                    <Label htmlFor="freelance" className="font-normal">
+                      Freelance page <span className="text-muted-foreground">(max 3)</span>
+                    </Label>
+                    <Switch id="freelance" checked={field.value} onCheckedChange={field.onChange} />
+                  </div>
+                )}
+              />
+              <p className="text-xs text-muted-foreground">
+                Only shown while Published is on. Turn the portfolio off for a freelance-only
+                project.
+              </p>
+            </div>
             <div className="flex gap-2">
               <Button type="submit" disabled={pending} className="flex-1">
                 {pending ? "Saving…" : project ? "Save" : "Create project"}
@@ -161,19 +195,9 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Freelance page</CardTitle>
+            <CardTitle>Freelance card</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <Controller
-              control={control}
-              name="freelance"
-              render={({ field }) => (
-                <div className="flex items-center justify-between gap-3">
-                  <Label htmlFor="freelance">Show in /freelance Work</Label>
-                  <Switch id="freelance" checked={field.value} onCheckedChange={field.onChange} />
-                </div>
-              )}
-            />
             <FormField
               label="Client"
               htmlFor="clientName"

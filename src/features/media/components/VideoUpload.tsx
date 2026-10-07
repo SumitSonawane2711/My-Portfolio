@@ -1,11 +1,10 @@
 "use client";
 
-import { useRef } from "react";
-import { Film, Loader2, RefreshCw, X } from "lucide-react";
-import { toast } from "sonner";
+import { useState } from "react";
+import { Film, RefreshCw, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { cldVideoPosterUrl, cldVideoUrl } from "@/shared/libs/cloudinaryUrl";
-import { useCloudinaryUpload } from "../hooks/useCloudinaryUpload";
+import { MediaPicker } from "./MediaPicker";
 import type { MediaFolder, MediaRef } from "../interfaces/media";
 
 type VideoUploadProps = {
@@ -16,29 +15,17 @@ type VideoUploadProps = {
 
 // Form field for one short video. Use with React Hook Form's <Controller>.
 export const VideoUpload = ({ value, onChange, folder }: VideoUploadProps) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { upload, isUploading, progress } = useCloudinaryUpload(folder, "video");
-
-  async function handleFile(file: File | undefined) {
-    if (!file) return;
-    try {
-      onChange(await upload(file));
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Upload failed.");
-    }
-  }
+  const [picking, setPicking] = useState(false);
 
   return (
     <div className="flex flex-col gap-2">
-      <input
-        ref={inputRef}
-        type="file"
-        accept="video/mp4,video/webm,video/quicktime"
-        className="hidden"
-        onChange={(e) => {
-          void handleFile(e.target.files?.[0]);
-          e.target.value = "";
-        }}
+      <MediaPicker
+        open={picking}
+        onOpenChange={setPicking}
+        kind="video"
+        folder={folder}
+        exclude={value ? [value.id] : []}
+        onSelect={([media]) => onChange(media)}
       />
 
       {value ? (
@@ -59,10 +46,9 @@ export const VideoUpload = ({ value, onChange, folder }: VideoUploadProps) => {
               size="icon-sm"
               variant="secondary"
               aria-label="Replace video"
-              disabled={isUploading}
-              onClick={() => inputRef.current?.click()}
+              onClick={() => setPicking(true)}
             >
-              {isUploading ? <Loader2 className="animate-spin" /> : <RefreshCw />}
+              <RefreshCw />
             </Button>
             <Button
               type="button"
@@ -78,21 +64,11 @@ export const VideoUpload = ({ value, onChange, folder }: VideoUploadProps) => {
       ) : (
         <button
           type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={isUploading}
+          onClick={() => setPicking(true)}
           className="flex aspect-video flex-col items-center justify-center gap-2 rounded-lg border border-dashed text-sm text-muted-foreground transition-colors hover:bg-muted/50"
         >
-          {isUploading ? (
-            <>
-              <Loader2 className="size-5 animate-spin" />
-              Uploading… {progress}%
-            </>
-          ) : (
-            <>
-              <Film className="size-5" />
-              Choose a video (MP4, WebM or MOV, max 20 MB)
-            </>
-          )}
+          <Film className="size-5" />
+          Choose from library or upload (MP4, WebM or MOV, max 20 MB)
         </button>
       )}
     </div>

@@ -29,7 +29,8 @@ const detailSelect = {
 export type ProjectCardRow = Prisma.ProjectGetPayload<{ select: typeof cardSelect }>;
 export type ProjectDetailRow = Prisma.ProjectGetPayload<{ select: typeof detailSelect }>;
 
-const published = { published: true } satisfies Prisma.ProjectWhereInput;
+// Live on the developer portfolio: published, and not a freelance-only project.
+const published = { published: true, portfolio: true } satisfies Prisma.ProjectWhereInput;
 
 export const projectRepository = {
   // ── Public ───────────────────────────────────────────────────────────
@@ -70,6 +71,8 @@ export const projectRepository = {
         slug: true,
         published: true,
         featured: true,
+        portfolio: true,
+        freelance: true,
         displayDate: true,
         cover: { select: { publicId: true } },
       },
@@ -107,6 +110,13 @@ export const projectRepository = {
       select: { id: true },
     });
     return Boolean(found);
+  },
+
+  /** How many projects are on the freelance page, not counting this one. */
+  countFreelance(exceptId?: string) {
+    return db.project.count({
+      where: { freelance: true, ...(exceptId && { NOT: { id: exceptId } }) },
+    });
   },
 
   async maxOrder() {

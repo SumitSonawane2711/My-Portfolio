@@ -52,6 +52,18 @@ export async function registerUpload(
   }
 }
 
+/** The media library for the picker popup (images or videos). */
+export async function listMediaLibrary(kind: "image" | "video"): Promise<ActionResult<MediaRef[]>> {
+  await requireAdmin();
+  const parsed = z.enum(["image", "video"]).safeParse(kind);
+  if (!parsed.success) return fail("Invalid media type.");
+  try {
+    return ok(await mediaRepository.listForPicker(parsed.data));
+  } catch (error) {
+    return fail(toErrorMessage(error));
+  }
+}
+
 export async function updateMediaAlt(id: string, alt: string): Promise<ActionResult<MediaRef>> {
   await requireAdmin();
   try {
