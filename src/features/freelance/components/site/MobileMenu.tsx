@@ -16,6 +16,8 @@ type MobileMenuProps = {
   whatsapp: string | null;
   /** The section in view (its link is highlighted). */
   active: string | null;
+  /** Where the section links point: "" on /freelance, "/freelance" elsewhere. */
+  base?: string;
 };
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -23,7 +25,7 @@ const noSubscribe = () => () => {};
 
 // Phones only: a menu button in the header that opens a full-screen dark
 // panel with the section links, "Contact now" and WhatsApp.
-export const MobileMenu = ({ name, links, whatsapp, active }: MobileMenuProps) => {
+export const MobileMenu = ({ name, links, whatsapp, active, base = "" }: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion();
@@ -127,7 +129,7 @@ export const MobileMenu = ({ name, links, whatsapp, active }: MobileMenuProps) =
                         className="border-b border-white/10"
                       >
                         <a
-                          href={`#${link.id}`}
+                          href={`${base}#${link.id}`}
                           onClick={close}
                           aria-current={active === link.id ? "true" : undefined}
                           className={cn(

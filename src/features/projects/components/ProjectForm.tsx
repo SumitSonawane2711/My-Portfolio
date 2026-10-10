@@ -167,7 +167,7 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
                 render={({ field }) => (
                   <div className="flex items-center justify-between gap-3">
                     <Label htmlFor="freelance" className="font-normal">
-                      Freelance page <span className="text-muted-foreground">(max 3)</span>
+                      Freelance page
                     </Label>
                     <Switch id="freelance" checked={field.value} onCheckedChange={field.onChange} />
                   </div>
@@ -175,7 +175,8 @@ export const ProjectForm = ({ project, technologies }: ProjectFormProps) => {
               />
               <p className="text-xs text-muted-foreground">
                 Only shown while Published is on. Turn the portfolio off for a freelance-only
-                project.
+                project. On /freelance, the first three (in project order) fill the Work carousel;
+                all of them are on the Work page.
               </p>
             </div>
             <div className="flex gap-2">

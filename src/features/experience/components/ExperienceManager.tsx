@@ -38,7 +38,7 @@ export const ExperienceManager = ({ items }: { items: ExperienceAdminRow[] }) =>
                 </Link>
                 <p className="text-xs text-muted-foreground">{item.period}</p>
               </div>
-              <Badge variant={item.published ? "default" : "outline"}>
+              <Badge variant={item.published ? "success" : "outline"}>
                 {item.published ? "published" : "hidden"}
               </Badge>
               <Button asChild variant="ghost" size="icon" aria-label={`Edit ${item.company}`}>

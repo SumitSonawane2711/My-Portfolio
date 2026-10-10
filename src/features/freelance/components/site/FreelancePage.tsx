@@ -16,18 +16,22 @@ import { FreelanceWork } from "./FreelanceWork";
 
 type FreelancePageProps = { page: FreelancePageData; profile: SiteProfile };
 
+/** The header's section links (only sections that have content). */
+export const sectionLinks = (page: FreelancePageData): HeaderLink[] =>
+  [
+    page.work.length > 0 && { id: "work", label: "Work" },
+    page.services.length > 0 && { id: "services", label: "What I do" },
+    page.copy.about && { id: "about", label: "About" },
+    { id: "process", label: "Process" },
+  ].filter((link): link is HeaderLink => Boolean(link));
+
 // The client-facing one-pager: hero → work → what I do → testimonials (when
 // there are any) → about → process → contact.
 export const FreelancePage = ({ page, profile }: FreelancePageProps) => {
   const { copy } = page;
   const channels: ContactChannels = { whatsapp: page.whatsapp, email: profile.contactEmail };
 
-  const links: HeaderLink[] = [
-    page.work.length > 0 && { id: "work", label: "Work" },
-    page.services.length > 0 && { id: "services", label: "What I do" },
-    copy.about && { id: "about", label: "About" },
-    { id: "process", label: "Process" },
-  ].filter((link): link is HeaderLink => Boolean(link));
+  const links = sectionLinks(page);
 
   return (
     <>

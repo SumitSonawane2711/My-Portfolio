@@ -1,4 +1,5 @@
-import { IconArrowUpRight } from "@tabler/icons-react";
+import Link from "next/link";
+import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
 import { CloudImage } from "@/shared/components/CloudImage";
 import { RichText } from "@/shared/components/RichText";
 import { TechBadgeIcon } from "@/shared/components/TechBadgeIcon";
@@ -23,7 +24,7 @@ const Media = ({ item }: { item: FreelanceWorkItem }) => {
       publicId={first.publicId}
       alt={first.alt || item.title}
       fill
-      sizes="(min-width: 1280px) 760px, (min-width: 768px) 62vw, 86vw"
+      sizes="(min-width: 1280px) 400px, (min-width: 768px) 32vw, 86vw"
       className={zoom}
     />
   ) : (
@@ -38,7 +39,7 @@ const Media = ({ item }: { item: FreelanceWorkItem }) => {
         className={cn(
           tile,
           // Beside the side images 16:10; alone it spans the card, so wider.
-          "aspect-square",
+          "aspect-[5/4]",
           side.length > 0 ? "md:aspect-[16/10]" : "md:aspect-[2/1]",
         )}
       >
@@ -52,7 +53,7 @@ const Media = ({ item }: { item: FreelanceWorkItem }) => {
                 publicId={image.publicId}
                 alt={image.alt || item.title}
                 fill
-                sizes="(min-width: 1280px) 250px, 20vw"
+                sizes="(min-width: 1280px) 140px, 11vw"
                 className={zoom}
               />
             </div>
@@ -63,17 +64,21 @@ const Media = ({ item }: { item: FreelanceWorkItem }) => {
   );
 };
 
-// One project per slide: the media on top, then the caption (date above the
-// title on phones, beside it on wider screens), the technologies and, when
-// the project is live, a link. Hover/focus brightens the border and lifts it.
-const Slide = ({ item }: { item: FreelanceWorkItem }) => (
-  <article className="group flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-2.5 transition duration-300 focus-within:border-white/25 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40 motion-reduce:hover:translate-y-0 md:p-3">
-    <Media item={item} />
-    <div className="flex flex-1 flex-col gap-4 px-2 pt-4 pb-1.5 md:flex-row md:items-end md:justify-between md:gap-8 md:px-3 md:pt-5">
-      <div className="min-w-0 md:max-w-2xl">
-        <div className="flex flex-col-reverse gap-1 md:flex-row md:items-baseline md:gap-3">
-          <h3 className="text-lg leading-snug font-semibold tracking-tight text-white md:text-xl">
-            {item.clientName || item.title}
+// One project per slide: the media on top, then a compact caption (title and
+// date, two lines of outcome, the technologies and, when the project is live,
+// a link at the end of that row). Hover/focus brightens the border and lifts it.
+const Slide = ({ item }: { item: FreelanceWorkItem }) => {
+  const name = item.clientName || item.title;
+  return (
+    <article className="group flex h-full flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-2.5 transition duration-300 focus-within:border-white/25 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40 motion-reduce:hover:translate-y-0 md:p-3">
+      <Media item={item} />
+      <div className="flex flex-1 flex-col px-2 pt-3.5 pb-1 md:px-3 md:pt-4">
+        <div className="flex flex-col-reverse gap-1 md:flex-row md:items-baseline md:justify-between md:gap-4">
+          <h3
+            title={name}
+            className="line-clamp-2 text-lg leading-snug font-semibold tracking-tight text-white md:line-clamp-1"
+          >
+            {name}
           </h3>
           {item.displayDate && (
             <p className="shrink-0 text-xs font-medium tracking-wider text-neutral-500 uppercase">
@@ -81,71 +86,89 @@ const Slide = ({ item }: { item: FreelanceWorkItem }) => (
             </p>
           )}
         </div>
-        <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-neutral-400 md:line-clamp-2">
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-neutral-400">
           {item.outcome}
         </p>
-        {item.technologies.length > 0 && (
-          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Built with">
-            {item.technologies.slice(0, 5).map((tech) => (
-              <li
-                key={tech.slug}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs text-neutral-300 ring-1 ring-white/10"
-              >
-                <TechBadgeIcon tech={tech} className="size-3.5" />
-                {tech.name}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="mt-auto flex flex-col items-start gap-3 pt-3 md:flex-row md:items-end">
+          {item.technologies.length > 0 && (
+            <ul className="flex min-w-0 flex-wrap gap-1.5 md:flex-1" aria-label="Built with">
+              {item.technologies.slice(0, 4).map((tech) => (
+                <li
+                  key={tech.slug}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-2.5 py-1 text-xs text-neutral-300 ring-1 ring-white/10"
+                >
+                  <TechBadgeIcon tech={tech} className="size-3.5" />
+                  {tech.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          {item.liveUrl && (
+            <a
+              href={item.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group/link inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 px-3.5 py-1.5 text-sm text-white transition-colors hover:border-white hover:bg-white hover:text-neutral-950 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none md:ml-auto"
+            >
+              Visit live site
+              <span className="sr-only"> of {name} (opens in a new tab)</span>
+              <IconArrowUpRight
+                aria-hidden
+                className="size-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
+              />
+            </a>
+          )}
+        </div>
       </div>
-      {item.liveUrl && (
-        <a
-          href={item.liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group/link mt-auto inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-white/20 px-4 py-2 text-sm text-white transition-colors hover:border-white hover:bg-white hover:text-neutral-950 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none md:mt-0 md:self-end"
-        >
-          Visit live site
-          <span className="sr-only"> of {item.clientName || item.title} (opens in a new tab)</span>
-          <IconArrowUpRight
-            aria-hidden
-            className="size-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"
-          />
-        </a>
-      )}
-    </div>
-  </article>
-);
+    </article>
+  );
+};
+
+/** How many projects the carousel shows; the rest are on /freelance/work. */
+export const CAROUSEL_PROJECTS = 3;
 
 type FreelanceWorkProps = { title: string; intro: string; items: FreelanceWorkItem[] };
 
 export const FreelanceWork = ({ title, intro, items }: FreelanceWorkProps) => {
   if (items.length === 0) return null;
+  const featured = items.slice(0, CAROUSEL_PROJECTS);
 
   return (
     <section
       id="work"
       data-tone="dark"
       aria-labelledby="work-title"
-      className="bg-neutral-950 py-24 text-white md:py-32"
+      className="bg-neutral-950 pt-28 pb-12 text-white md:pt-24 md:pb-14"
     >
-      <div className="reveal mx-auto mb-12 w-full max-w-6xl px-6 md:px-10">
-        <h2 id="work-title" className="text-3xl font-bold tracking-tight md:text-5xl">
-          {title}
-        </h2>
-        {intro && (
-          <RichText
-            text={intro}
-            className="mt-4 max-w-2xl text-lg text-neutral-400"
-            boldClassName="text-white"
+      <div className="reveal mx-auto mb-8 flex w-full max-w-6xl flex-wrap items-end justify-between gap-x-8 gap-y-4 px-6 md:px-10">
+        <div>
+          <h2 id="work-title" className="text-3xl font-bold tracking-tight md:text-4xl">
+            {title}
+          </h2>
+          {intro && (
+            <RichText
+              text={intro}
+              className="mt-3 max-w-2xl text-base text-neutral-400 md:text-lg"
+              boldClassName="text-white"
+            />
+          )}
+        </div>
+        <Link
+          href="/freelance/work"
+          className="group/all inline-flex items-center gap-1.5 rounded-full border border-white/20 px-4 py-2 text-sm text-white transition-colors hover:border-white hover:bg-white hover:text-neutral-950 focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:outline-none"
+        >
+          View all work
+          <IconArrowRight
+            aria-hidden
+            className="size-4 transition-transform group-hover/all:translate-x-0.5"
           />
-        )}
+        </Link>
       </div>
       <WorkCarousel
-        slides={items.map((item) => (
+        slides={featured.map((item) => (
           <Slide key={item.slug} item={item} />
         ))}
-        labels={items.map((item) => item.clientName || item.title)}
+        labels={featured.map((item) => item.clientName || item.title)}
       />
     </section>
   );

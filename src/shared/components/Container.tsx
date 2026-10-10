@@ -6,14 +6,10 @@ type ContainerProps = {
   className?: string;
 };
 
+// The one page width, shared with the navbar and footer.
 export const Container: React.FC<ContainerProps> = ({ children, className }) => {
   return (
-    <div
-      className={cn(
-        "mx-auto w-full max-w-4xl bg-white p-4 text-neutral-900 md:px-18 dark:bg-neutral-900 dark:text-neutral-100",
-        className,
-      )}
-    >
+    <div className={cn("mx-auto w-full max-w-5xl px-6 py-8 sm:px-10 sm:py-12", className)}>
       {children}
     </div>
   );

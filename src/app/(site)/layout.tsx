@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import { inter } from "@/shared/configs/fonts";
+import { chaiFontVariables } from "@/shared/configs/fonts";
+import { Backdrop } from "@/shared/components/chai/Backdrop";
 import { clientEnv } from "@/shared/configs/clientEnv";
 import { Navbar } from "@/shared/components/Navbar";
 import { Footer } from "@/shared/components/Footer";
@@ -39,15 +40,17 @@ export default async function SiteLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} bg-neutral-100 font-sans text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100`}
-      >
+      <body className={`${chaiFontVariables} chai font-sans antialiased`}>
         <AppProviders>
           <NavigationProgress />
           <LiveVisitorBeacon site="PORTFOLIO" />
-          <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
-          {children}
-          <Footer name={settings.name} socials={settings.socials} />
+          {/* The warm hexagon glow sits behind the whole page (ChaiUI backdrop). */}
+          <div className="relative isolate flex min-h-screen flex-col overflow-clip">
+            <Backdrop />
+            <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
+            <div className="flex-1">{children}</div>
+            <Footer name={settings.name} socials={settings.socials} />
+          </div>
         </AppProviders>
       </body>
     </html>

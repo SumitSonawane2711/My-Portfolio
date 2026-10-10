@@ -19,8 +19,10 @@ export const Sidebar = ({ unreadCount }: SidebarProps) => {
   const pathname = usePathname();
 
   return (
-    <aside className="border-b bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:flex md:h-screen md:w-60 md:shrink-0 md:flex-col md:border-r md:border-b-0">
-      <div className="hidden px-4 py-5 text-sm font-semibold md:block">Portfolio dashboard</div>
+    <aside className="border-b bg-background/60 text-sidebar-foreground backdrop-blur-md md:sticky md:top-0 md:flex md:h-screen md:w-60 md:shrink-0 md:flex-col md:border-r md:border-b-0">
+      <div className="hidden px-4 py-5 text-[15px] font-semibold tracking-tight md:block">
+        Portfolio dashboard
+      </div>
 
       {/* Horizontal scrolling bar on small screens, vertical list from md up. */}
       <nav className="no-scrollbar flex gap-1 overflow-x-auto p-2 md:flex-1 md:flex-col md:overflow-visible">
@@ -34,8 +36,8 @@ export const Sidebar = ({ unreadCount }: SidebarProps) => {
               className={cn(
                 "flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
                 active
-                  ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground"
-                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-foreground",
+                  ? "bg-sidebar-accent/60 font-medium text-foreground"
+                  : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-brand",
               )}
             >
               <Icon className="size-4" />

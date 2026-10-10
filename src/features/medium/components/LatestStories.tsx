@@ -7,11 +7,15 @@ export const LatestStories = ({ stories }: { stories: MediumStory[] }) => {
   if (stories.length === 0) return null;
 
   return (
-    <section aria-labelledby="writing-title" className="py-12">
+    <section aria-labelledby="writing-title" className="py-12 sm:py-16">
       <SectionHeader
         id="writing-title"
         title="Writing"
-        description="Notes on building software, published on Medium."
+        description={
+          <>
+            Notes on <span className="highlight">building software</span>, published on Medium.
+          </>
+        }
         action={{ href: "/blog", label: "All stories" }}
       />
       <ul className="mt-8 flex flex-col gap-3">

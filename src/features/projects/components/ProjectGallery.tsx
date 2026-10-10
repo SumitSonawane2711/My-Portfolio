@@ -65,14 +65,14 @@ export const ProjectGallery = ({ images, alt }: ProjectGalleryProps) => {
       <button
         type="button"
         onClick={() => openPopup(activeIndex)}
-        className="group block w-full cursor-zoom-in overflow-hidden rounded-lg border border-neutral-200 shadow-xl dark:border-neutral-800"
+        className="group block w-full cursor-zoom-in overflow-hidden rounded-[calc(var(--radius)+4px)] border border-card-edge"
       >
         <CloudImage
           publicId={images[activeIndex]}
           alt={alt}
           height={500}
           width={900}
-          className="max-h-96 w-full rounded-lg object-cover transition duration-300 group-hover:scale-[1.02]"
+          className="max-h-[32rem] w-full object-cover transition duration-300 motion-safe:group-hover:scale-[1.03]"
         />
       </button>
 
@@ -86,8 +86,8 @@ export const ProjectGallery = ({ images, alt }: ProjectGalleryProps) => {
               className={cn(
                 "overflow-hidden rounded-md border transition duration-200",
                 index === activeIndex
-                  ? "border-primary ring-2 ring-primary/50"
-                  : "border-neutral-200 opacity-70 hover:opacity-100 dark:border-neutral-800",
+                  ? "border-card-edge-hover"
+                  : "border-card-edge opacity-60 hover:opacity-100",
               )}
             >
               <CloudImage

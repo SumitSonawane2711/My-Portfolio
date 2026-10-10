@@ -18,7 +18,7 @@ export const ArrowLink = ({ href, children, external = false, className }: Arrow
       href={href}
       {...(external && { target: "_blank", rel: "noopener noreferrer" })}
       className={cn(
-        "group/arrow inline-flex items-center gap-1 rounded-sm text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:outline-none",
+        "group/arrow inline-flex items-center gap-1 rounded-sm text-sm font-medium text-primary transition-colors duration-200 hover:text-brand focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
         className,
       )}
     >

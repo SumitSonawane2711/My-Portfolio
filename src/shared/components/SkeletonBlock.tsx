@@ -4,7 +4,7 @@ import { cn } from "@/shared/libs/utils";
 export const SkeletonBlock = ({ className }: { className?: string }) => (
   <div
     className={cn(
-      "animate-pulse rounded-lg bg-neutral-200/80 motion-reduce:animate-none dark:bg-neutral-800",
+      "animate-pulse rounded-lg bg-neutral-500/15 motion-reduce:animate-none",
       className,
     )}
   />

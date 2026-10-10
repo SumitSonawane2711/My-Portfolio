@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/shared/libs/utils";
 
+// Page title (ChaiUI): medium weight, centred.
 export const Heading = ({
   as: Tag = "h1",
   children,
@@ -13,7 +14,7 @@ export const Heading = ({
   return (
     <Tag
       className={cn(
-        "fade-up text-3xl font-bold tracking-tighter text-balance text-primary md:text-5xl",
+        "fade-up text-center text-2xl font-medium tracking-tight text-balance text-primary sm:text-3xl",
         className,
       )}
     >

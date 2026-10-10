@@ -10,7 +10,7 @@ import { SignOutButton } from "./SignOutButton";
 // sidebar only shows from md up.
 export const AdminTopbar = () => {
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-8">
+    <header className="sticky top-0 z-20 flex h-14 items-center justify-between gap-3 border-b bg-background/60 px-4 backdrop-blur-md md:px-8">
       <div className="min-w-0 overflow-x-auto">
         <AdminBreadcrumbs />
       </div>
