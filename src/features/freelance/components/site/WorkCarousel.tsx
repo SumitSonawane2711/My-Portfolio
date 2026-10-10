@@ -179,7 +179,7 @@ export const WorkCarousel = ({ slides, labels }: WorkCarouselProps) => {
             aria-label={`${index + 1} of ${slides.length}: ${labels[index]}`}
             // relative keeps absolutely positioned children (e.g. sr-only text)
             // inside the scroller, so off-screen slides can't widen the page.
-            className="relative w-[88%] shrink-0 snap-start scroll-ml-6 md:w-[84%] md:scroll-ml-10 xl:w-[62rem] xl:scroll-ml-[max(2.5rem,calc((100vw-72rem)/2+2.5rem))]"
+            className="relative w-[88%] shrink-0 snap-start scroll-ml-6 md:w-[calc(50%-0.625rem)] md:scroll-ml-10 xl:scroll-ml-[max(2.5rem,calc((100vw-72rem)/2+2.5rem))]"
           >
             {slide}
           </li>

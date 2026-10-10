@@ -107,7 +107,7 @@ model Project {
   published      Boolean        @default(false)
   /// Shown on the developer portfolio (home, /projects and its own page).
   portfolio      Boolean        @default(true)
-  /// Shown in the Work section of /freelance (at most three projects).
+  /// Shown on /freelance: the first three (project order) in the Work carousel, all on /freelance/work.
   freelance      Boolean        @default(false)
   /// Freelance caption: "<client> – <outcome>"
   clientName     String?

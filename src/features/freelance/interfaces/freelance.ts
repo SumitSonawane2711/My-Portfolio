@@ -58,6 +58,7 @@ export type FreelancePage = {
   whatsapp: string | null;
   services: FreelanceService[];
   offers: FreelanceOffer[];
+  /** Every published freelance project, in project order. */
   work: FreelanceWorkItem[];
   testimonials: TestimonialCard[];
 };

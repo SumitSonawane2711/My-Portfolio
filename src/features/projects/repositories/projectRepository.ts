@@ -112,13 +112,6 @@ export const projectRepository = {
     return Boolean(found);
   },
 
-  /** How many projects are on the freelance page, not counting this one. */
-  countFreelance(exceptId?: string) {
-    return db.project.count({
-      where: { freelance: true, ...(exceptId && { NOT: { id: exceptId } }) },
-    });
-  },
-
   async maxOrder() {
     const { _max } = await db.project.aggregate({ _max: { order: true } });
     return _max.order ?? -1;

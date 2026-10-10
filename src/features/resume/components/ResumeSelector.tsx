@@ -14,7 +14,7 @@ export const ResumeSelector = ({
   return (
     <nav
       aria-label="Choose a resume"
-      className="mb-4 inline-flex flex-wrap gap-1 rounded-full border border-neutral-200 p-1 dark:border-neutral-700"
+      className="mb-4 inline-flex flex-wrap gap-1 rounded-lg border border-card-edge p-1"
     >
       {options.map((option) => {
         const active = option.slug === selected;
@@ -24,10 +24,10 @@ export const ResumeSelector = ({
             href={`/resume/${option.slug}`}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-full px-3 py-1.5 text-sm transition-colors",
+              "rounded-md px-3 py-1.5 text-sm transition-colors duration-200",
               active
-                ? "bg-primary font-medium text-white dark:text-neutral-950"
-                : "text-secondary hover:bg-neutral-100 dark:hover:bg-neutral-800",
+                ? "bg-amber-900/10 font-medium text-foreground dark:bg-orange-900/40"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             {option.title}

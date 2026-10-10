@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "../globals.css";
-import { inter } from "@/shared/configs/fonts";
+import { chaiFontVariables } from "@/shared/configs/fonts";
 import { AppProviders } from "@/shared/components/providers";
 import { NavigationProgress } from "@/shared/components/NavigationProgress";
 
@@ -19,7 +19,7 @@ export default function AdminRootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} admin-theme font-sans antialiased`}>
+      <body className={`${chaiFontVariables} admin-theme font-sans antialiased`}>
         <AppProviders>
           <NavigationProgress />
           <NuqsAdapter>{children}</NuqsAdapter>

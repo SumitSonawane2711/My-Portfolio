@@ -43,7 +43,7 @@ export const HamburgerButton = ({
       aria-expanded={open}
       title={open ? "Close menu" : "Open menu"}
       onClick={handleClick}
-      className={`inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-800 text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300 ${className}`}
+      className={`inline-flex size-9 cursor-pointer items-center justify-center rounded-md text-foreground transition-colors duration-200 outline-none hover:text-brand focus-visible:ring-[3px] focus-visible:ring-ring/50 ${className}`}
     >
       <span className="relative h-4 w-4">
         <span

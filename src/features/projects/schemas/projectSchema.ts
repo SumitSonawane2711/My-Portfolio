@@ -28,7 +28,7 @@ export const projectSchema = z.object({
   published: z.boolean(),
   /** On the developer portfolio (home, /projects, its own page). */
   portfolio: z.boolean(),
-  /** In the Work section of /freelance (at most three projects). */
+  /** On /freelance: the first three (in project order) fill the Work carousel. */
   freelance: z.boolean(),
   clientName: z.string().trim().max(80),
   outcome: z.string().trim().max(200),

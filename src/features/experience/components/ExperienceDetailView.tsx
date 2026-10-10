@@ -1,44 +1,39 @@
 import Link from "next/link";
-import { IconExternalLink } from "@tabler/icons-react";
 import { Container } from "@/shared/components/Container";
 import { ContentRenderer } from "@/shared/components/ContentRenderer";
 import { Heading } from "@/shared/components/Heading";
+import { SubHeading } from "@/shared/components/SubHeading";
+import { ChaiButton } from "@/shared/components/chai/Button";
+import { Chip } from "@/shared/components/chai/Chip";
 import type { ExperienceDetail } from "../interfaces/experience";
 
 export const ExperienceDetailView = ({ experience }: { experience: ExperienceDetail }) => {
   return (
-    <main className="flex min-h-screen items-start justify-start">
-      <Container className="min-h-screen p-4 md:pt-20 md:pb-10">
-        <div className="mb-10">
-          <p className="text-sm text-secondary">{experience.period}</p>
-          <Heading className="mb-4 text-4xl font-bold">{experience.company}</Heading>
-          <p className="mb-3 text-sm font-medium text-primary">{experience.role}</p>
-          <p className="max-w-2xl text-secondary">{experience.summary}</p>
-          {experience.companyUrl && (
-            <Link
-              href={experience.companyUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary"
-            >
-              Visit company
-              <IconExternalLink className="h-4 w-4" />
-            </Link>
-          )}
+    <main>
+      <Container>
+        <div className="mb-10 text-center">
+          <p className="fade-up text-sm text-muted-foreground">{experience.period}</p>
+          <Heading className="mt-2">{experience.company}</Heading>
+          <p className="fade-up mt-2 text-sm text-foreground/80">{experience.role}</p>
+          <SubHeading>{experience.summary}</SubHeading>
           {experience.technologies.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <ul className="mt-5 flex flex-wrap justify-center gap-1.5" aria-label="Technologies">
               {experience.technologies.map((technology) => (
-                <span
-                  key={technology}
-                  className="rounded-md border border-neutral-200 px-2 py-1 text-xs text-secondary dark:border-neutral-800"
-                >
-                  {technology}
-                </span>
+                <li key={technology}>
+                  <Chip>{technology}</Chip>
+                </li>
               ))}
-            </div>
+            </ul>
+          )}
+          {experience.companyUrl && (
+            <ChaiButton asChild variant="outline" className="mt-6">
+              <Link href={experience.companyUrl} target="_blank" rel="noreferrer">
+                Visit company
+              </Link>
+            </ChaiButton>
           )}
         </div>
-        <ContentRenderer html={experience.contentHtml} />
+        <ContentRenderer html={experience.contentHtml} className="mx-auto" />
       </Container>
     </main>
   );

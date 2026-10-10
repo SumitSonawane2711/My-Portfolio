@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { IconDownload, IconArrowLeft } from "@tabler/icons-react";
+import { ChaiButton } from "@/shared/components/chai/Button";
 import { Container } from "@/shared/components/Container";
 import type { PublicResume } from "../interfaces/resume";
 import { ResumeSelector } from "./ResumeSelector";
@@ -14,29 +15,26 @@ type ResumePageProps = {
 // whichever resume is selected. Downloads go through a counting route.
 export const ResumePage = ({ resume, options }: ResumePageProps) => {
   return (
-    <Container className="min-h-screen py-8">
+    <Container>
       <div className="mb-6 flex items-center justify-between gap-3">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-2 rounded-full border border-neutral-200 px-3 py-2 text-sm font-medium text-secondary transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800"
-        >
-          <IconArrowLeft className="h-4 w-4" />
-          Back home
-        </Link>
+        <ChaiButton asChild variant="ghost">
+          <Link href="/">
+            <IconArrowLeft className="size-4" />
+            Back home
+          </Link>
+        </ChaiButton>
 
-        <a
-          href={resume.downloadPath}
-          className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-sm font-medium text-white transition-colors hover:opacity-90"
-        >
-          <IconDownload className="h-4 w-4" />
-          Download PDF
-        </a>
+        <ChaiButton asChild variant="solid" iconRight={<IconDownload />}>
+          <a href={resume.downloadPath}>Download PDF</a>
+        </ChaiButton>
       </div>
 
       {options.length > 1 && <ResumeSelector options={options} selected={resume.slug} />}
-      {resume.description && <p className="mb-4 text-sm text-secondary">{resume.description}</p>}
+      {resume.description && (
+        <p className="mb-4 text-sm text-muted-foreground">{resume.description}</p>
+      )}
 
-      <div className="overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
+      <div className="overflow-hidden card-chai">
         <iframe
           key={resume.slug}
           src={resume.viewUrl}

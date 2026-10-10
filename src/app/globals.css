@@ -36,8 +36,7 @@
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
 
   /* shadcn/ui token names (dashboard only — values exist inside .admin-theme). */
-  --font-heading:
-    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--ff-manrope), ui-sans-serif, system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -61,6 +60,85 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* ChaiUI (DESIGN.md): fonts and colours. Set only inside .chai (portfolio)
+     and .admin-theme (dashboard), never on :root, so /freelance keeps its look. */
+  --font-manrope: var(--ff-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-montserrat: var(--ff-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --color-brand: var(--brand);
+  --color-highlight: var(--highlight);
+  --color-card-edge: var(--card-edge);
+  --color-card-edge-hover: var(--card-edge-hover);
+  --color-card-fill: var(--card-fill);
+}
+
+/* ─── ChaiUI: portfolio theme ────────────────────────────────────────────
+   On <body class="chai"> in app/(site)/layout.tsx. Dark is the default
+   (next-themes puts .dark on <html>). The portfolio keeps its own meaning of
+   --primary / --secondary: headline text and muted text. */
+
+.chai {
+  --font-sans: var(--ff-manrope), ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.145 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.439 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --brand: oklch(66.6% 0.179 58.318);
+  --highlight: oklch(0.476 0.114 61.907);
+  --card-edge: rgb(120 53 15 / 0.15);
+  --card-edge-hover: rgb(120 53 15 / 0.3);
+  --card-fill: rgb(255 255 255 / 0.7);
+}
+
+.dark .chai {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.708 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0);
+  --brand: oklch(75% 0.183 55.934);
+  --highlight: oklch(0.954 0.038 75.164);
+  --card-edge: rgb(255 247 237 / 0.15);
+  --card-edge-hover: rgb(255 247 237 / 0.3);
+  --card-fill: rgb(0 0 0 / 0.1);
+}
+
+/* ChaiUI utilities (only take effect where the variables above exist). */
+@utility highlight {
+  font-family: var(--font-montserrat);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  text-transform: capitalize;
+  color: var(--highlight);
+}
+
+@utility card-chai {
+  border-radius: calc(var(--radius, 0.625rem) + 4px);
+  border: 1px solid var(--card-edge);
+  background: var(--card-fill);
+  backdrop-filter: blur(4px);
+  transition:
+    border-color 300ms,
+    opacity 300ms;
+  &:hover {
+    border-color: var(--card-edge-hover);
+  }
+}
+
+@utility btn-asym {
+  border-radius: 0 var(--radius, 0.625rem) 0 var(--radius, 0.625rem);
+}
+
+@utility btn-asym-mirror {
+  border-radius: var(--radius, 0.625rem) 0 var(--radius, 0.625rem) 0;
 }
 
 /* ─── Dashboard theme (shadcn "neutral") ─────────────────────────────────
@@ -71,6 +149,13 @@
    render in portals attached to <body>. */
 
 .admin-theme {
+  --font-sans: var(--ff-manrope), ui-sans-serif, system-ui, sans-serif;
+  --radius: 0.625rem;
+  --brand: oklch(66.6% 0.179 58.318);
+  --highlight: oklch(0.476 0.114 61.907);
+  --card-edge: rgb(120 53 15 / 0.15);
+  --card-edge-hover: rgb(120 53 15 / 0.3);
+  --card-fill: rgb(255 255 255 / 0.7);
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
@@ -106,6 +191,11 @@
 }
 
 .dark .admin-theme {
+  --brand: oklch(75% 0.183 55.934);
+  --highlight: oklch(0.954 0.038 75.164);
+  --card-edge: rgb(255 247 237 / 0.15);
+  --card-edge-hover: rgb(255 247 237 / 0.3);
+  --card-fill: rgb(0 0 0 / 0.1);
   --primary: oklch(0.922 0 0);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
@@ -140,6 +230,9 @@
 }
 
 @layer base {
+  .chai {
+    @apply bg-background text-foreground;
+  }
   .admin-theme,
   .admin-theme * {
     @apply border-border outline-ring/50;

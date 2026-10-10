@@ -5,24 +5,24 @@ import { SkeletonBlock } from "@/shared/components/SkeletonBlock";
 // Shaped like the home page: heading, intro, actions, then a row of cards.
 export default function SiteLoading() {
   return (
-    <main className="flex min-h-screen items-start justify-start">
-      <Container className="min-h-screen pt-28 pb-16">
-        <div role="status" aria-live="polite">
+    <main>
+      <Container>
+        <div role="status" aria-live="polite" className="flex flex-col items-center">
           <span className="sr-only">Loading…</span>
-          <SkeletonBlock className="h-10 w-64 md:h-12" />
+          <SkeletonBlock className="mt-10 h-12 w-72 md:h-16 md:w-[28rem]" />
           <SkeletonBlock className="mt-5 h-4 w-full max-w-xl" />
           <SkeletonBlock className="mt-2 h-4 w-4/5 max-w-lg" />
           <div className="mt-7 flex gap-3">
-            <SkeletonBlock className="h-10 w-36 rounded-full" />
-            <SkeletonBlock className="h-10 w-28 rounded-full" />
+            <SkeletonBlock className="h-10 w-36 rounded-none rounded-tr-lg rounded-bl-lg" />
+            <SkeletonBlock className="h-10 w-28 rounded-none rounded-tl-lg rounded-br-lg" />
           </div>
-          <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[0, 1, 2].map((card) => (
               <div
                 key={card}
-                className="overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800"
+                className="overflow-hidden rounded-[calc(var(--radius)+4px)] border border-card-edge"
               >
-                <SkeletonBlock className="aspect-[16/10] rounded-none" />
+                <SkeletonBlock className="aspect-video rounded-none" />
                 <div className="p-4">
                   <SkeletonBlock className="h-3 w-20" />
                   <SkeletonBlock className="mt-3 h-4 w-11/12" />

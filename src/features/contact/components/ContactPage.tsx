@@ -5,15 +5,14 @@ import { ContactForm } from "./ContactForm";
 
 export const ContactPage = () => {
   return (
-    <main className="flex min-h-screen items-start justify-start">
-      <Container className="min-h-screen p-4 pt-20 md:pb-10">
+    <main>
+      <Container>
         <Heading>Contact</Heading>
         <SubHeading>
-          I would love to hear from you! Whether you have a question, a project idea, or just want
-          to say hello, feel free to reach out. Let&apos;s collaborate and create something amazing
-          together!
+          Have a question, a project idea, or just want to say hello? I would love to{" "}
+          <span className="highlight">hear from you</span>.
         </SubHeading>
-        <ContactForm />
+        <ContactForm className="card-chai border-card-edge bg-card-fill p-6 shadow-none sm:p-8 dark:border-card-edge dark:bg-card-fill" />
       </Container>
     </main>
   );

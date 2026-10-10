@@ -13,7 +13,7 @@ type StatCardProps = {
 export const StatCard = ({ label, value, href, icon: Icon, hint }: StatCardProps) => {
   return (
     <Link href={href} className="group">
-      <Card className="transition-colors group-hover:bg-muted/50">
+      <Card className="group-hover:ring-card-edge-hover">
         <CardContent className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm text-muted-foreground">{label}</p>

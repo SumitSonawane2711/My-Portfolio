@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import type { TurnstileInstance } from "@marsidev/react-turnstile";
 import { getCountries, getCountryCallingCode, type CountryCode } from "libphonenumber-js/mobile";
 import { TurnstileField } from "@/shared/components/TurnstileField";
+import { CountrySelect } from "./CountrySelect";
 import { sendContactMessage } from "@/features/inbox/actions/messageActions";
 import { contactSchema, MESSAGE_MAX, MESSAGE_MIN } from "@/features/inbox/schemas/messageSchema";
 import { cn } from "@/shared/libs/utils";
@@ -164,7 +165,6 @@ export const ContactForm = ({ source = "PORTFOLIO", className, onSent }: Contact
       </p>
     );
 
-  const selected = countries.find((c) => c.code === country);
   const messageLength = formData.message.trim().length;
 
   return (
@@ -207,38 +207,15 @@ export const ContactForm = ({ source = "PORTFOLIO", className, onSent }: Contact
           Mobile number
         </label>
         <div className="flex gap-2">
-          {/* A native select (good on phones), showing just the country and
-              calling code; the full country names are in the list. */}
-          <div className="relative shrink-0">
-            <span
-              aria-hidden
-              className={cn(inputClass, "flex h-full items-center gap-1 pr-6 tabular-nums")}
-            >
-              {country} +{selected?.dial}
-            </span>
-            <select
-              aria-label="Country code"
-              value={country}
-              onChange={(e) => {
-                const code = e.target.value as CountryCode;
-                setCountry(code);
-                if (formData.phone) validate("phone", formData, code);
-              }}
-              className="absolute inset-0 cursor-pointer opacity-0"
-            >
-              {countries.map((c) => (
-                <option key={c.code} value={c.code}>
-                  {c.name} (+{c.dial})
-                </option>
-              ))}
-            </select>
-            <span
-              aria-hidden
-              className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 text-[10px] text-neutral-400"
-            >
-              ▼
-            </span>
-          </div>
+          <CountrySelect
+            options={countries}
+            value={country}
+            onChange={(code) => {
+              setCountry(code);
+              if (formData.phone) validate("phone", formData, code);
+            }}
+            className={cn(inputClass, "w-auto")}
+          />
           <input
             {...fieldProps("phone")}
             type="tel"

@@ -15,6 +15,8 @@ type FreelanceHeaderProps = {
   links: HeaderLink[];
   /** Digits with country code (for the WhatsApp button in the mobile menu). */
   whatsapp: string | null;
+  /** Where the section links point: "" on /freelance, "/freelance" elsewhere. */
+  base?: string;
 };
 
 const HEADER_HEIGHT = 96;
@@ -27,6 +29,7 @@ export const FreelanceHeader = ({
   available,
   links,
   whatsapp,
+  base = "",
 }: FreelanceHeaderProps) => {
   const [active, setActive] = useState<string | null>(null);
   const [tone, setTone] = useState<"light" | "dark">("light");
@@ -70,7 +73,7 @@ export const FreelanceHeader = ({
     >
       <div className="mx-auto flex h-24 w-full max-w-6xl items-center gap-6 px-6 md:px-10">
         <a
-          href="#top"
+          href={`${base}#top`}
           className="flex shrink-0 items-center gap-3 rounded-full focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none"
         >
           <span className="relative">
@@ -112,7 +115,7 @@ export const FreelanceHeader = ({
           {links.map((link) => (
             <a
               key={link.id}
-              href={`#${link.id}`}
+              href={`${base}#${link.id}`}
               aria-current={active === link.id ? "true" : undefined}
               className={cn(
                 "relative rounded-md px-3 py-2 text-base transition-opacity hover:opacity-100 focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:outline-none",
@@ -141,7 +144,7 @@ export const FreelanceHeader = ({
           )}
         />
 
-        <MobileMenu name={name} links={links} whatsapp={whatsapp} active={active} />
+        <MobileMenu name={name} links={links} whatsapp={whatsapp} active={active} base={base} />
       </div>
     </header>
   );

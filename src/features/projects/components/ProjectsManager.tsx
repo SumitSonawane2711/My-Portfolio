@@ -57,7 +57,7 @@ export const ProjectsManager = ({ projects }: { projects: ProjectAdminRow[] }) =
               {project.portfolio && <Badge variant="secondary">portfolio</Badge>}
               {project.freelance && <Badge variant="secondary">freelance</Badge>}
               {project.featured && <Badge variant="secondary">featured</Badge>}
-              <Badge variant={project.published ? "default" : "outline"}>
+              <Badge variant={project.published ? "success" : "outline"}>
                 {project.published ? "published" : "draft"}
               </Badge>
             </div>

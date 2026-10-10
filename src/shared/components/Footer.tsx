@@ -1,47 +1,44 @@
-import Link from "next/link";
 import type { SocialLink } from "@/features/settings/schemas/settingsSchema";
-import { NAV_ITEMS } from "@/shared/constants/nav";
-import { Container } from "./Container";
+import { cn } from "@/shared/libs/utils";
+import { chaiButtonVariants } from "./chai/Button";
 import { SocialIcon, SOCIAL_LABELS, socialHref } from "./SocialIcon";
 
+// One quiet row: the copyright and the social icons, under a warm hairline
+// that fades out at both ends.
 export const Footer = ({ name, socials }: { name: string; socials: SocialLink[] }) => {
   return (
-    <footer>
-      <Container className="flex flex-col gap-4 border-t border-neutral-200 py-8 sm:flex-row sm:items-center sm:justify-between dark:border-neutral-800">
-        <p className="text-sm text-secondary">
-          © {new Date().getFullYear()} {name || "Sumit Sonawane"} · Built with care.
-        </p>
-        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-          <nav aria-label="Footer" className="flex gap-4">
-            {NAV_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-sm text-secondary transition-colors hover:text-primary"
+    <footer
+      className={cn(
+        "relative mx-auto flex w-full max-w-5xl flex-col items-center gap-3 px-6 py-6 sm:flex-row sm:justify-between sm:px-10",
+        "before:absolute before:top-0 before:left-1/2 before:h-px before:w-full before:-translate-x-1/2 before:opacity-10",
+        "before:[mask-image:linear-gradient(90deg,transparent_0%,black_40%,black_60%,transparent_100%)]",
+        "before:bg-amber-600 dark:before:bg-orange-300",
+      )}
+    >
+      <p className="text-sm text-muted-foreground">
+        © {new Date().getFullYear()} {name || "Sumit Sonawane"}. All rights reserved.
+      </p>
+      {socials.length > 0 && (
+        <ul className="flex items-center gap-1" aria-label="Social profiles">
+          {socials.map((link) => (
+            <li key={link.url}>
+              <a
+                href={socialHref(link)}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={SOCIAL_LABELS[link.platform]}
+                title={SOCIAL_LABELS[link.platform]}
+                className={cn(
+                  chaiButtonVariants({ variant: "ghost", size: "icon" }),
+                  "text-muted-foreground",
+                )}
               >
-                {item.title}
-              </Link>
-            ))}
-          </nav>
-          {socials.length > 0 && (
-            <ul className="flex items-center gap-1" aria-label="Social profiles">
-              {socials.map((link) => (
-                <li key={link.url}>
-                  <a
-                    href={socialHref(link)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={SOCIAL_LABELS[link.platform]}
-                    className="flex size-8 items-center justify-center rounded-full text-secondary transition duration-200 hover:-translate-y-0.5 hover:bg-neutral-200/70 hover:text-primary motion-reduce:hover:translate-y-0 dark:hover:bg-neutral-800"
-                  >
-                    <SocialIcon platform={link.platform} className="size-4" />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </Container>
+                <SocialIcon platform={link.platform} className="size-4" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </footer>
   );
 };
