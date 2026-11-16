@@ -4,6 +4,7 @@ import "../globals.css";
 import { inter } from "@/shared/configs/fonts";
 import { clientEnv } from "@/shared/configs/clientEnv";
 import { LiveVisitorBeacon } from "@/features/analytics/components/LiveVisitorBeacon";
+import { PortfolioChat } from "@/shared/components/PortfolioChat";
 
 export const metadata: Metadata = {
   metadataBase: new URL(clientEnv.siteUrl),
@@ -25,6 +26,7 @@ export default function FreelanceRootLayout({
         <Toaster position="top-center" />
         <LiveVisitorBeacon site="FREELANCE" />
         {children}
+        <PortfolioChat audience="freelance" />
       </body>
     </html>
   );
