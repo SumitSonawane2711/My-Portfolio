@@ -6,6 +6,11 @@ import { Bot, BotMessageSquareIcon, LoaderCircle, Send, X } from "lucide-react";
 type Message = { role: "user" | "assistant"; content: string };
 type Audience = "portfolio" | "freelance";
 
+// Hide an unfinished Markdown link while text is still streaming
+function hidePartialLink(content: string) {
+  return content.replace(/\[[^\]]*$|\[[^\]]*\]\([^)]*$/, "");
+}
+
 function renderLinks(content: string, isFreelance: boolean): ReactNode[] {
   const linkPattern =
     /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|#[^\s)]*)\)|(\/(?:freelance\/work|professional-experience|projects(?:\/[\w-]+)?|freelance|contact|about|resume|blog)(?:#[\w-]+)?)/g;
@@ -68,8 +73,12 @@ export function PortfolioChat({ audience = "portfolio" }: { audience?: Audience 
   const [error, setError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  const [website, setWebsite] = useState("");
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: busy ? "auto" : "smooth" });
   }, [messages, error, busy, open]);
 
   async function sendMessage(event: FormEvent<HTMLFormElement>) {
@@ -78,21 +87,52 @@ export function PortfolioChat({ audience = "portfolio" }: { audience?: Audience 
     if (!content || busy) return;
 
     const nextMessages = [...messages, { role: "user" as const, content }];
-    setMessages(nextMessages);
+    setMessages([...nextMessages, { role: "assistant", content: "" }]);
     setDraft("");
     setError("");
     setBusy(true);
+
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audience, messages: nextMessages.slice(-12) }),
+        body: JSON.stringify({ audience, website, messages: nextMessages.slice(-10) }),
+        signal: controller.signal,
       });
-      const result = (await response.json()) as { message?: string; error?: string };
-      if (!response.ok || !result.message) throw new Error(result.error ?? "Please try again.");
-      setMessages((current) => [...current, { role: "assistant", content: result.message! }]);
+
+      if (!response.ok || !response.body) {
+        const result = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(result?.error ?? "Please try again.");
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let text = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+        setMessages((current) => {
+          const copy = [...current];
+          copy[copy.length - 1] = { role: "assistant", content: text };
+          return copy;
+        });
+      }
+
+      if (!text.trim()) {
+        throw new Error("I couldn’t answer just now. Please try again in a moment.");
+      }
     } catch (caught) {
+      setMessages((current) =>
+        current.at(-1)?.role === "assistant" && !current.at(-1)?.content
+          ? current.slice(0, -1)
+          : current,
+      );
+      if ((caught as Error).name === "AbortError") return;
       setError(
         caught instanceof Error ? caught.message : "I couldn’t answer just now. Please try again.",
       );
@@ -153,19 +193,26 @@ export function PortfolioChat({ audience = "portfolio" }: { audience?: Audience 
           </header>
 
           <div aria-live="polite" className="flex-1 space-y-3 overflow-y-auto p-4">
-            {messages.map((message, index) => (
-              <div
-                key={`${index}-${message.role}`}
-                className={`max-w-[88%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
-                  message.role === "user"
-                    ? `ml-auto rounded-br-sm ${isFreelance ? "bg-neutral-900 text-white" : "bg-brand text-white"}`
-                    : `rounded-bl-sm ${isFreelance ? "bg-neutral-100 text-neutral-900" : "bg-muted text-foreground"}`
-                }`}
-              >
-                {renderLinks(message.content, isFreelance)}
-              </div>
-            ))}
-            {busy && (
+            {messages.map((message, index) => {
+              if (message.role === "assistant" && !message.content) return null;
+              const isLast = index === messages.length - 1;
+              return (
+                <div
+                  key={`${index}-${message.role}`}
+                  className={`max-w-[88%] rounded-2xl px-3 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+                    message.role === "user"
+                      ? `ml-auto rounded-br-sm ${isFreelance ? "bg-neutral-900 text-white" : "bg-brand text-white"}`
+                      : `rounded-bl-sm ${isFreelance ? "bg-neutral-100 text-neutral-900" : "bg-muted text-foreground"}`
+                  }`}
+                >
+                  {renderLinks(
+                    busy && isLast ? hidePartialLink(message.content) : message.content,
+                    isFreelance,
+                  )}
+                </div>
+              );
+            })}
+            {busy && messages.at(-1)?.content === "" && (
               <div className="flex items-center gap-2 text-xs text-muted-foreground" role="status">
                 <LoaderCircle aria-hidden="true" className="size-4 animate-spin" />
                 Thinking…
@@ -184,10 +231,21 @@ export function PortfolioChat({ audience = "portfolio" }: { audience?: Audience 
             <label className="sr-only" htmlFor={`${audience}-chat-message`}>
               Your message
             </label>
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              value={website}
+              onChange={(event) => setWebsite(event.target.value)}
+              className="absolute left-[-9999px] size-0 opacity-0"
+            />
             <textarea
               id={`${audience}-chat-message`}
               value={draft}
-              onChange={(event) => setDraft(event.target.value.slice(0, 1500))}
+              onChange={(event) => setDraft(event.target.value.slice(0, 500))}
+              maxLength={500}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
@@ -196,7 +254,6 @@ export function PortfolioChat({ audience = "portfolio" }: { audience?: Audience 
               }}
               placeholder="Ask a question…"
               rows={1}
-              maxLength={1500}
               className={`max-h-28 min-h-10 flex-1 resize-y rounded-xl border px-3 py-2.5 text-sm outline-none focus-visible:ring-2 ${
                 isFreelance
                   ? "border-neutral-300 bg-white text-neutral-900 placeholder:text-neutral-400 focus-visible:ring-amber-700"
