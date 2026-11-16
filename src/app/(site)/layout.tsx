@@ -10,6 +10,7 @@ import { AppProviders } from "@/shared/components/providers";
 import { cldUrl } from "@/shared/libs/cloudinaryUrl";
 import { LiveVisitorBeacon } from "@/features/analytics/components/LiveVisitorBeacon";
 import { getSettings } from "@/features/settings/queries/settingsQueries";
+import { PortfolioChat } from "@/shared/components/PortfolioChat";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
@@ -50,6 +51,7 @@ export default async function SiteLayout({
             <Navbar name={settings.name} avatarPublicId={settings.avatarPublicId} />
             <div className="flex-1">{children}</div>
             <Footer name={settings.name} socials={settings.socials} />
+            <PortfolioChat />
           </div>
         </AppProviders>
       </body>
